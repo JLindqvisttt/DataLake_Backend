@@ -23,7 +23,7 @@ public class User {
   @NotBlank
   @Size(max = 50)
   @Email
-  private String email;
+  private String username;
 
   @JsonIgnore
   @NotBlank
@@ -34,10 +34,10 @@ public class User {
 
   }
 
-  public User(String firstName, String lastName, String email, String password) {
+  public User(String firstName, String lastName, String username, String password) {
     this.firstName = firstName;
     this.lastName = lastName;
-    this.email = email;
+    this.username = username;
     this.password = password;
   }
 
@@ -57,12 +57,12 @@ public class User {
     this.lastName = lastName;
   }
 
-  public String getEmail() {
-    return email;
+  public String getUsername() {
+    return username;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
+  public void setUsername(String username) {
+    this.username = username;
   }
 
   public String getPassword() {
@@ -79,7 +79,7 @@ public class User {
       "id=" + id +
       ", firstName='" + firstName + '\'' +
       ", lastName='" + lastName + '\'' +
-      ", email='" + email + '\'' +
+      ", username='" + username + '\'' +
       ", password='" + password + "\n" ;
   }
 }

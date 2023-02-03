@@ -20,8 +20,8 @@ public class DatalakeBackendApplication {
 
   public static void main(String[] args) throws Exception {
     SpringApplication.run(DatalakeBackendApplication.class, args);
-    System.exit(0);
   }
+
 
   @Bean
   CommandLineRunner demo(UserRepository personRepository) {
@@ -37,7 +37,7 @@ public class DatalakeBackendApplication {
       personRepository.save(user2);
       personRepository.save(user3);
 
-      User test = personRepository.findByEmail(user1.getEmail());
+      User test = personRepository.findByUsername(user1.getUsername());
       List<User> test2 = personRepository.findAll();
       System.out.println("FindByEmail(): " +  test.toString());
       System.out.println("FindAll(): ");
@@ -45,5 +45,4 @@ public class DatalakeBackendApplication {
 
     };
   }
-
 }
