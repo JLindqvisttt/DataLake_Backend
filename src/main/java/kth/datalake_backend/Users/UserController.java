@@ -1,11 +1,11 @@
 package kth.datalake_backend.Users;
 
 
-import kth.datalake_backend.Users.User;
+
 import kth.datalake_backend.Payload.Request.SigninRequest;
-import kth.datalake_backend.Users.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.List;
 
@@ -14,19 +14,19 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class UserController {
 
-  private final UserService userService;
+    private final UserService userService;
 
-  public UserController(UserService userService) {
-    this.userService = userService;
-  }
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-  @PostMapping("/signIn")
-  public ResponseEntity signIn(@Valid @RequestBody SigninRequest signinRequest){
-    return userService.authenticateUser(signinRequest.getUsername(),signinRequest.getPassword());
-  }
+    @PostMapping("/signIn")
+    public ResponseEntity signIn(@Valid @RequestBody SigninRequest signinRequest) {
+        return userService.authenticateUser(signinRequest.getUsername(), signinRequest.getPassword());
+    }
 
-  @GetMapping("/getAllUser")
-  public List<User> getUserAllUsers() {
-    return userService.getAllUser();
-  }
+    @GetMapping("/getAllUser")
+    public List<User> getUserAllUsers() {
+        return userService.getAllUser();
+    }
 }
