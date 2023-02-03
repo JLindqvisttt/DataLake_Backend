@@ -6,7 +6,6 @@ import kth.datalake_backend.Payload.Request.SigninRequest;
 import kth.datalake_backend.Service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 

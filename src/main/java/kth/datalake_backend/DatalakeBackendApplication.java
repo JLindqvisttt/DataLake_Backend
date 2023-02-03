@@ -18,7 +18,7 @@ public class DatalakeBackendApplication {
 
   private final static Logger log = LoggerFactory.getLogger(DatalakeBackendApplication.class);
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args){
     SpringApplication.run(DatalakeBackendApplication.class, args);
   }
 
@@ -33,6 +33,8 @@ public class DatalakeBackendApplication {
       User user2 = new User("Viktor","Lindström", "viktor@gmail.com","root1");
       User user3 = new User("Kasper","Lindström", "kasper@gmail.com","root2");
 
+      user1.setDatabases("KASPER.COM");
+      user1.setDatabases("VIKTOR.COM");
       personRepository.save(user1);
       personRepository.save(user2);
       personRepository.save(user3);

@@ -3,15 +3,22 @@ package kth.datalake_backend.Entity;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Node
 public class User {
 
-  @Id @GeneratedValue private Long id;
+  @Id
+  @GeneratedValue
+  private Long id;
 
   @NotBlank
   @Size(max = 50)
@@ -30,7 +37,9 @@ public class User {
   @Size(max = 120)
   private String password;
 
-  public User(){
+  private List<String> availableDatabases;
+
+  public User() {
 
   }
 
@@ -39,6 +48,15 @@ public class User {
     this.lastName = lastName;
     this.username = username;
     this.password = password;
+    this.availableDatabases = new ArrayList<>();
+  }
+
+  public List<String> getDatabases() {
+    return availableDatabases;
+  }
+
+  public void setDatabases(String newDatabase) {
+    if (!availableDatabases.contains(newDatabase)) this.availableDatabases.add(newDatabase);
   }
 
   public String getFirstName() {
@@ -75,11 +93,13 @@ public class User {
 
   @Override
   public String toString() {
-    return
+    return "User{" +
       "id=" + id +
       ", firstName='" + firstName + '\'' +
       ", lastName='" + lastName + '\'' +
       ", username='" + username + '\'' +
-      ", password='" + password + "\n" ;
+      ", password='" + password + '\'' +
+      ", availableDatabases=" + availableDatabases +
+      '}';
   }
 }
