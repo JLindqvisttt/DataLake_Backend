@@ -1,15 +1,13 @@
 package kth.datalake_backend.Entity;
 
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +16,7 @@ public class User {
 
   @Id
   @GeneratedValue
-  private Long id;
+  private Long identity;
 
   @NotBlank
   @Size(max = 50)
@@ -38,6 +36,25 @@ public class User {
   private String password;
 
   private List<String> availableDatabases;
+
+  private List<ERole> roles;
+
+  public List<String> getAvailableDatabases() {
+    return availableDatabases;
+  }
+
+  public void setAvailableDatabases(List<String> availableDatabases) {
+    this.availableDatabases = availableDatabases;
+  }
+
+
+  public List<ERole> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(List<ERole> roles) {
+    this.roles = roles;
+  }
 
   public User() {
 
@@ -71,6 +88,14 @@ public class User {
     return lastName;
   }
 
+  public Long getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(Long identity) {
+    this.identity = identity;
+  }
+
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
@@ -94,12 +119,13 @@ public class User {
   @Override
   public String toString() {
     return "User{" +
-      "id=" + id +
+      "identity=" + identity +
       ", firstName='" + firstName + '\'' +
       ", lastName='" + lastName + '\'' +
       ", username='" + username + '\'' +
       ", password='" + password + '\'' +
       ", availableDatabases=" + availableDatabases +
+      ", roles=" + roles +
       '}';
   }
 }
