@@ -1,7 +1,7 @@
 package kth.datalake_backend;
 
-import kth.datalake_backend.Entity.User;
-import kth.datalake_backend.Repository.UserRepository;
+import kth.datalake_backend.Users.User;
+import kth.datalake_backend.Users.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

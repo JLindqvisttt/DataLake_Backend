@@ -1,9 +1,9 @@
-package kth.datalake_backend.Controller;
+package kth.datalake_backend.Users;
 
 
-import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Users.User;
 import kth.datalake_backend.Payload.Request.SigninRequest;
-import kth.datalake_backend.Service.UserService;
+import kth.datalake_backend.Users.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;

@@ -1,7 +1,5 @@
-package kth.datalake_backend.Service;
+package kth.datalake_backend.Users;
 
-import kth.datalake_backend.Entity.User;
-import kth.datalake_backend.Repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;

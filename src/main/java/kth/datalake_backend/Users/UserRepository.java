@@ -1,6 +1,5 @@
-package kth.datalake_backend.Repository;
+package kth.datalake_backend.Users;
 
-import kth.datalake_backend.Entity.User;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 
 import java.util.List;
