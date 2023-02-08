@@ -41,7 +41,7 @@ public class WebSecurityConfig {
     return new AuthTokenFilter();
   }
   @Bean
-  public DaoAuthenticationProvider authProvider() {
+  public DaoAuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
     authProvider.setUserDetailsService(userDetailsService);
     authProvider.setPasswordEncoder(passwordEncoder());
@@ -59,19 +59,14 @@ public class WebSecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    CorsConfiguration corsConfiguration = new CorsConfiguration();
-    corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
-    corsConfiguration.setAllowedOrigins(List.of("*"));
-    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "OPTIONS", "PATCH"));
-    corsConfiguration.setExposedHeaders(List.of("Authorization"));
-    http.cors().configurationSource(request->corsConfiguration).and().csrf().disable()
+    http.cors().and().csrf().disable()
       .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-      .authorizeRequests().antMatchers("/api/user/**").permitAll()
+      .authorizeRequests().antMatchers("/api/auth/**").permitAll()
       .antMatchers("/api/test/**").permitAll()
       .anyRequest().authenticated();
 
-    http.authenticationProvider(authProvider());
+    http.authenticationProvider(authenticationProvider());
 
     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 

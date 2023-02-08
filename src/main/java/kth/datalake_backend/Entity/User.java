@@ -35,29 +35,32 @@ public class User {
   @Size(max = 120)
   private String password;
 
+  @NotBlank
   private List<String> availableDatabases;
 
-  private List<ERole> roles;
+  @NotBlank
+  private ERole role;
 
   public List<String> getAvailableDatabases() {
     return availableDatabases;
   }
 
-  public void setAvailableDatabases(List<String> availableDatabases) {
-    this.availableDatabases = availableDatabases;
+  public void setAvailableDatabases(String newdatabase) {
+    if (!availableDatabases.contains(newdatabase)) availableDatabases.add(newdatabase);
   }
 
-
-  public List<ERole> getRoles() {
-    return roles;
-  }
-
-  public void setRoles(List<ERole> roles) {
-    this.roles = roles;
-  }
 
   public User() {
 
+  }
+
+  public User(String firstName, String lastName, String username, String password, ERole userRole) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.username = username;
+    this.password = password;
+    this.role = userRole;
+    this.availableDatabases = new ArrayList<>();
   }
 
   public User(String firstName, String lastName, String username, String password) {
@@ -66,6 +69,18 @@ public class User {
     this.username = username;
     this.password = password;
     this.availableDatabases = new ArrayList<>();
+  }
+
+  public void setAvailableDatabases(List<String> availableDatabases) {
+    this.availableDatabases = availableDatabases;
+  }
+
+  public ERole getRole() {
+    return role;
+  }
+
+  public void setRole(ERole role) {
+    this.role = role;
   }
 
   public List<String> getDatabases() {
@@ -125,7 +140,7 @@ public class User {
       ", username='" + username + '\'' +
       ", password='" + password + '\'' +
       ", availableDatabases=" + availableDatabases +
-      ", roles=" + roles +
+      ", roles=" + role +
       '}';
   }
 }

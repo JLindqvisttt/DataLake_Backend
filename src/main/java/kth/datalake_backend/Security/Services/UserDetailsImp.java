@@ -22,9 +22,9 @@ public class UserDetailsImp implements UserDetails {
   private String lastName;
 
   private List<String> availableDatabases;
-  private List<ERole> roles;
+  private ERole roles;
 
-  public UserDetailsImp(Long identity, String username, String password, String firstName, String lastName, List<String> availableDatabases, List<ERole> roles) {
+  public UserDetailsImp(Long identity, String username, String password, String firstName, String lastName, List<String> availableDatabases, ERole roles) {
     this.identity = identity;
     this.username = username;
     this.password = password;
@@ -36,7 +36,7 @@ public class UserDetailsImp implements UserDetails {
 
   public static UserDetailsImp build(User user){
 
-      return new UserDetailsImp(user.getIdentity(),user.getUsername(), user.getPassword(),user.getFirstName(),user.getLastName(),user.getAvailableDatabases(),user.getRoles());
+      return new UserDetailsImp(user.getIdentity(),user.getUsername(), user.getPassword(),user.getFirstName(),user.getLastName(),user.getAvailableDatabases(),user.getRole());
   }
 
   public void setUsername(String username) {
@@ -79,11 +79,11 @@ public class UserDetailsImp implements UserDetails {
     this.availableDatabases = availableDatabases;
   }
 
-  public List<ERole> getRoles() {
+  public ERole getRoles() {
     return roles;
   }
 
-  public void setRoles(List<ERole> roles) {
+  public void setRoles(ERole roles) {
     this.roles = roles;
   }
 
@@ -104,22 +104,22 @@ public class UserDetailsImp implements UserDetails {
 
   @Override
   public boolean isAccountNonExpired() {
-    return false;
+    return true;
   }
 
   @Override
   public boolean isAccountNonLocked() {
-    return false;
+    return true;
   }
 
   @Override
   public boolean isCredentialsNonExpired() {
-    return false;
+    return true;
   }
 
   @Override
   public boolean isEnabled() {
-    return false;
+    return true;
   }
 
 }

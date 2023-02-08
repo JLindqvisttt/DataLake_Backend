@@ -13,11 +13,33 @@ public class JwtResponse {
   private String firstname;
   private String lastname;
 
-  public JwtResponse(String accessToken, String email, String firstname, String lastname) {
-    this.token = accessToken;
+  private String role;
+  private List<String> availableDatabases;
+
+  public JwtResponse(String token, Long id, String email, String firstname, String lastname, String role, List<String> availableDatabases) {
+    this.token = token;
+    this.id = id;
     this.email = email;
     this.firstname = firstname;
     this.lastname = lastname;
+    this.role = role;
+    this.availableDatabases = availableDatabases;
+  }
+
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
+  }
+
+  public List<String> getAvailableDatabases() {
+    return availableDatabases;
+  }
+
+  public void setAvailableDatabases(List<String> availableDatabases) {
+    this.availableDatabases = availableDatabases;
   }
 
   public String getToken() {
@@ -68,4 +90,17 @@ public class JwtResponse {
     this.lastname = lastname;
   }
 
+  @Override
+  public String toString() {
+    return "JwtResponse{" +
+      "token='" + token + '\'' +
+      ", type='" + type + '\'' +
+      ", id=" + id +
+      ", email='" + email + '\'' +
+      ", firstname='" + firstname + '\'' +
+      ", lastname='" + lastname + '\'' +
+      ", role=" + role +
+      ", availableDatabases=" + availableDatabases +
+      '}';
+  }
 }
