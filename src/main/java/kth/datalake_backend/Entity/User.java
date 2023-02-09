@@ -54,6 +54,16 @@ public class User {
 
   }
 
+  public User(Long identity, String firstName, String lastName, String username, String password, List<String> availableDatabases, ERole role) {
+    this.identity = identity;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.username = username;
+    this.password = password;
+    this.availableDatabases = availableDatabases;
+    this.role = role;
+  }
+
   public User(String firstName, String lastName, String username, String password, ERole userRole) {
     this.firstName = firstName;
     this.lastName = lastName;

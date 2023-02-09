@@ -3,6 +3,7 @@ package kth.datalake_backend.Service;
 import kth.datalake_backend.Entity.ERole;
 import kth.datalake_backend.Entity.User;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
+import kth.datalake_backend.Payload.Request.UpdateUserRequest;
 import kth.datalake_backend.Payload.Response.JwtResponse;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.UserRepository;
@@ -55,5 +56,18 @@ public class UserService {
 
   public List<User> getAllUser() {
     return userRepository.findAll();
+  }
+
+  public ResponseEntity updateUser(UpdateUserRequest updateUserRequest) {
+    System.out.println(updateUserRequest);
+    User user = new User(updateUserRequest.getIdentity(),
+            updateUserRequest.getFirstname(),
+            updateUserRequest.getLastname(),
+            updateUserRequest.getUsername(),
+            updateUserRequest.getPassword(),
+            updateUserRequest.getAvailableDatabases(),
+            updateUserRequest.getRole());
+    userRepository.save(user);
+    return ResponseEntity.ok(user);
   }
 }

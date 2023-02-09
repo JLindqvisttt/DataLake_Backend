@@ -4,6 +4,7 @@ package kth.datalake_backend.Controller;
 import kth.datalake_backend.Entity.User;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
 import kth.datalake_backend.Payload.Request.SigninRequest;
+import kth.datalake_backend.Payload.Request.UpdateUserRequest;
 import kth.datalake_backend.Service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,5 +36,11 @@ public class UserController {
   @GetMapping("/getAllUser")
   public List<User> getUserAllUsers() {
     return userService.getAllUser();
+  }
+
+  @PatchMapping("/updateUser")
+  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest){
+    System.out.println("alive");
+    return userService.updateUser(updateUserRequest);
   }
 }
