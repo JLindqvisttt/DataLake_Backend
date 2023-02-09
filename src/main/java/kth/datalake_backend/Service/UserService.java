@@ -64,7 +64,7 @@ public class UserService {
             updateUserRequest.getFirstname(),
             updateUserRequest.getLastname(),
             updateUserRequest.getUsername(),
-            updateUserRequest.getPassword(),
+            encoder.encode(updateUserRequest.getPassword()),
             updateUserRequest.getAvailableDatabases(),
             updateUserRequest.getRole());
     userRepository.save(user);
