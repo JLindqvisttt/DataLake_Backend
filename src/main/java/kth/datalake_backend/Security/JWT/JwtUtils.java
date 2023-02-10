@@ -18,7 +18,7 @@ public class JwtUtils {
   @Value("datalakeSecretKey")
   private String jwtSecret;
 
-  @Value("300000") // 5 min
+  @Value("10000") // 5 min
   private int jwtExpirationMs;
 
   public String generateJwtToken(String username) {
