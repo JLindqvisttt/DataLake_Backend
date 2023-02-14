@@ -1,5 +1,6 @@
 package kth.datalake_backend.Service;
 
+import io.jsonwebtoken.Jwts;
 import kth.datalake_backend.Entity.ERole;
 import kth.datalake_backend.Entity.User;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
@@ -54,12 +55,15 @@ public class UserService {
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
-  public List<User> getAllUser() {
-    return userRepository.findAll();
+  public List<User> getAllUser(String userEmail) {
+    User user = userRepository.findByUsername(userEmail);
+    if(user.getRole().toString() == "ROLE_ADMIN") return userRepository.findAll();
+    return null;
   }
 
-  public ResponseEntity updateUser(UpdateUserRequest updateUserRequest) {
-    System.out.println(updateUserRequest);
+  public ResponseEntity updateUser(UpdateUserRequest updateUserRequest, String userEmail) {
+   if(!userRepository.existsByUsername(userEmail)) return null;
+
     User user = new User(updateUserRequest.getIdentity(),
             updateUserRequest.getFirstname(),
             updateUserRequest.getLastname(),
@@ -70,4 +74,6 @@ public class UserService {
     userRepository.save(user);
     return ResponseEntity.ok(user);
   }
+
+
 }

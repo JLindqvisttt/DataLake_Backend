@@ -59,14 +59,18 @@ public class WebSecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    CorsConfiguration corsConfiguration = new CorsConfiguration();
+    corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control","userEmail"));
+    corsConfiguration.setAllowedOrigins(List.of("*"));
+    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "OPTIONS", "PATCH"));
+    corsConfiguration.setExposedHeaders(List.of("Authorization", "userEmail"));
+
     http.cors().and().csrf().disable()
       .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-      .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-      .antMatchers("/api/test/**").permitAll()
-      .anyRequest().authenticated();
-
-    http.authenticationProvider(authenticationProvider());
+      .authorizeRequests().antMatchers("/api/auth/signIn","/api/auth/signUp").permitAll()
+        .anyRequest().authenticated();
+    http.authenticationProvider(authenticationProvider()).cors().configurationSource(request -> corsConfiguration);
 
     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 

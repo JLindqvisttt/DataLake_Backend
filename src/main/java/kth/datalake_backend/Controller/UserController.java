@@ -33,14 +33,13 @@ public class UserController {
     return userService.registerUser(signUpRequestRequest);
   }
 
-  @GetMapping("/getAllUser")
-  public List<User> getUserAllUsers() {
-    return userService.getAllUser();
+  @GetMapping("/getAllUser/{userEmail}")
+  public List<User> getUserAllUsers(@PathVariable String userEmail) {
+    return userService.getAllUser(userEmail);
   }
 
-  @PatchMapping("/updateUser")
-  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest){
-    System.out.println("alive");
-    return userService.updateUser(updateUserRequest);
+  @PatchMapping("/updateUser{userEmail}")
+  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest,@PathVariable String userEmail ){
+    return userService.updateUser(updateUserRequest,userEmail);
   }
 }
