@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,15 +61,20 @@ public class UserService {
   }
 
   public ResponseEntity updateUser(UpdateUserRequest updateUserRequest) {
+    System.out.println("JONTE ÄR BÄST " + updateUserRequest.getIdentity());
 
-    User user = new User(updateUserRequest.getIdentity(),
+    if (userRepository.findByIdentity(updateUserRequest.getIdentity()) == null) {
+      System.out.println("SUCKS TO SUCK");
+      return ResponseEntity.badRequest().body("User not found");
+    }
+    User successUser = new User(updateUserRequest.getIdentity(),
             updateUserRequest.getFirstname(),
             updateUserRequest.getLastname(),
             updateUserRequest.getUsername(),
             encoder.encode(updateUserRequest.getPassword()),
             updateUserRequest.getAvailableDatabases(),
             updateUserRequest.getRole());
-    userRepository.save(user);
+    userRepository.save(successUser);
     return ResponseEntity.ok(new MessageResponse("Successfully updated user"));
   }
 
