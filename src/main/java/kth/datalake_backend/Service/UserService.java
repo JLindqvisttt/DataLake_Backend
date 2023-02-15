@@ -69,7 +69,7 @@ public class UserService {
             updateUserRequest.getAvailableDatabases(),
             updateUserRequest.getRole());
     userRepository.save(user);
-    return ResponseEntity.ok(user);
+    return ResponseEntity.ok(new MessageResponse("Successfully updated user"));
   }
 
 
