@@ -41,11 +41,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     try {
       String jwt = parseJwt(request);
-
-
       if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
-
+        if (request.getRequestURI().toString().equals("/api/auth/getAllUser")) {
+          if (!userDetailsService.ifUserIsAdmin(username)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            filterChain.doFilter(request, response);
+          }
+        }
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken authentication =
           new UsernamePasswordAuthenticationToken(
@@ -55,8 +58,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-      }
-      else if ("OPTIONS".equals(request.getMethod())) {
+      } else if ("OPTIONS".equals(request.getMethod())) {
         response.setStatus(HttpServletResponse.SC_OK);
         filterChain.doFilter(request, response);
       }

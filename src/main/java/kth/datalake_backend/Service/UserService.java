@@ -55,14 +55,11 @@ public class UserService {
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
-  public List<User> getAllUser(String userEmail) {
-    User user = userRepository.findByUsername(userEmail);
-    if(user.getRole().toString() == "ROLE_ADMIN") return userRepository.findAll();
-    return null;
+  public List<User> getAllUser() {
+    return userRepository.findAll();
   }
 
-  public ResponseEntity updateUser(UpdateUserRequest updateUserRequest, String userEmail) {
-   if(!userRepository.existsByUsername(userEmail)) return null;
+  public ResponseEntity updateUser(UpdateUserRequest updateUserRequest) {
 
     User user = new User(updateUserRequest.getIdentity(),
             updateUserRequest.getFirstname(),

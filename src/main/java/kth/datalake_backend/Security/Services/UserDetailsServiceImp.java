@@ -21,4 +21,10 @@ public class UserDetailsServiceImp implements UserDetailsService {
     if (user==null) throw new UsernameNotFoundException("User not found with that username: " + username);
     return UserDetailsImp.build(user);
   }
+
+  public Boolean ifUserIsAdmin(String username) throws UsernameNotFoundException {
+    User user = userRepository.findByUsername(username);
+    if(user.getRole().toString() == "ROLE_ADMIN") return true;
+    return false;
+  }
 }
