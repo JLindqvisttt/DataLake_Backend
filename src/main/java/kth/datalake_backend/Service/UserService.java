@@ -63,7 +63,7 @@ public class UserService {
     public ResponseEntity updateUser(UpdateUserRequest updateUserRequest) {
 
         if (userRepository.findByIdentity(updateUserRequest.getIdentity()) == null)
-            return ResponseEntity.badRequest().body("User not found");
+            return ResponseEntity.badRequest().body("Could not save, try again");
 
         User successUser = new User(updateUserRequest.getIdentity(),
                 updateUserRequest.getFirstname(),
