@@ -53,7 +53,14 @@ public class User {
   public User() {
 
   }
-
+  public User(Long identity, String firstName, String lastName, String username, List<String> availableDatabases, ERole role) {
+    this.identity = identity;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.username = username;
+    this.availableDatabases = availableDatabases;
+    this.role = role;
+  }
   public User(Long identity, String firstName, String lastName, String username, String password, List<String> availableDatabases, ERole role) {
     this.identity = identity;
     this.firstName = firstName;

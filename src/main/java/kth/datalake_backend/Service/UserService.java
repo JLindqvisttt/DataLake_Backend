@@ -27,54 +27,63 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder encoder;
+  @Autowired
+  AuthenticationManager authenticationManager;
+  @Autowired
+  UserRepository userRepository;
+  @Autowired
+  PasswordEncoder encoder;
 
 
-    @Autowired
-    JwtUtils jwtUtils;
+  @Autowired
+  JwtUtils jwtUtils;
 
-    public ResponseEntity authenticateUser(String username, String password) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(username);
-        UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
+  public ResponseEntity authenticateUser(String username, String password) {
+    Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    String jwt = jwtUtils.generateJwtToken(username);
+    UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
 
-        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getIdentity(), userDetails.getUsername(), userDetails.getFirstName(), userDetails.getLastName(), userDetails.getRoles().toString(), userDetails.getAvailableDatabases().stream().toList()));
+    return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getIdentity(), userDetails.getUsername(), userDetails.getFirstName(), userDetails.getLastName(), userDetails.getRoles().toString(), userDetails.getAvailableDatabases().stream().toList()));
+  }
+
+  public ResponseEntity<?> registerUser(SignUpRequest signUpRequest) {
+    if (userRepository.existsByUsername(signUpRequest.getUsername()))
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+
+    User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(), signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), ERole.ROLE_USER);
+    userRepository.save(user);
+    return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+  }
+
+  public List<User> getAllUser() {
+    return userRepository.findAll();
+  }
+
+  public ResponseEntity updateUser(UpdateUserRequest updateUserRequest) {
+
+    if (userRepository.findByIdentity(updateUserRequest.getIdentity()) == null)
+      return ResponseEntity.badRequest().body("Could not save, try again");
+    User successUser = null;
+    if (updateUserRequest.getPassword() == null) {
+      successUser = new User(updateUserRequest.getIdentity(),
+        updateUserRequest.getFirstname(),
+        updateUserRequest.getLastname(),
+        updateUserRequest.getUsername(),
+        updateUserRequest.getAvailableDatabases(),
+        updateUserRequest.getRole());
+    } else {
+      successUser = new User(updateUserRequest.getIdentity(),
+        updateUserRequest.getFirstname(),
+        updateUserRequest.getLastname(),
+        updateUserRequest.getUsername(),
+        encoder.encode(updateUserRequest.getPassword()),
+        updateUserRequest.getAvailableDatabases(),
+        updateUserRequest.getRole());
+      userRepository.save(successUser);
     }
-
-    public ResponseEntity<?> registerUser(SignUpRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername()))
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
-
-        User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(), signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), ERole.ROLE_USER);
-        userRepository.save(user);
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-    }
-
-    public List<User> getAllUser() {
-        return userRepository.findAll();
-    }
-
-    public ResponseEntity updateUser(UpdateUserRequest updateUserRequest) {
-
-        if (userRepository.findByIdentity(updateUserRequest.getIdentity()) == null)
-            return ResponseEntity.badRequest().body("Could not save, try again");
-
-        User successUser = new User(updateUserRequest.getIdentity(),
-                updateUserRequest.getFirstname(),
-                updateUserRequest.getLastname(),
-                updateUserRequest.getUsername(),
-                encoder.encode(updateUserRequest.getPassword()),
-                updateUserRequest.getAvailableDatabases(),
-                updateUserRequest.getRole());
-        userRepository.save(successUser);
-        return ResponseEntity.ok("Successfully updated user");
-    }
+    return ResponseEntity.ok("Successfully updated user");
+  }
 
 
 }
