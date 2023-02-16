@@ -80,8 +80,8 @@ public class UserService {
         encoder.encode(updateUserRequest.getPassword()),
         updateUserRequest.getAvailableDatabases(),
         updateUserRequest.getRole());
-      userRepository.save(successUser);
     }
+    userRepository.save(successUser);
     return ResponseEntity.ok("Successfully updated user");
   }
 
