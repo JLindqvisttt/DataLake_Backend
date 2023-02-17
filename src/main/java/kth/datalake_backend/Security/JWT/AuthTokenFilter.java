@@ -43,7 +43,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       String jwt = parseJwt(request);
       if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
-        if (request.getRequestURI().toString().equals("/api/auth/getAllUser")) {
+        if (request.getRequestURI().toString().equals("/api/auth/getAllUser") || request.getRequestURI().toString().equals("/api/auth/removeUser") ) {
           if (!userDetailsService.ifUserIsAdmin(username)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             filterChain.doFilter(request, response);

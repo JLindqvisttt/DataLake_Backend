@@ -3,6 +3,7 @@ package kth.datalake_backend.Service;
 import io.jsonwebtoken.Jwts;
 import kth.datalake_backend.Entity.ERole;
 import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Payload.Request.RemoveUserRequest;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
 import kth.datalake_backend.Payload.Request.UpdateUserRequest;
 import kth.datalake_backend.Payload.Response.JwtResponse;
@@ -18,7 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.sql.SQLOutput;
 import java.util.Collections;
 import java.util.List;
@@ -86,4 +89,11 @@ public class UserService {
   }
 
 
+  public ResponseEntity removeUser(RemoveUserRequest removeUserRequest){
+    User user = userRepository.findByIdentity(removeUserRequest.getIdentity());
+    System.out.println("Getting identity: " + removeUserRequest.getIdentity());
+    if (user == null) return ResponseEntity.badRequest().body("Could not remove user, try again");
+    userRepository.delete(user);
+    return ResponseEntity.ok("Successfully removed user");
+  }
 }

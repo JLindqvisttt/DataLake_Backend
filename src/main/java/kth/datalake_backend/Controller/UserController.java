@@ -2,6 +2,7 @@ package kth.datalake_backend.Controller;
 
 
 import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Payload.Request.RemoveUserRequest;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
 import kth.datalake_backend.Payload.Request.SigninRequest;
 import kth.datalake_backend.Payload.Request.UpdateUserRequest;
@@ -24,12 +25,12 @@ public class UserController {
   }
 
   @PostMapping("/signIn")
-  public ResponseEntity signIn(@Valid @RequestBody SigninRequest signinRequest){
-    return userService.authenticateUser(signinRequest.getUsername(),signinRequest.getPassword());
+  public ResponseEntity signIn(@Valid @RequestBody SigninRequest signinRequest) {
+    return userService.authenticateUser(signinRequest.getUsername(), signinRequest.getPassword());
   }
 
   @PostMapping("/signUp")
-  public ResponseEntity signUp(@Valid @RequestBody SignUpRequest signUpRequestRequest){
+  public ResponseEntity signUp(@Valid @RequestBody SignUpRequest signUpRequestRequest) {
     return userService.registerUser(signUpRequestRequest);
   }
 
@@ -39,7 +40,13 @@ public class UserController {
   }
 
   @PatchMapping("/updateUser")
-  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest){
+  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest) {
     return userService.updateUser(updateUserRequest);
   }
+
+  @DeleteMapping("/removeUser")
+  public ResponseEntity removeUser(@Valid @RequestBody RemoveUserRequest removeUserRequest) {
+    return userService.removeUser(removeUserRequest);
+  }
+
 }
