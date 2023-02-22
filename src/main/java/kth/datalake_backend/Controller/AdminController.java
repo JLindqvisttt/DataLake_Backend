@@ -4,7 +4,7 @@ package kth.datalake_backend.Controller;
 import kth.datalake_backend.Entity.User;
 import kth.datalake_backend.Payload.Request.RemoveUserRequest;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
-import kth.datalake_backend.Payload.Request.UpdateUserRequest;
+import kth.datalake_backend.Payload.Request.UpdateUserRequest_Admin;
 import kth.datalake_backend.Service.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,7 @@ public class AdminController {
   }
 
   @PatchMapping("/updateUser")
-  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest){
+  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest_Admin updateUserRequest){
     return adminService.updateUser(updateUserRequest);
   }
   @PostMapping("/signUp")

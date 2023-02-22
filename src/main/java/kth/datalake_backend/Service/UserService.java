@@ -2,8 +2,7 @@ package kth.datalake_backend.Service;
 
 
 import kth.datalake_backend.Entity.User;
-import kth.datalake_backend.Payload.Request.RemoveUserRequest;
-import kth.datalake_backend.Payload.Request.UpdateUserRequest;
+import kth.datalake_backend.Payload.Request.UpdateUserRequest_Admin;
 import kth.datalake_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public class UserService {
     return userRepository.findAll();
   }
 
-  public ResponseEntity updateUser(UpdateUserRequest updateUserRequest) {
+  public ResponseEntity updateUser(UpdateUserRequest_Admin updateUserRequest) {
     if (userRepository.findByIdentity(updateUserRequest.getIdentity()) == null)
       return ResponseEntity.badRequest().body("Could not save, try again");
     User successUser = null;

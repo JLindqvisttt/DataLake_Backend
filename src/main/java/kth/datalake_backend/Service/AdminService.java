@@ -5,7 +5,7 @@ import kth.datalake_backend.Entity.ERole;
 import kth.datalake_backend.Entity.User;
 import kth.datalake_backend.Payload.Request.RemoveUserRequest;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
-import kth.datalake_backend.Payload.Request.UpdateUserRequest;
+import kth.datalake_backend.Payload.Request.UpdateUserRequest_Admin;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class AdminService {
     return adminRepository.findAll();
   }
 
-  public ResponseEntity updateUser(UpdateUserRequest updateUserRequest) {
+  public ResponseEntity updateUser(UpdateUserRequest_Admin updateUserRequest) {
     if (adminRepository.findByIdentity(updateUserRequest.getIdentity()) == null)
       return ResponseEntity.badRequest().body("Could not save, try again");
     User successUser = null;
