@@ -3,11 +3,15 @@ package kth.datalake_backend.Controller;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Service.PatientService;
 
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -19,8 +23,24 @@ public class PatientController {
     public PatientController(PatientService patientService) {this.patientService = patientService;}
 
     @PostMapping("/input")
-    public ResponseEntity inputData(){
+    public ResponseEntity inputData(@RequestParam("file") MultipartFile files) throws IOException {
 
-        return ResponseEntity.ok(new MessageResponse("input"));
+        XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
+        XSSFSheet worksheet = workbook.getSheetAt(0);
+
+        for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
+            if (index > 0) {
+
+
+                XSSFRow row = worksheet.getRow(index);
+                Integer id = (int) row.getCell(0).getNumericCellValue();
+                for(int i = 0; i <23; i++){
+                    System.out.println(row.getCell(i));
+                }
+
+            }
+        }
+
+        return ResponseEntity.ok(new MessageResponse("print"));
     }
 }

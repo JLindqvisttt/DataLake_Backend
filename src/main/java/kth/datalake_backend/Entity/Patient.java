@@ -1,11 +1,17 @@
 package kth.datalake_backend.Entity;
 
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
 import javax.validation.constraints.NotBlank;
 
 @Node
 public class Patient {
+
+    @Id
+    @GeneratedValue
+    private int id;
 
     @NotBlank
     private int age;

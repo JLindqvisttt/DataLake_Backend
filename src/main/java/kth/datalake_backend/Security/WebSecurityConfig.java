@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
@@ -70,7 +69,7 @@ public class WebSecurityConfig {
     http.cors().and().csrf().disable()
       .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-      .authorizeRequests().antMatchers("/api/auth/signIn", "/api/auth/signUp").permitAll()
+      .authorizeRequests().antMatchers("/api/auth/signIn", "/api/auth/signUp", "/api/patient/input").permitAll()
       .anyRequest().authenticated();
     http.authenticationProvider(authenticationProvider()).cors().configurationSource(request -> corsConfiguration);
 

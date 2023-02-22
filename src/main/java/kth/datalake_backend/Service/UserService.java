@@ -1,6 +1,6 @@
 package kth.datalake_backend.Service;
 
-import io.jsonwebtoken.Jwts;
+
 import kth.datalake_backend.Entity.ERole;
 import kth.datalake_backend.Entity.User;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
@@ -19,10 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLOutput;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -61,7 +58,6 @@ public class UserService {
   }
 
   public ResponseEntity updateUser(UpdateUserRequest updateUserRequest) {
-
     if (userRepository.findByIdentity(updateUserRequest.getIdentity()) == null)
       return ResponseEntity.badRequest().body("Could not save, try again");
     User successUser = null;
@@ -84,6 +80,4 @@ public class UserService {
     userRepository.save(successUser);
     return ResponseEntity.ok("Successfully updated user");
   }
-
-
 }
