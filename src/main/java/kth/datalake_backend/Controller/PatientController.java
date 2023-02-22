@@ -33,7 +33,8 @@ public class PatientController {
 
 
                 XSSFRow row = worksheet.getRow(index);
-                Integer id = (int) row.getCell(0).getNumericCellValue();
+                //Integer id = (int) row.getCell(0).getNumericCellValue();
+                System.out.println("new patient");
                 for(int i = 0; i <23; i++){
                     System.out.println(row.getCell(i));
                 }
