@@ -3,6 +3,7 @@ package kth.datalake_backend.Service;
 
 import kth.datalake_backend.Entity.ERole;
 import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Payload.Request.RemoveUserRequest;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
 import kth.datalake_backend.Payload.Request.UpdateUserRequest;
 import kth.datalake_backend.Payload.Response.MessageResponse;
@@ -56,5 +57,13 @@ public class AdminService {
     User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(), signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), ERole.ROLE_USER);
     adminRepository.save(user);
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+  }
+
+  public ResponseEntity removeUser(RemoveUserRequest removeUserRequest){
+    User user = adminRepository.findByIdentity(removeUserRequest.getIdentity());
+    System.out.println("Getting identity: " + removeUserRequest.getIdentity());
+    if (user == null) return ResponseEntity.badRequest().body("Could not remove user, try again");
+    adminRepository.delete(user);
+    return ResponseEntity.ok("Successfully removed user");
   }
 }

@@ -2,6 +2,7 @@ package kth.datalake_backend.Controller;
 
 
 import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Payload.Request.RemoveUserRequest;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
 import kth.datalake_backend.Payload.Request.UpdateUserRequest;
 import kth.datalake_backend.Service.AdminService;
@@ -34,5 +35,10 @@ public class AdminController {
   @PostMapping("/signUp")
   public ResponseEntity signUp(@Valid @RequestBody SignUpRequest signUpRequestRequest){
     return adminService.registerUser(signUpRequestRequest);
+  }
+
+  @PostMapping("/removeUser")
+  public ResponseEntity removeUser(@Valid @RequestBody RemoveUserRequest removeUserRequest) {
+    return adminService.removeUser(removeUserRequest);
   }
 }

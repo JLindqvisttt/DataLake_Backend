@@ -49,12 +49,6 @@ public class UserService {
     return ResponseEntity.ok("Successfully updated user");
   }
 
-  public ResponseEntity removeUser(RemoveUserRequest removeUserRequest){
-    User user = userRepository.findByIdentity(removeUserRequest.getIdentity());
-    System.out.println("Getting identity: " + removeUserRequest.getIdentity());
-    if (user == null) return ResponseEntity.badRequest().body("Could not remove user, try again");
-    userRepository.delete(user);
-    return ResponseEntity.ok("Successfully removed user");
-  }
+
 
 }
