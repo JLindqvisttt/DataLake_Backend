@@ -1,6 +1,10 @@
 package kth.datalake_backend.Controller;
 
 
+import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Payload.Request.RemoveUserRequest;
+import kth.datalake_backend.Payload.Request.SignUpRequest;
+import kth.datalake_backend.Payload.Request.SigninRequest;
 
 import kth.datalake_backend.Payload.Request.UpdateUserRequest;
 import kth.datalake_backend.Service.UserService;
@@ -21,7 +25,13 @@ public class UserController {
   }
 
   @PatchMapping("/updateUser")
-  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest){
+  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest) {
     return userService.updateUser(updateUserRequest);
   }
+
+  @PostMapping("/removeUser")
+  public ResponseEntity removeUser(@Valid @RequestBody RemoveUserRequest removeUserRequest) {
+    return userService.removeUser(removeUserRequest);
+  }
+
 }

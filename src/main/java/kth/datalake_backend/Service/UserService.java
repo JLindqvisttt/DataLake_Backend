@@ -1,21 +1,12 @@
 package kth.datalake_backend.Service;
 
 
-import kth.datalake_backend.Entity.ERole;
 import kth.datalake_backend.Entity.User;
-import kth.datalake_backend.Payload.Request.SignUpRequest;
+import kth.datalake_backend.Payload.Request.RemoveUserRequest;
 import kth.datalake_backend.Payload.Request.UpdateUserRequest;
-import kth.datalake_backend.Payload.Response.JwtResponse;
-import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.UserRepository;
-import kth.datalake_backend.Security.JWT.JwtUtils;
-import kth.datalake_backend.Security.Services.UserDetailsImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +14,7 @@ import java.util.List;
 
 @Service
 public class UserService {
-  
+
   @Autowired
   UserRepository userRepository;
   @Autowired
@@ -57,4 +48,13 @@ public class UserService {
     userRepository.save(successUser);
     return ResponseEntity.ok("Successfully updated user");
   }
+
+  public ResponseEntity removeUser(RemoveUserRequest removeUserRequest){
+    User user = userRepository.findByIdentity(removeUserRequest.getIdentity());
+    System.out.println("Getting identity: " + removeUserRequest.getIdentity());
+    if (user == null) return ResponseEntity.badRequest().body("Could not remove user, try again");
+    userRepository.delete(user);
+    return ResponseEntity.ok("Successfully removed user");
+  }
+
 }
