@@ -16,6 +16,7 @@ public class Patient {
   @Id
   @GeneratedValue
   private Long id;
+
   @NotBlank
   private int age;
 
@@ -27,6 +28,21 @@ public class Patient {
 
   @NotBlank
   private int subjectId;
+
+  @NotBlank
+  private String relapse;
+
+  @NotBlank
+  private double survivalTime;
+
+  @NotBlank
+  private double relapseTime;
+
+  @NotBlank
+  private String failureFreeSurvivalStatus;
+
+  @NotBlank
+  private double failureFreeSurvivalTime;
 
   @Relationship(type="Treatment", direction = Relationship.Direction.OUTGOING)
   private Set<Treatment> Treatment = new HashSet<>();
@@ -58,6 +74,26 @@ public class Patient {
 
   public int getSubjectId() {
     return subjectId;
+  }
+
+  public String getRelapse() {
+    return relapse;
+  }
+
+  public double getSurvivalTime() {
+    return survivalTime;
+  }
+
+  public String getFailureFreeSurvivalStatus() {
+    return failureFreeSurvivalStatus;
+  }
+
+  public double getRelapseTime() {
+    return relapseTime;
+  }
+
+  public double getFailureFreeSurvivalTime() {
+    return failureFreeSurvivalTime;
   }
 
   public void setAge(int age) {
@@ -110,5 +146,37 @@ public class Patient {
       ", ethnicity='" + ethnicity + '\'' +
       ", subjectId=" + subjectId +
       '}';
+  }
+
+  public void setRelapse(String relapse) {
+    switch (relapse) {
+      case "1": this.relapse = "No";
+        break;
+      case "2": this.relapse ="Yes";
+        break;
+      default: this.relapse = "Unknown";
+    }
+  }
+
+  public void setSurvivalTime(double survivalTime) {
+    this.survivalTime = survivalTime;
+  }
+
+  public void setRelapseTime(double relapseTime) {
+    this.relapseTime = relapseTime;
+  }
+
+  public void setFailureFreeSurvivalStatus(String failureFreeSurvivalStatus) {
+    switch (failureFreeSurvivalStatus) {
+      case "1": this.failureFreeSurvivalStatus = "Survived";
+        break;
+      case "2": this.failureFreeSurvivalStatus ="Deceased";
+        break;
+      default: this.failureFreeSurvivalStatus = "Unknown";
+    }
+  }
+
+  public void setFailureFreeSurvivalTime(double failureFreeSurvivalTime) {
+    this.failureFreeSurvivalTime = failureFreeSurvivalTime;
   }
 }

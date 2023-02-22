@@ -38,34 +38,49 @@ public class PatientService {
       treatmentName.add(t.getTreatment());
 
     for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
-      if (index > 0) break;
+      if (index > 0) {
+        Patient patient = new Patient();
+        Treatment treatment;
+        XSSFRow row = worksheet.getRow(index);
 
-      Patient patient = new Patient();
-      Treatment treatment;
-      XSSFRow row = worksheet.getRow(index);
+        if(row.getCell(0) == null){
+          System.out.println("no id found");
+          continue;
+        }
 
-      if(row.getCell(0) == null){
-        System.out.println("no id found");
-        continue;
+        patient.setSubjectId(Integer.parseInt(row.getCell(0).toString().replace(".0", "")));
+
+        if (row.getCell(2) == null) patient.setAge(-1);
+        else patient.setAge(Integer.parseInt(row.getCell(2).toString().replace(".0", "")));
+
+        if (row.getCell(1) == null) patient.setGender("null");
+        else patient.setGender(row.getCell(1).toString().replace(".0", ""));
+
+        if(row.getCell(3) == null) patient.setEthnicity("null");
+        else patient.setEthnicity(row.getCell(3).toString().replace(".0", ""));
+
+        if(row.getCell(10) == null) treatment = new Treatment("Unknown");
+        else treatment = new Treatment(row.getCell(10).toString());
+
+        if (row.getCell(17) == null) patient.setRelapse("null");
+        else patient.setRelapse(row.getCell(17).toString().replace(".0", ""));
+
+        if (row.getCell(19) == null) patient.setSurvivalTime(-1);
+        else patient.setSurvivalTime(Double.parseDouble(row.getCell(19).toString()));
+
+        if (row.getCell(20) == null) patient.setRelapseTime(-1);
+        else patient.setRelapseTime(Double.parseDouble(row.getCell(20).toString()));
+
+        if (row.getCell(21) == null) patient.setFailureFreeSurvivalStatus("null");
+        else patient.setFailureFreeSurvivalStatus(row.getCell(21).toString().replace(".0", ""));
+
+        if (row.getCell(22) == null) patient.setFailureFreeSurvivalTime(-1);
+        else patient.setFailureFreeSurvivalTime(Double.parseDouble(row.getCell(22).toString()));
+
+        treatmentNode(treatmentName, patient, treatment, treatmentList);
+
+        patientRepository.save(patient);
       }
-
-      patient.setSubjectId(Integer.parseInt(row.getCell(0).toString().replace(".0", "")));
-
-      if (row.getCell(2) == null) patient.setAge(-1);
-      else patient.setAge(Integer.parseInt(row.getCell(2).toString().replace(".0", "")));
-
-      if (row.getCell(1) == null) patient.setGender("null");
-      else patient.setGender(row.getCell(1).toString().replace(".0", ""));
-
-      if(row.getCell(3) == null) patient.setEthnicity("null");
-      else patient.setEthnicity(row.getCell(3).toString().replace(".0", ""));
-
-      if(row.getCell(10) == null) treatment = new Treatment("Unknown");
-      else treatment = new Treatment(row.getCell(10).toString());
-
-      treatmentNode(treatmentName, patient, treatment, treatmentList);
-
-      patientRepository.save(patient);
 
     }
 
