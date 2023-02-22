@@ -15,4 +15,33 @@ public class Patient {
 
     @NotBlank
     private String ethnicity;
+
+    @NotBlank
+    private int subjectId;
+
+    public int getAge() {
+        return age;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public String getEthnicity() {
+        return ethnicity;
+    }
+
+    public int getSubjectId() {
+        return subjectId;
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "age=" + age +
+                ", gender=" + gender +
+                ", ethnicity='" + ethnicity + '\'' +
+                ", subjectId=" + subjectId +
+                '}';
+    }
 }
