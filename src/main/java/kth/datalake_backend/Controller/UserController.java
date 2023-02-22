@@ -44,7 +44,7 @@ public class UserController {
     return userService.updateUser(updateUserRequest);
   }
 
-  @DeleteMapping("/removeUser")
+  @PostMapping("/removeUser")
   public ResponseEntity removeUser(@Valid @RequestBody RemoveUserRequest removeUserRequest) {
     return userService.removeUser(removeUserRequest);
   }
