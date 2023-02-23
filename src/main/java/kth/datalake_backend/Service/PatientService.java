@@ -176,7 +176,7 @@ public class PatientService {
 
 
 
-  public void symptons(){
+  public void symptons() {
 /*
     List<Patient> patiens;
 
@@ -190,5 +190,5 @@ public class PatientService {
     }
   }
  */
-
+  }
 }
