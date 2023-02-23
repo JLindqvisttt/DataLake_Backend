@@ -16,9 +16,7 @@ public class NewMalignancy {
     @NotBlank
     private String newMalignancy;
 
-    public NewMalignancy(){
-
-    }
+    public NewMalignancy(){}
 
     public NewMalignancy(String newMalignancy){
         this.newMalignancy = newMalignancy;
@@ -29,6 +27,10 @@ public class NewMalignancy {
     }
 
     public void setNewMalignancy(String newMalignancy) {
-        this.newMalignancy = newMalignancy;
+        switch (newMalignancy) {
+            case "1.0" -> this.newMalignancy = "no";
+            case "2.0" -> this.newMalignancy = "yes";
+            default -> this.newMalignancy = "Unknown";
+        }
     }
 }

@@ -1,5 +1,6 @@
 package kth.datalake_backend.Service;
 
+import jdk.dynalink.linker.LinkerServices;
 import kth.datalake_backend.Entity.Nodes.*;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.Nodes.*;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @Service
 public class PatientService {
@@ -44,7 +46,7 @@ public class PatientService {
     ArrayList<OverAllSurvivalStatus> overallSurvivalStatusList = overallSurvivalStatusRepository.findAll();
     ArrayList<String> overallSurvivalStatusName = new ArrayList<>();
 
-    ArrayList<NewMalignancy> NewMalignancyList = newMalignancyRepository.findAll();
+    ArrayList<NewMalignancy> newMalignancyList = newMalignancyRepository.findAll();
     ArrayList<String> newMalignancyName = new ArrayList<>();
 
     for (Treatment t:treatmentList)
@@ -57,6 +59,7 @@ public class PatientService {
         Treatment treatment;
         CauseOfDeath causeOfDeath = new CauseOfDeath();
         OverAllSurvivalStatus overallSurvivalStatus = new OverAllSurvivalStatus();
+        NewMalignancy newMalignancy = new NewMalignancy();
         XSSFRow row = worksheet.getRow(index);
 
         if(row.getCell(0) == null){
@@ -92,18 +95,25 @@ public class PatientService {
         if (row.getCell(22) == null) patient.setFailureFreeSurvivalTime(-1);
         else patient.setFailureFreeSurvivalTime(Double.parseDouble(row.getCell(22).toString()));
 
+
+        //nodes
         if(row.getCell(10) == null) treatment = new Treatment("Unknown");
         else treatment = new Treatment(row.getCell(10).toString());
         treatmentNode(treatmentName, patient, treatment, treatmentList);
-
-        if(row.getCell(16) == null) causeOfDeath.setCauseOfDeath("Unknown");
-        else causeOfDeath.setCauseOfDeath(row.getCell(16).toString());
-        causeOfDeathNode(causeOfDeathName, patient, causeOfDeath, causeOfDeathList);
 
         if(row.getCell(15) == null) overallSurvivalStatus.setOverAllSurvivalStatus("Unknown");
         else overallSurvivalStatus.setOverAllSurvivalStatus(row.getCell(15).toString());
         overallSurvivalStatusNode(overallSurvivalStatusName, patient, overallSurvivalStatus, overallSurvivalStatusList);
 
+        if(!overallSurvivalStatus.getOverAllSurvivalStatus().equals("Alive")){
+          if(row.getCell(16) == null) causeOfDeath.setCauseOfDeath("Unknown");
+          else causeOfDeath.setCauseOfDeath(row.getCell(16).toString());
+          causeOfDeathNode(causeOfDeathName, patient, causeOfDeath, causeOfDeathList);
+        }
+
+        if(row.getCell(18) == null) newMalignancy.setNewMalignancy("Unknown");
+        else newMalignancy.setNewMalignancy(row.getCell(18).toString());
+        newMalignancyNode(newMalignancyName, patient, newMalignancy, newMalignancyList);
 
         patientRepository.save(patient);
       }
@@ -150,4 +160,35 @@ public class PatientService {
         if(a.getOverAllSurvivalStatus().equals(overallSurvivalStatus.getOverAllSurvivalStatus()))
           patient.setOverAllSurvivalStatus(a);
   }
+
+  private void newMalignancyNode(ArrayList<String> newMalignancyName, Patient patient, NewMalignancy newMalignancy, ArrayList<NewMalignancy> newMalignancyList) {
+    if(!newMalignancyName.contains(newMalignancy.getNewMalignancy())){
+      newMalignancyRepository.save(newMalignancy);
+      newMalignancyName.add(newMalignancy.getNewMalignancy());
+      newMalignancyList.add(newMalignancy);
+      patient.setNewMalignancy(newMalignancy);
+    }
+    else
+      for (NewMalignancy a: newMalignancyList)
+        if(a.getNewMalignancy().equals(newMalignancy.getNewMalignancy()))
+          patient.setNewMalignancy(a);
+  }
+
+
+
+  public void symptons(){
+/*
+    List<Patient> patiens;
+
+    for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
+
+      if (index > 0) {
+        //check id of current sympton and get that patient
+
+        //control if the patiet have a relationship with the current node if not add
+      }
+    }
+  }
+ */
+
 }

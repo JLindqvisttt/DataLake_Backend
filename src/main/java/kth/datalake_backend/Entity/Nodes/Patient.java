@@ -107,6 +107,14 @@ public class Patient {
     return failureFreeSurvivalTime;
   }
 
+  public Set<Treatment> getTreatment() {return treatment;}
+
+  public Set<CauseOfDeath> getCauseOfDeath() {return causeOfDeath;}
+
+  public Set<NewMalignancy> getNewMalignancy() {return newMalignancy;}
+
+  public Set<OverAllSurvivalStatus> getOverAllSurvivalStatus() {return overAllSurvivalStatus;}
+
   public void setDataset(String dataset) {
     this.dataset = dataset;
   }
@@ -125,27 +133,17 @@ public class Patient {
 
   public void setEthnicity(String ethnicity) {
     switch (ethnicity) {
-      case "1.0": this.ethnicity = "White";
-      break;
-      case "2.0": this.ethnicity ="Hispanic";
-        break;
-      case "3.0": this.ethnicity = "Black";
-        break;
-      case "4.0": this.ethnicity = "Oriental";
-        break;
-      case "5.0": this.ethnicity = "Native Hawaiian";
-        break;
-      case "6.0": this.ethnicity = "Native American";
-        break;
-      case "7.0": this.ethnicity = "Indian";
-        break;
-      case "8.0": this.ethnicity = "Filipino";
-        break;
-      case "9.0": this.ethnicity = "Other";
-        break;
-      case "10.0": this.ethnicity = "Patient refusal";
-        break;
-      default: this.ethnicity = "Unknown";
+      case "1.0" -> this.ethnicity = "White";
+      case "2.0" -> this.ethnicity = "Hispanic";
+      case "3.0" -> this.ethnicity = "Black";
+      case "4.0" -> this.ethnicity = "Oriental";
+      case "5.0" -> this.ethnicity = "Native Hawaiian";
+      case "6.0" -> this.ethnicity = "Native American";
+      case "7.0" -> this.ethnicity = "Indian";
+      case "8.0" -> this.ethnicity = "Filipino";
+      case "9.0" -> this.ethnicity = "Other";
+      case "10.0" -> this.ethnicity = "Patient refusal";
+      default -> this.ethnicity = "Unknown";
     }
   }
 
@@ -155,11 +153,9 @@ public class Patient {
 
   public void setRelapse(String relapse) {
     switch (relapse) {
-      case "1.0": this.relapse = "No";
-        break;
-      case "2.0": this.relapse ="Yes";
-        break;
-      default: this.relapse = "Unknown";
+      case "1.0" -> this.relapse = "No";
+      case "2.0" -> this.relapse = "Yes";
+      default -> this.relapse = "Unknown";
     }
   }
 
@@ -173,11 +169,9 @@ public class Patient {
 
   public void setFailureFreeSurvivalStatus(String failureFreeSurvivalStatus) {
     switch (failureFreeSurvivalStatus) {
-      case "1.0": this.failureFreeSurvivalStatus = "Survived";
-        break;
-      case "2.0": this.failureFreeSurvivalStatus ="Deceased";
-        break;
-      default: this.failureFreeSurvivalStatus = "Unknown";
+      case "1.0" -> this.failureFreeSurvivalStatus = "Survived";
+      case "2.0" -> this.failureFreeSurvivalStatus = "Deceased";
+      default -> this.failureFreeSurvivalStatus = "Unknown";
     }
   }
 
@@ -189,7 +183,7 @@ public class Patient {
 
   public void setCauseOfDeath(CauseOfDeath causeOfDeath){this.causeOfDeath.add(causeOfDeath);}
 
-  public void setMalignancy(NewMalignancy malignancy){this.newMalignancy.add(malignancy);}
+  public void setNewMalignancy(NewMalignancy newMalignancy){this.newMalignancy.add(newMalignancy);}
 
   public void setOverAllSurvivalStatus(OverAllSurvivalStatus overAllSurvivalStatus){this.overAllSurvivalStatus.add(overAllSurvivalStatus);}
 
