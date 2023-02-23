@@ -26,7 +26,6 @@ public class AuthService {
   JwtUtils jwtUtils;
 
   public ResponseEntity<?> authenticateUser(String username, String password) {
-
     Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String jwt = jwtUtils.generateJwtToken(username);

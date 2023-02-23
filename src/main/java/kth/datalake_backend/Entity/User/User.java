@@ -41,6 +41,17 @@ public class User {
   @NotBlank
   private ERole role;
 
+  public User(Long identity, String firstname, String lastname,String username) {
+    this.identity = identity;
+    this.firstName = firstname;
+    this.lastName = lastname;
+    this.username = username;
+  }
+  public User(Long identity, String password, String username) {
+    this.username = username;
+    this.identity = identity;
+    this.password = password;
+  }
   public List<String> getAvailableDatabases() {
     return availableDatabases;
   }

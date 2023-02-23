@@ -21,48 +21,37 @@ public class AdminService {
 
   @Autowired
   PasswordEncoder encoder;
+
   public List<User> getAllUser() {
     return adminRepository.findAll();
   }
 
   public ResponseEntity updateUser(UpdateUserRequest_Admin updateUserRequest) {
-    if (adminRepository.findByIdentity(updateUserRequest.getIdentity()) == null)
-      return ResponseEntity.badRequest().body("Could not save, try again");
-    User successUser = null;
+    User userCheck = adminRepository.findByIdentity(updateUserRequest.getIdentity());
+    if (userCheck == null) return ResponseEntity.badRequest().body(new MessageResponse("Could not save, try again"));
     if (updateUserRequest.getPassword() == null) {
-      successUser = new User(updateUserRequest.getIdentity(),
-        updateUserRequest.getFirstname(),
-        updateUserRequest.getLastname(),
-        updateUserRequest.getUsername(),
-        updateUserRequest.getAvailableDatabases(),
-        updateUserRequest.getRole());
+      userCheck.setRole(updateUserRequest.getRole());
+      userCheck.setAvailableDatabases(updateUserRequest.getAvailableDatabases());
     } else {
-      successUser = new User(updateUserRequest.getIdentity(),
-        updateUserRequest.getFirstname(),
-        updateUserRequest.getLastname(),
-        updateUserRequest.getUsername(),
-        encoder.encode(updateUserRequest.getPassword()),
-        updateUserRequest.getAvailableDatabases(),
-        updateUserRequest.getRole());
+      userCheck.setPassword(encoder.encode(updateUserRequest.getPassword()));
+      userCheck.setRole(updateUserRequest.getRole());
+      userCheck.setAvailableDatabases(updateUserRequest.getAvailableDatabases());
     }
-    adminRepository.save(successUser);
-    return ResponseEntity.ok("Successfully updated user");
+    adminRepository.save(userCheck);
+    return ResponseEntity.ok(new MessageResponse("Successfully updated user"));
   }
 
   public ResponseEntity<?> registerUser(SignUpRequest signUpRequest) {
-    if (adminRepository.existsByUsername(signUpRequest.getUsername()))
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
-
+    if (adminRepository.existsByUsername(signUpRequest.getUsername())) return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
     User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(), signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), ERole.ROLE_USER);
     adminRepository.save(user);
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
-  public ResponseEntity removeUser(RemoveUserRequest removeUserRequest){
+  public ResponseEntity removeUser(RemoveUserRequest removeUserRequest) {
     User user = adminRepository.findByIdentity(removeUserRequest.getIdentity());
-    System.out.println("Getting identity: " + removeUserRequest.getIdentity());
-    if (user == null) return ResponseEntity.badRequest().body("Could not remove user, try again");
+    if (user == null) return ResponseEntity.badRequest().body( new MessageResponse("Could not remove user, try again"));
     adminRepository.delete(user);
-    return ResponseEntity.ok("Successfully removed user");
+    return ResponseEntity.ok(new MessageResponse("Successfully removed user"));
   }
 }
