@@ -1,6 +1,6 @@
 package kth.datalake_backend.Payload.Request;
 
-import kth.datalake_backend.Entity.ERole;
+import kth.datalake_backend.Entity.User.ERole;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 

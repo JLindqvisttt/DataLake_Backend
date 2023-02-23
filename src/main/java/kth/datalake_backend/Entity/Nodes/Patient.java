@@ -1,4 +1,4 @@
-package kth.datalake_backend.Entity;
+package kth.datalake_backend.Entity.Nodes;
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
@@ -16,6 +16,9 @@ public class Patient {
   @Id
   @GeneratedValue
   private Long id;
+
+  @NotBlank
+  private String dataset;
 
   @NotBlank
   private int age;
@@ -45,8 +48,16 @@ public class Patient {
   private double failureFreeSurvivalTime;
 
   @Relationship(type="Treatment", direction = Relationship.Direction.OUTGOING)
-  private Set<Treatment> Treatment = new HashSet<>();
+  private Set<Treatment> treatment = new HashSet<>();
 
+  @Relationship(type = "Death", direction = Relationship.Direction.OUTGOING)
+  private Set<CauseOfDeath> causeOfDeath = new HashSet<>();
+
+  @Relationship(type = "newMalignancy", direction = Relationship.Direction.OUTGOING)
+  private Set<NewMalignancy> newMalignancy = new HashSet<>();
+
+  @Relationship(type = "OverallSurvivalStatus", direction = Relationship.Direction.OUTGOING)
+  private Set<OverAllSurvivalStatus> overAllSurvivalStatus = new HashSet<>();
 
   public Patient() {}
 
@@ -56,8 +67,8 @@ public class Patient {
   }
 
 
-  public void setTreatment(Treatment treatment){
-    this.Treatment.add(treatment);
+  public String getDataset() {
+    return dataset;
   }
 
   public int getAge() {
@@ -96,39 +107,43 @@ public class Patient {
     return failureFreeSurvivalTime;
   }
 
+  public void setDataset(String dataset) {
+    this.dataset = dataset;
+  }
+
   public void setAge(int age) {
     this.age = age;
   }
 
   public void setGender(String gender) {
       switch (gender) {
-        case "1" -> this.gender = Gender.MALE;
-        case "2" -> this.gender = Gender.FEMALE;
+        case "1.0" -> this.gender = Gender.MALE;
+        case "2.0" -> this.gender = Gender.FEMALE;
         default -> this.gender = Gender.UNKNOWN;
       }
   }
 
   public void setEthnicity(String ethnicity) {
     switch (ethnicity) {
-      case "1": this.ethnicity = "White";
+      case "1.0": this.ethnicity = "White";
       break;
-      case "2": this.ethnicity ="Hispanic";
+      case "2.0": this.ethnicity ="Hispanic";
         break;
-      case "3": this.ethnicity = "Black";
+      case "3.0": this.ethnicity = "Black";
         break;
-      case "4": this.ethnicity = "Oriental";
+      case "4.0": this.ethnicity = "Oriental";
         break;
-      case "5": this.ethnicity = "Native Hawaiian";
+      case "5.0": this.ethnicity = "Native Hawaiian";
         break;
-      case "6": this.ethnicity = "Native American";
+      case "6.0": this.ethnicity = "Native American";
         break;
-      case "7": this.ethnicity = "Indian";
+      case "7.0": this.ethnicity = "Indian";
         break;
-      case "8": this.ethnicity = "Filipino";
+      case "8.0": this.ethnicity = "Filipino";
         break;
-      case "9": this.ethnicity = "Other";
+      case "9.0": this.ethnicity = "Other";
         break;
-      case "10": this.ethnicity = "Patient refusal";
+      case "10.0": this.ethnicity = "Patient refusal";
         break;
       default: this.ethnicity = "Unknown";
     }
@@ -138,21 +153,11 @@ public class Patient {
     this.subjectId = subjectId;
   }
 
-  @Override
-  public String toString() {
-    return "Patient{" +
-      "age=" + age +
-      ", gender=" + gender +
-      ", ethnicity='" + ethnicity + '\'' +
-      ", subjectId=" + subjectId +
-      '}';
-  }
-
   public void setRelapse(String relapse) {
     switch (relapse) {
-      case "1": this.relapse = "No";
+      case "1.0": this.relapse = "No";
         break;
-      case "2": this.relapse ="Yes";
+      case "2.0": this.relapse ="Yes";
         break;
       default: this.relapse = "Unknown";
     }
@@ -168,9 +173,9 @@ public class Patient {
 
   public void setFailureFreeSurvivalStatus(String failureFreeSurvivalStatus) {
     switch (failureFreeSurvivalStatus) {
-      case "1": this.failureFreeSurvivalStatus = "Survived";
+      case "1.0": this.failureFreeSurvivalStatus = "Survived";
         break;
-      case "2": this.failureFreeSurvivalStatus ="Deceased";
+      case "2.0": this.failureFreeSurvivalStatus ="Deceased";
         break;
       default: this.failureFreeSurvivalStatus = "Unknown";
     }
@@ -178,5 +183,34 @@ public class Patient {
 
   public void setFailureFreeSurvivalTime(double failureFreeSurvivalTime) {
     this.failureFreeSurvivalTime = failureFreeSurvivalTime;
+  }
+
+  public void setTreatment(Treatment treatment){this.treatment.add(treatment);}
+
+  public void setCauseOfDeath(CauseOfDeath causeOfDeath){this.causeOfDeath.add(causeOfDeath);}
+
+  public void setMalignancy(NewMalignancy malignancy){this.newMalignancy.add(malignancy);}
+
+  public void setOverAllSurvivalStatus(OverAllSurvivalStatus overAllSurvivalStatus){this.overAllSurvivalStatus.add(overAllSurvivalStatus);}
+
+  @Override
+  public String toString() {
+    return "Patient{" +
+            "id=" + id +
+            ", dataset='" + dataset + '\'' +
+            ", age=" + age +
+            ", gender=" + gender +
+            ", ethnicity='" + ethnicity + '\'' +
+            ", subjectId=" + subjectId +
+            ", relapse='" + relapse + '\'' +
+            ", survivalTime=" + survivalTime +
+            ", relapseTime=" + relapseTime +
+            ", failureFreeSurvivalStatus='" + failureFreeSurvivalStatus + '\'' +
+            ", failureFreeSurvivalTime=" + failureFreeSurvivalTime +
+            ", treatment=" + treatment +
+            ", causeOfDeath=" + causeOfDeath +
+            ", newMalignancy=" + newMalignancy +
+            ", overallSurvivalStatus=" + overAllSurvivalStatus +
+            '}';
   }
 }

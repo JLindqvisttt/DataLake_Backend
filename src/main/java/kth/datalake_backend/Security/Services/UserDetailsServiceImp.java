@@ -1,8 +1,8 @@
 package kth.datalake_backend.Security.Services;
 
 
-import kth.datalake_backend.Entity.User;
-import kth.datalake_backend.Repository.AuthRepository;
+import kth.datalake_backend.Entity.User.User;
+import kth.datalake_backend.Repository.User.AuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

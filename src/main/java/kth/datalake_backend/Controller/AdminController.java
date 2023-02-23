@@ -1,7 +1,7 @@
 package kth.datalake_backend.Controller;
 
 
-import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Entity.User.User;
 import kth.datalake_backend.Payload.Request.RemoveUserRequest;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
 import kth.datalake_backend.Payload.Request.UpdateUserRequest_Admin;

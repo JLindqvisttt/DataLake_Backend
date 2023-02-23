@@ -1,6 +1,6 @@
-package kth.datalake_backend.Repository;
+package kth.datalake_backend.Repository.User;
 
-import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Entity.User.User;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 
 public interface AuthRepository extends Neo4jRepository<User, Long> {

@@ -1,4 +1,4 @@
-package kth.datalake_backend.Entity;
+package kth.datalake_backend.Entity.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;

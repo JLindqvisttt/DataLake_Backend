@@ -1,4 +1,4 @@
-package kth.datalake_backend.Entity;
+package kth.datalake_backend.Entity.Nodes;
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;

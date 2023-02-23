@@ -1,4 +1,4 @@
-package kth.datalake_backend.Entity;
+package kth.datalake_backend.Entity.User;
 
 public enum ERole {
 

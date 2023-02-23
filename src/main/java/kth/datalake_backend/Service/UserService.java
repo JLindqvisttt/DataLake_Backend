@@ -1,9 +1,9 @@
 package kth.datalake_backend.Service;
 
 
-import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Entity.User.User;
 import kth.datalake_backend.Payload.Request.UpdateUserRequest_Admin;
-import kth.datalake_backend.Repository.UserRepository;
+import kth.datalake_backend.Repository.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;

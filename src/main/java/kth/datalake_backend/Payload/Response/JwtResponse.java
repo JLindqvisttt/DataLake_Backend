@@ -1,7 +1,5 @@
 package kth.datalake_backend.Payload.Response;
 
-import kth.datalake_backend.Entity.ERole;
-
 import java.util.List;
 
 public class JwtResponse {

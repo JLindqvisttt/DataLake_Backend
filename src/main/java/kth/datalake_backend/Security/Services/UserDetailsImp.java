@@ -1,14 +1,13 @@
 package kth.datalake_backend.Security.Services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import kth.datalake_backend.Entity.ERole;
-import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Entity.User.ERole;
+import kth.datalake_backend.Entity.User.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 public class UserDetailsImp implements UserDetails {
 

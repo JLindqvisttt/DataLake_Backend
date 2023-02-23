@@ -19,8 +19,8 @@ public class PatientController {
     public PatientController(PatientService patientService) {this.patientService = patientService;}
 
     @PostMapping("/input")
-    public ResponseEntity inputData(@RequestParam("file") MultipartFile files) throws IOException {
-        patientService.loadData(files);
+    public ResponseEntity inputData(@RequestParam("file") MultipartFile files, @RequestParam("name") String name) throws IOException {
+        patientService.loadData(files, name);
         return ResponseEntity.ok(new MessageResponse("successfully  entered new patients"));
     }
 }

@@ -1,12 +1,7 @@
 package kth.datalake_backend.Service;
 
-import kth.datalake_backend.Entity.ERole;
-import kth.datalake_backend.Entity.User;
-import kth.datalake_backend.Payload.Request.SignUpRequest;
 import kth.datalake_backend.Payload.Response.JwtResponse;
-import kth.datalake_backend.Payload.Response.MessageResponse;
-import kth.datalake_backend.Repository.AuthRepository;
-import kth.datalake_backend.Repository.UserRepository;
+import kth.datalake_backend.Repository.User.AuthRepository;
 import kth.datalake_backend.Security.JWT.JwtUtils;
 import kth.datalake_backend.Security.Services.UserDetailsImp;
 import org.springframework.beans.factory.annotation.Autowired;

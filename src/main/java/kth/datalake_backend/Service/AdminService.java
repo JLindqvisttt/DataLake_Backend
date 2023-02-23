@@ -1,13 +1,12 @@
 package kth.datalake_backend.Service;
 
-
-import kth.datalake_backend.Entity.ERole;
-import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Entity.User.ERole;
+import kth.datalake_backend.Entity.User.User;
 import kth.datalake_backend.Payload.Request.RemoveUserRequest;
 import kth.datalake_backend.Payload.Request.SignUpRequest;
 import kth.datalake_backend.Payload.Request.UpdateUserRequest_Admin;
 import kth.datalake_backend.Payload.Response.MessageResponse;
-import kth.datalake_backend.Repository.AdminRepository;
+import kth.datalake_backend.Repository.User.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
