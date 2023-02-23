@@ -47,6 +47,9 @@ public class Patient {
   @NotBlank
   private double failureFreeSurvivalTime;
 
+  @Relationship(type="Symptoms", direction = Relationship.Direction.OUTGOING)
+  private Set<Symptoms> symptoms = new HashSet<>();
+
   @Relationship(type="Treatment", direction = Relationship.Direction.OUTGOING)
   private Set<Treatment> treatment = new HashSet<>();
 
@@ -187,6 +190,14 @@ public class Patient {
 
   public void setOverAllSurvivalStatus(OverAllSurvivalStatus overAllSurvivalStatus){this.overAllSurvivalStatus.add(overAllSurvivalStatus);}
 
+  public Set<Symptoms> getSymptoms() {
+    return symptoms;
+  }
+
+  public void setSymptoms(Symptoms symptoms) {
+    this.symptoms.add(symptoms);
+  }
+
   @Override
   public String toString() {
     return "Patient{" +
@@ -201,10 +212,11 @@ public class Patient {
             ", relapseTime=" + relapseTime +
             ", failureFreeSurvivalStatus='" + failureFreeSurvivalStatus + '\'' +
             ", failureFreeSurvivalTime=" + failureFreeSurvivalTime +
+            ", symptoms=" + symptoms +
             ", treatment=" + treatment +
             ", causeOfDeath=" + causeOfDeath +
             ", newMalignancy=" + newMalignancy +
-            ", overallSurvivalStatus=" + overAllSurvivalStatus +
+            ", overAllSurvivalStatus=" + overAllSurvivalStatus +
             '}';
   }
 }

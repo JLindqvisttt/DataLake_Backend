@@ -21,6 +21,12 @@ public class PatientController {
     @PostMapping("/input")
     public ResponseEntity inputData(@RequestParam("file") MultipartFile files, @RequestParam("name") String name) throws IOException {
         patientService.loadData(files, name);
-        return ResponseEntity.ok(new MessageResponse("successfully  entered new patients"));
+        return ResponseEntity.ok(new MessageResponse("successfully entered new patients"));
+    }
+
+    @PostMapping("/input/symptoms")
+    public ResponseEntity inputSymptoms(@RequestParam("file") MultipartFile files, @RequestParam("name") String name) throws IOException{
+        patientService.loadSymptoms(files, name);
+        return ResponseEntity.ok(new MessageResponse("successfully entered new symptoms"));
     }
 }

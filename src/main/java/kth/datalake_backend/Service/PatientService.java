@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class PatientService {
@@ -31,6 +32,9 @@ public class PatientService {
   OverallSurvivalStatusRepository overallSurvivalStatusRepository;
   @Autowired
   NewMalignancyRepository newMalignancyRepository;
+
+  @Autowired
+  SymptomsRepository symptomsRepository;
 
   //https://por-porkaew15.medium.com/how-to-import-excel-by-spring-boot-2624367c8468
   public ResponseEntity<?> loadData(MultipartFile file, String name) throws IOException {
@@ -51,6 +55,7 @@ public class PatientService {
 
     for (Treatment t:treatmentList)
       treatmentName.add(t.getTreatment());
+    //TODO bör det inte finnas en for each för varje node?
 
     for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
 
@@ -176,19 +181,72 @@ public class PatientService {
 
 
 
-  public void symptons() {
-/*
-    List<Patient> patiens;
+  public ResponseEntity<?> loadSymptoms(MultipartFile file, String name) throws IOException {
+    XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+    XSSFSheet worksheet = workbook.getSheetAt(0);
+
+    List<Patient> patientList = patientRepository.findAll();
+    List<Integer> patientId = new ArrayList<>();
+
+    ArrayList<Symptoms> symptomsList = symptomsRepository.findAll();
+    ArrayList<String> symptomsName = new ArrayList<>();
+
+    for (Patient t : patientList)
+      patientId.add(t.getSubjectId());
+
+    /*
+    for (Symptoms t:symptomsList)
+      symptomsName.add(t.getSymptom());
+    */
 
     for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
-
       if (index > 0) {
-        //check id of current sympton and get that patient
+        Patient patient = new Patient();
+        Symptoms symptoms = new Symptoms();
+        XSSFRow row = worksheet.getRow(index);
 
-        //control if the patiet have a relationship with the current node if not add
+        if (row.getCell(0) == null) {
+          System.out.println("no id found");
+          continue;
+        }
+
+        //probs hitta en bättre lösning
+        if (!patientId.contains(Integer.parseInt(row.getCell(0).toString().replace(".0", "")))){
+          System.out.println("patient with that id not found");
+        }
+        int id = Integer.parseInt(row.getCell(0).toString().replace(".0", ""));
+        for (Patient a: patientList)
+          if(a.getSubjectId() == id)
+            patient = a;
+
+        if(row.getCell(1) == null || row.getCell(2) == null) continue;
+        else {
+          symptoms.setSymptom(row.getCell(1).toString());
+          symptoms.setSeverity(Integer.parseInt(row.getCell(2).toString().replace(".0","")));
+        }
+
+        symptomsNode(symptoms, patient, symptomsList);
+
+
       }
     }
+    return ResponseEntity.ok(new MessageResponse("testing"));
   }
- */
+
+  private void symptomsNode(Symptoms symptoms, Patient patient, ArrayList<Symptoms> symptomsList){
+    System.out.println("test");
+    boolean flag = true;
+    for(int i = 0; i < symptomsList.size(); i++){
+      if(symptomsList.get(i).getSymptom().equals(symptoms.getSymptom()) && symptomsList.get(i).getSeverity() == symptoms.getSeverity()){
+        System.out.println("exist");
+        flag = false;
+        patient.setSymptoms(symptomsList.get(i));
+      }
+    }
+    if(flag){
+      symptomsRepository.save(symptoms);
+      patient.setSymptoms(symptoms);
+      symptomsList.add(symptoms);
+    }
   }
 }
