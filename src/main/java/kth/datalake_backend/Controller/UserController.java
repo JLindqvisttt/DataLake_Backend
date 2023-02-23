@@ -1,7 +1,6 @@
 package kth.datalake_backend.Controller;
 
-
-import kth.datalake_backend.Payload.Request.UpdateUserRequest_Admin;
+import kth.datalake_backend.Payload.Request.UpdateUserRequest_User;
 import kth.datalake_backend.Service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +19,8 @@ public class UserController {
   }
 
   @PatchMapping("/updateUser")
-  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest_Admin updateUserRequest) {
-    return userService.updateUser(updateUserRequest);
+  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest_User updateUserRequest_user) {
+    return userService.updateUser(updateUserRequest_user);
   }
 
 
