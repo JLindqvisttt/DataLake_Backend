@@ -82,47 +82,48 @@ public class PatientService {
         patient.setDataset(name);
 
 
-        if (row.getCell(rowNumbers.get("age")) == null ) patient.setAge(-1);
+        if (!rowNumbers.containsKey("age") || row.getCell(rowNumbers.get("age")) == null ) patient.setAge(-1);
         else patient.setAge(Integer.parseInt(row.getCell(rowNumbers.get("age")).toString().replace(".0", "")));
 
-        if (row.getCell(rowNumbers.get("gender")) == null) patient.setGender("null");
+        if (!rowNumbers.containsKey("gender") || row.getCell(rowNumbers.get("gender")) == null) patient.setGender("null");
         else patient.setGender(row.getCell(rowNumbers.get("gender")).toString());
 
-        if (row.getCell(rowNumbers.get("ethnicity")) == null) patient.setEthnicity("null");
+        if (!rowNumbers.containsKey("ethnicity") || row.getCell(rowNumbers.get("ethnicity")) == null) patient.setEthnicity("null");
         else patient.setEthnicity(row.getCell(rowNumbers.get("ethnicity")).toString());
 
-        if (row.getCell(rowNumbers.get("relapse")) == null) patient.setRelapse("null");
+        if (!rowNumbers.containsKey("relapse") || row.getCell(rowNumbers.get("relapse")) == null) patient.setRelapse("null");
         else patient.setRelapse(row.getCell(rowNumbers.get("relapse")).toString());
 
-        if (row.getCell(rowNumbers.get("overall survival time")) == null) patient.setSurvivalTime(-1);
+        if (!rowNumbers.containsKey("overall survival time") || row.getCell(rowNumbers.get("overall survival time")) == null) patient.setSurvivalTime(-1);
         else patient.setSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("overall survival time")).toString()));
 
-        if (row.getCell(rowNumbers.get("relapse time")) == null) patient.setRelapseTime(-1);
+        if (!rowNumbers.containsKey("relapse time") || row.getCell(rowNumbers.get("relapse time")) == null) patient.setRelapseTime(-1);
         else patient.setRelapseTime(Double.parseDouble(row.getCell(rowNumbers.get("relapse time")).toString()));
 
-        if (row.getCell(rowNumbers.get("failure free survival")) == null) patient.setFailureFreeSurvivalStatus("null");
+        if (!rowNumbers.containsKey("failure free survival") || row.getCell(rowNumbers.get("failure free survival")) == null) patient.setFailureFreeSurvivalStatus("null");
         else patient.setFailureFreeSurvivalStatus(row.getCell(rowNumbers.get("failure free survival")).toString());
 
-        if (row.getCell(rowNumbers.get("failure free survival time")) == null) patient.setFailureFreeSurvivalTime(-1);
+        if (!rowNumbers.containsKey("failure free survival time") || row.getCell(rowNumbers.get("failure free survival time")) == null) patient.setFailureFreeSurvivalTime(-1);
         else patient.setFailureFreeSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("failure free survival time")).toString()));
 
 
 
-        if (row.getCell(rowNumbers.get("treatment drug")) == null) treatment = new Treatment("Unknown");
+        if (!rowNumbers.containsKey("treatment drug") || row.getCell(rowNumbers.get("treatment drug")) == null) treatment = new Treatment("Unknown");
         else treatment = new Treatment(row.getCell(rowNumbers.get("treatment drug")).toString());
         treatmentNode(treatmentName, patient, treatment, treatmentList);
 
-        if (row.getCell(rowNumbers.get("overall survival status")) == null) overallSurvivalStatus.setOverAllSurvivalStatus("Unknown");
+        if (!rowNumbers.containsKey("overall survival status") || row.getCell(rowNumbers.get("overall survival status")) == null) overallSurvivalStatus.setOverAllSurvivalStatus("Unknown");
         else overallSurvivalStatus.setOverAllSurvivalStatus(row.getCell(rowNumbers.get("overall survival status")).toString());
         overallSurvivalStatusNode(overallSurvivalStatusName, patient, overallSurvivalStatus, overallSurvivalStatusList);
 
-        if (!overallSurvivalStatus.getOverAllSurvivalStatus().equals("Alive")) {
-            if (row.getCell(rowNumbers.get("cause of death")) == null) causeOfDeath.setCauseOfDeath("Unknown");
+        if (!overallSurvivalStatus.getOverAllSurvivalStatus().equals("Alive") && !overallSurvivalStatus.getOverAllSurvivalStatus().equals("Unknown")) {
+            System.out.println("hereo?");
+            if (!rowNumbers.containsKey("cause of death") || row.getCell(rowNumbers.get("cause of death")) == null) causeOfDeath.setCauseOfDeath("Unknown");
             else causeOfDeath.setCauseOfDeath(row.getCell(rowNumbers.get("cause of death")).toString());
             causeOfDeathNode(causeOfDeathName, patient, causeOfDeath, causeOfDeathList);
         }
 
-        if (row.getCell(rowNumbers.get("new malignancy")) == null) newMalignancy.setNewMalignancy("Unknown");
+        if (!rowNumbers.containsKey("new malignancy") || row.getCell(rowNumbers.get("new malignancy")) == null) newMalignancy.setNewMalignancy("Unknown");
         else newMalignancy.setNewMalignancy(row.getCell(rowNumbers.get("new malignancy")).toString());
         newMalignancyNode(newMalignancyName, patient, newMalignancy, newMalignancyList);
 
