@@ -2,14 +2,13 @@ package kth.datalake_backend.Service;
 
 
 import kth.datalake_backend.Entity.User.User;
-import kth.datalake_backend.Payload.Request.UpdateUserRequest_Admin;
+import kth.datalake_backend.Payload.Request.UpdateUserRequest_User;
+import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserService {
@@ -20,34 +19,23 @@ public class UserService {
   PasswordEncoder encoder;
 
 
-  public List<User> getAllUser() {
-    return userRepository.findAll();
-  }
-
-  public ResponseEntity updateUser(UpdateUserRequest_Admin updateUserRequest) {
-    if (userRepository.findByIdentity(updateUserRequest.getIdentity()) == null)
-      return ResponseEntity.badRequest().body("Could not save, try again");
-    User successUser = null;
-    if (updateUserRequest.getPassword() == null) {
-      successUser = new User(updateUserRequest.getIdentity(),
-        updateUserRequest.getFirstname(),
-        updateUserRequest.getLastname(),
-        updateUserRequest.getUsername(),
-        updateUserRequest.getAvailableDatabases(),
-        updateUserRequest.getRole());
+  public ResponseEntity updateUser(UpdateUserRequest_User updateUserRequest_user) {
+    User userCheck = userRepository.findByIdentity(updateUserRequest_user.getIdentity());
+    if (userCheck == null) return ResponseEntity.badRequest().body(new MessageResponse("Could not save, try again"));
+    String message = "";
+    if (updateUserRequest_user.getPassword() == null) {
+      userCheck.setFirstName(updateUserRequest_user.getFirstname());
+      userCheck.setLastName(updateUserRequest_user.getLastname());
+      message = "Successfully update firstname and lastname";
     } else {
-      successUser = new User(updateUserRequest.getIdentity(),
-        updateUserRequest.getFirstname(),
-        updateUserRequest.getLastname(),
-        updateUserRequest.getUsername(),
-        encoder.encode(updateUserRequest.getPassword()),
-        updateUserRequest.getAvailableDatabases(),
-        updateUserRequest.getRole());
+      if (encoder.matches(updateUserRequest_user.getCheckPassword(), userCheck.getPassword())) {
+        userCheck.setPassword(encoder.encode(updateUserRequest_user.getPassword()));
+        message = "Successfully update the password";
+      } else return ResponseEntity.badRequest().body(new MessageResponse("The old password is not correct, try again"));
     }
-    userRepository.save(successUser);
-    return ResponseEntity.ok("Successfully updated user");
+    userRepository.save(userCheck);
+    return ResponseEntity.ok(new MessageResponse(message));
   }
-
 
 
 }
