@@ -47,8 +47,7 @@ public class Patient {
   @NotBlank
   private double failureFreeSurvivalTime;
 
-  @Relationship(type="Symptoms", direction = Relationship.Direction.OUTGOING)
-  private Set<Symptoms> symptoms = new HashSet<>();
+
 
   @Relationship(type="Treatment", direction = Relationship.Direction.OUTGOING)
   private Set<Treatment> treatment = new HashSet<>();
@@ -61,6 +60,9 @@ public class Patient {
 
   @Relationship(type = "OverallSurvivalStatus", direction = Relationship.Direction.OUTGOING)
   private Set<OverAllSurvivalStatus> overAllSurvivalStatus = new HashSet<>();
+
+  @Relationship(type="Symptoms", direction = Relationship.Direction.OUTGOING)
+  private Set<Symptoms> symptoms = new HashSet<>();
 
   public Patient() {}
 
@@ -117,6 +119,10 @@ public class Patient {
   public Set<NewMalignancy> getNewMalignancy() {return newMalignancy;}
 
   public Set<OverAllSurvivalStatus> getOverAllSurvivalStatus() {return overAllSurvivalStatus;}
+
+  public Set<Symptoms> getSymptoms() {
+    return symptoms;
+  }
 
   public void setDataset(String dataset) {
     this.dataset = dataset;
@@ -190,13 +196,10 @@ public class Patient {
 
   public void setOverAllSurvivalStatus(OverAllSurvivalStatus overAllSurvivalStatus){this.overAllSurvivalStatus.add(overAllSurvivalStatus);}
 
-  public Set<Symptoms> getSymptoms() {
-    return symptoms;
-  }
-
   public void setSymptoms(Symptoms symptoms) {
     this.symptoms.add(symptoms);
   }
+
 
   @Override
   public String toString() {
@@ -212,11 +215,11 @@ public class Patient {
             ", relapseTime=" + relapseTime +
             ", failureFreeSurvivalStatus='" + failureFreeSurvivalStatus + '\'' +
             ", failureFreeSurvivalTime=" + failureFreeSurvivalTime +
-            ", symptoms=" + symptoms +
             ", treatment=" + treatment +
             ", causeOfDeath=" + causeOfDeath +
             ", newMalignancy=" + newMalignancy +
             ", overAllSurvivalStatus=" + overAllSurvivalStatus +
+            ", symptoms=" + symptoms +
             '}';
   }
 }

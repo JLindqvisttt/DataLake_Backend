@@ -28,8 +28,8 @@ public class NewMalignancy {
 
     public void setNewMalignancy(String newMalignancy) {
         switch (newMalignancy) {
-            case "1.0" -> this.newMalignancy = "no";
-            case "2.0" -> this.newMalignancy = "yes";
+            case "1.0" -> this.newMalignancy = "No";
+            case "2.0" -> this.newMalignancy = "Yes";
             default -> this.newMalignancy = "Unknown";
         }
     }

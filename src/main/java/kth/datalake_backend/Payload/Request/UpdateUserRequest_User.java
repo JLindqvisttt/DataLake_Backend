@@ -1,13 +1,13 @@
 package kth.datalake_backend.Payload.Request;
 
-import kth.datalake_backend.Entity.ERole;
+
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 
-import javax.validation.constraints.Email;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
+
 
 public class UpdateUserRequest_User {
 
