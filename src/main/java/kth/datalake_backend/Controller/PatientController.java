@@ -14,20 +14,20 @@ import java.io.IOException;
 @RequestMapping("/api/patient")
 public class PatientController {
 
-    private final PatientService patientService;
+  private final PatientService patientService;
 
-    public PatientController(PatientService patientService) {this.patientService = patientService;}
+  public PatientController(PatientService patientService) {
+    this.patientService = patientService;
+  }
 
-    @PostMapping("/input")
-    public ResponseEntity inputData(@RequestParam("file") MultipartFile files, @RequestParam("name") String name) throws IOException {
-        patientService.loadData(files, name);
-        return ResponseEntity.ok(new MessageResponse("successfully entered new patients"));
-    }
+  @PostMapping("/input")
+  public ResponseEntity inputData(@RequestParam("file") MultipartFile files, @RequestParam("name") String name) throws IOException {
+    return patientService.loadData(files, name);
+  }
 
-    @PostMapping("/input/symptoms")
-    public ResponseEntity inputSymptoms(@RequestParam("file") MultipartFile files, @RequestParam("name") String name) throws IOException{
-        patientService.loadSymptoms(files, name);
-        return ResponseEntity.ok(new MessageResponse("successfully entered new symptoms"));
-    }
+  @PostMapping("/input/symptoms")
+  public ResponseEntity inputSymptoms(@RequestParam("file") MultipartFile files, @RequestParam("name") String name) throws IOException {
+    return patientService.loadSymptoms(files, name);
+  }
 
 }
