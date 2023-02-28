@@ -174,13 +174,17 @@ public class PatientService {
                     //ID
                     patient.setSubjectId(Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")));
                     //AGE
-                    if (!rowNumbers.containsKey("age") || row.getCell(rowNumbers.get("age")) == null ) patient.setAge(-1);
-                    else patient.setAge(Integer.parseInt(row.getCell(rowNumbers.get("age")).toString().replace(".0", "")));
+                    if (!rowNumbers.containsKey("age") || row.getCell(rowNumbers.get("age")) == null)
+                        patient.setAge(-1);
+                    else
+                        patient.setAge(Integer.parseInt(row.getCell(rowNumbers.get("age")).toString().replace(".0", "")));
                     //GENDER
-                    if (!rowNumbers.containsKey("gender") || row.getCell(rowNumbers.get("gender")) == null) patient.setGender("null");
+                    if (!rowNumbers.containsKey("gender") || row.getCell(rowNumbers.get("gender")) == null)
+                        patient.setGender("null");
                     else patient.setGender(row.getCell(rowNumbers.get("gender")).toString());
                     //ETHNICITY
-                    if (!rowNumbers.containsKey("ethnicity") || row.getCell(rowNumbers.get("ethnicity")) == null) patient.setEthnicity("null");
+                    if (!rowNumbers.containsKey("ethnicity") || row.getCell(rowNumbers.get("ethnicity")) == null)
+                        patient.setEthnicity("null");
                     else patient.setEthnicity(row.getCell(rowNumbers.get("ethnicity")).toString());
 
                     addToMap(Patientmap, Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")),
@@ -190,12 +194,11 @@ public class PatientService {
                 } else {
                     if (Patientmap.containsKey(Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")))) {
                         int id = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
-                        String med =  row.getCell(rowNumbers.get("treatment drug")).toString();
+                        String med = row.getCell(rowNumbers.get("treatment drug")).toString();
                         if (!Patientmap.get(id).contains(med))
                             addToMap(Patientmap, id, med);
                     }
                 }
-
 
 
             } else {
