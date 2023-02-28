@@ -42,6 +42,11 @@ public class PatientService {
     XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
     XSSFSheet worksheet = workbook.getSheetAt(0);
 
+      List<Patient> patientList = patientRepository.findAll();
+      List<Integer> patientId = new ArrayList<>();
+        for(Patient t:patientList)
+            patientId.add(t.getSubjectId());
+
     ArrayList<Treatment> treatmentList = treatmentRepository.findAll();
     ArrayList<String> treatmentName = new ArrayList<>();
       for (Treatment t:treatmentList)
@@ -76,6 +81,8 @@ public class PatientService {
             System.out.println("no id found");
             continue;
         }
+        if (patientId.contains(Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""))))
+            continue;
 
         patient.setSubjectId(Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")));
 
@@ -117,7 +124,6 @@ public class PatientService {
         overallSurvivalStatusNode(overallSurvivalStatusName, patient, overallSurvivalStatus, overallSurvivalStatusList);
 
         if (!overallSurvivalStatus.getOverAllSurvivalStatus().equals("Alive") && !overallSurvivalStatus.getOverAllSurvivalStatus().equals("Unknown")) {
-            System.out.println("hereo?");
             if (!rowNumbers.containsKey("cause of death") || row.getCell(rowNumbers.get("cause of death")) == null) causeOfDeath.setCauseOfDeath("Unknown");
             else causeOfDeath.setCauseOfDeath(row.getCell(rowNumbers.get("cause of death")).toString());
             causeOfDeathNode(causeOfDeathName, patient, causeOfDeath, causeOfDeathList);
