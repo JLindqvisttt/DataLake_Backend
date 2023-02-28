@@ -134,15 +134,15 @@ public class Patient {
 
   public void setGender(String gender) {
       switch (gender) {
-        case "1.0" -> this.gender = Gender.MALE;
-        case "2.0" -> this.gender = Gender.FEMALE;
+        case "1.0", "Male" -> this.gender = Gender.MALE;
+        case "2.0", "Female" -> this.gender = Gender.FEMALE;
         default -> this.gender = Gender.UNKNOWN;
       }
   }
 
   public void setEthnicity(String ethnicity) {
     switch (ethnicity) {
-      case "1.0" -> this.ethnicity = "White";
+      case "1.0", "White" -> this.ethnicity = "White";
       case "2.0" -> this.ethnicity = "Hispanic";
       case "3.0" -> this.ethnicity = "Black";
       case "4.0" -> this.ethnicity = "Oriental";
