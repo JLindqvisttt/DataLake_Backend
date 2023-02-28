@@ -27,4 +27,9 @@ public class Treatment {
     public void setTreatment(String treatment){
         this.treatment = treatment;
     }
+
+    @Override
+    public String toString() {
+        return "Treatment:" + treatment ;
+    }
 }

@@ -32,7 +32,26 @@ public class PatientController {
 
     @PostMapping("/input/2")
     public ResponseEntity inputFile(@RequestParam("file") MultipartFile files, @RequestParam("name") String name) throws IOException {
-        patientService.loadFile(files, name);
+        if (files.isEmpty()) return ResponseEntity.badRequest().body("Empty file");
+        String fileName = files.getOriginalFilename();
+        String extension = "";
+        int i = fileName.lastIndexOf('.');
+        if (i > 0) {
+            extension = fileName.substring(i + 1);
+        }
+        switch (extension) {
+            case "xlsx":
+                System.out.println("excel file");
+                //patientService.loadFileXlsx(files, name);
+                break;
+            case "sas7bdat":
+                patientService.loadFileSAS(files, name);
+                break;
+
+            default:
+                System.out.println("other file");
+                break;
+        }
         return ResponseEntity.ok(new MessageResponse("successfully  entered new patients"));
     }
 }
