@@ -1,9 +1,7 @@
 package kth.datalake_backend.Service;
 
-import com.epam.parso.Column;
 import com.epam.parso.SasFileReader;
 import com.epam.parso.impl.SasFileReaderImpl;
-import jdk.dynalink.linker.LinkerServices;
 import kth.datalake_backend.Entity.Nodes.*;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.Nodes.*;
@@ -14,14 +12,11 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -168,11 +163,11 @@ public class PatientService {
                     System.out.println("no id found");
                     continue;
                 }
-
-                if (previousID != Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""))) {
+                int currentID = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
+                if (previousID != currentID) {
                     Patient patient = new Patient();
                     //ID
-                    patient.setSubjectId(Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")));
+                    patient.setSubjectId(currentID);
 
                     //Database
                     patient.setDataset(name);
@@ -193,13 +188,12 @@ public class PatientService {
                     addToMap(Patientmap, Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")),
                             row.getCell(rowNumbers.get("treatment drug")).toString());
                     patients.add(patient);
-                    previousID = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
+                    previousID = currentID;
                 } else {
-                    if (Patientmap.containsKey(Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")))) {
-                        int id = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
+                    if (Patientmap.containsKey(currentID)) {
                         String med = row.getCell(rowNumbers.get("treatment drug")).toString();
-                        if (!Patientmap.get(id).contains(med))
-                            addToMap(Patientmap, id, med);
+                        if (!Patientmap.get(currentID).contains(med))
+                            addToMap(Patientmap, currentID, med);
                     }
                 }
 
@@ -209,9 +203,9 @@ public class PatientService {
             }
         }
         for (Patient p : patients) {
-            List<String> treatmentset = Patientmap.get(p.getSubjectId());
-            Collections.sort(treatmentset);
-            treatment = new Treatment(treatmentset.toString());
+            List<String> treatmentsInHashMap = Patientmap.get(p.getSubjectId());
+            Collections.sort(treatmentsInHashMap);
+            treatment = new Treatment(treatmentsInHashMap.toString());
             treatmentNode(treatmentName, p, treatment, treatmentList);
             patientRepository.save(p);
         }
