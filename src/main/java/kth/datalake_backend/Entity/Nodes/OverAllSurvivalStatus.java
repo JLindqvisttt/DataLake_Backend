@@ -22,15 +22,15 @@ public class OverAllSurvivalStatus {
         return overAllSurvivalStatus;
     }
 
-    public void setOverAllSurvivalStatus(String overAllSurvivalStatus) {
+    public void setOverAllSurvivalStatus(String overAllSurvivalStatus, String name) {
+        if(name.equals("266"))overAllSurvivalStatus = String.valueOf(Double.valueOf(overAllSurvivalStatus)+1);
+        System.out.println("Row 27, OverAllSurvivalStatus: " +overAllSurvivalStatus);
         switch (overAllSurvivalStatus) {
-            case "1.0": this.overAllSurvivalStatus = "Alive";
-                break;
-            case "2.0": this.overAllSurvivalStatus ="Death";
-                break;
-            case "3.0": this.overAllSurvivalStatus ="Lost to follow-up";
-                break;
-            default: this.overAllSurvivalStatus = "Unknown";
+            case "1.0" -> this.overAllSurvivalStatus = "Alive";
+            case "2.0" -> this.overAllSurvivalStatus = "Death";
+            case "3.0" -> this.overAllSurvivalStatus = "Lost to follow-up";
+            default -> this.overAllSurvivalStatus = "Unknown";
         }
     }
+
 }

@@ -148,9 +148,9 @@ public class PatientService {
             patient.setFailureFreeSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("failure free survival time")).toString()));
 
           if (!rowNumbers.containsKey("overall survival status") || row.getCell(rowNumbers.get("overall survival status")) == null)
-            overallSurvivalStatus.setOverAllSurvivalStatus("Unknown");
+            overallSurvivalStatus.setOverAllSurvivalStatus("Unknown", name);
           else
-            overallSurvivalStatus.setOverAllSurvivalStatus(row.getCell(rowNumbers.get("overall survival status")).toString());
+            overallSurvivalStatus.setOverAllSurvivalStatus(row.getCell(rowNumbers.get("overall survival status")).toString(), name);
           overallSurvivalStatusNode(overallSurvivalStatusName, patient, overallSurvivalStatus, overallSurvivalStatusList);
 
           if (!overallSurvivalStatus.getOverAllSurvivalStatus().equals("Alive") && !overallSurvivalStatus.getOverAllSurvivalStatus().equals("Unknown")) {
@@ -165,16 +165,21 @@ public class PatientService {
           else newMalignancy.setNewMalignancy(row.getCell(rowNumbers.get("new malignancy")).toString());
           newMalignancyNode(newMalignancyName, patient, newMalignancy, newMalignancyList);
 
-          addToMap(Patientmap, Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")),
-            row.getCell(rowNumbers.get("treatment drug")).toString().toUpperCase());
+          if (rowNumbers.containsKey("treatment drug") && row.getCell(rowNumbers.get("treatment drug")) != null){
+              addToMap(Patientmap, Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")),
+                      row.getCell(rowNumbers.get("treatment drug")).toString().toUpperCase());
+          }
+
 
           patients.add(patient);
           previousID = currentID;
         } else {
           if (Patientmap.containsKey(currentID)) {
-            String med = row.getCell(rowNumbers.get("treatment drug")).toString();
-            if (!Patientmap.get(currentID).contains(med))
-              addToMap(Patientmap, currentID, med);
+            if (rowNumbers.containsKey("treatment drug") && row.getCell(rowNumbers.get("treatment drug")) != null){
+                String med = row.getCell(rowNumbers.get("treatment drug")).toString();
+                if (!Patientmap.get(currentID).contains(med))
+                  addToMap(Patientmap, currentID, med);
+            }
           }
         }
 
@@ -184,109 +189,16 @@ public class PatientService {
       }
     }
     for (Patient p : patients) {
-      List<String> treatmentsInHashMap = Patientmap.get(p.getSubjectId());
-      Collections.sort(treatmentsInHashMap);
-      treatment = new Treatment(treatmentsInHashMap.toString());
-      treatmentNode(treatmentName, p, treatment, treatmentList);
+      if(!Patientmap.isEmpty()) {
+        List<String> treatmentsInHashMap = Patientmap.get(p.getSubjectId());
+        Collections.sort(treatmentsInHashMap);
+        treatment = new Treatment(treatmentsInHashMap.toString());
+        treatmentNode(treatmentName, p, treatment, treatmentList);
+      }
       patientRepository.save(p);
     }
+
     return ResponseEntity.ok(new MessageResponse("Successfully added new patients"));
-  }
-
-
-  private static void addToMap(HashMap<Integer, List<String>> map, Integer key, String value) {
-    // If the key is already in the map, add the value to its set
-    if (map.containsKey(key)) {
-      List<String> set = map.get(key);
-      set.add(value);
-    }
-    // Otherwise, create a new set with the value and add it to the map
-    else {
-      List<String> set = new ArrayList<>();
-      if (value.contains(",")) {
-        String[] parts = value.split(",", 4);
-        for (int i = 0; i < parts.length; i++)
-          set.add(parts[i]);
-        map.put(key, set);
-      } else {
-        set.add(value);
-        map.put(key, set);
-      }
-    }
-  }
-
-  private HashMap<String, Integer> setRowNumbers(XSSFSheet worksheet, int index) {
-    HashMap<String, Integer> rowNumbers = new HashMap<>();
-    XSSFRow row = worksheet.getRow(index);
-    for (Cell r : row) {
-      switch (r.toString()) {
-        case "PHATOM_ID", "SUBJID" -> rowNumbers.put("id", r.getColumnIndex());//id
-        case "GENDER", "SEX" -> rowNumbers.put("gender", r.getColumnIndex());//gender
-        case "AGE" -> rowNumbers.put("age", r.getColumnIndex());//age (years)
-        case "RACE" -> rowNumbers.put("ethnicity", r.getColumnIndex());//race
-        case "PD" -> rowNumbers.put("relapse", r.getColumnIndex());//relapse time
-        case "OS_TIME" -> rowNumbers.put("overall survival time", r.getColumnIndex());//overall survival time (months)
-        case "PD_TIME" -> rowNumbers.put("relapse time", r.getColumnIndex());//relapse time (months)
-        case "PFS_STATUS" -> rowNumbers.put("failure free survival", r.getColumnIndex());//failure free survival
-        case "PFS_TIME" ->
-          rowNumbers.put("failure free survival time", r.getColumnIndex());//failure free survival time (months)
-        case "TRT_ARM_LABEL", "CHPTERM" -> rowNumbers.put("treatment drug", r.getColumnIndex());//treatment drug
-        case "STATUS" -> rowNumbers.put("overall survival status", r.getColumnIndex());//overall survival status
-        case "CAUSEDTH" -> rowNumbers.put("cause of death", r.getColumnIndex());//cause of death
-        case "NEW_MALIG" -> rowNumbers.put("new malignancy", r.getColumnIndex());//new malignancy
-        case "AE_NAME", "AEPTERM" -> rowNumbers.put("symptom", r.getColumnIndex());//symptom
-        case "AE_GRADE", "SEVRCD" -> rowNumbers.put("grade", r.getColumnIndex());//severity grade
-      }
-    }
-    return rowNumbers;
-  }
-
-  private void treatmentNode(ArrayList<String> treatmentName, Patient patient, Treatment treatment, ArrayList<Treatment> treatmentList) {
-    if (!treatmentName.contains(treatment.getTreatment())) {
-      treatmentRepository.save(treatment);
-      treatmentName.add(treatment.getTreatment());
-      treatmentList.add(treatment);
-      patient.setTreatment(treatment);
-    } else
-      for (Treatment a : treatmentList)
-        if (a.getTreatment().equals(treatment.getTreatment()))
-          patient.setTreatment(a);
-  }
-
-  private void causeOfDeathNode(ArrayList<String> causeOfDeathName, Patient patient, CauseOfDeath causeOfDeath, ArrayList<CauseOfDeath> causeOfDeathsList) {
-    if (!causeOfDeathName.contains(causeOfDeath.getCauseOfDeath())) {
-      causeOfDeathRepository.save(causeOfDeath);
-      causeOfDeathName.add(causeOfDeath.getCauseOfDeath());
-      causeOfDeathsList.add(causeOfDeath);
-      patient.setCauseOfDeath(causeOfDeath);
-    } else
-      for (CauseOfDeath a : causeOfDeathsList)
-        if (a.getCauseOfDeath().equals(causeOfDeath.getCauseOfDeath()))
-          patient.setCauseOfDeath(a);
-  }
-
-  private void overallSurvivalStatusNode(ArrayList<String> overallSurvivalStatusName, Patient patient, OverAllSurvivalStatus overallSurvivalStatus, ArrayList<OverAllSurvivalStatus> overallSurvivalStatusList) {
-    if (!overallSurvivalStatusName.contains(overallSurvivalStatus.getOverAllSurvivalStatus())) {
-      overallSurvivalStatusRepository.save(overallSurvivalStatus);
-      overallSurvivalStatusName.add(overallSurvivalStatus.getOverAllSurvivalStatus());
-      overallSurvivalStatusList.add(overallSurvivalStatus);
-      patient.setOverAllSurvivalStatus(overallSurvivalStatus);
-    } else
-      for (OverAllSurvivalStatus a : overallSurvivalStatusList)
-        if (a.getOverAllSurvivalStatus().equals(overallSurvivalStatus.getOverAllSurvivalStatus()))
-          patient.setOverAllSurvivalStatus(a);
-  }
-
-  private void newMalignancyNode(ArrayList<String> newMalignancyName, Patient patient, NewMalignancy newMalignancy, ArrayList<NewMalignancy> newMalignancyList) {
-    if (!newMalignancyName.contains(newMalignancy.getNewMalignancy())) {
-      newMalignancyRepository.save(newMalignancy);
-      newMalignancyName.add(newMalignancy.getNewMalignancy());
-      newMalignancyList.add(newMalignancy);
-      patient.setNewMalignancy(newMalignancy);
-    } else
-      for (NewMalignancy a : newMalignancyList)
-        if (a.getNewMalignancy().equals(newMalignancy.getNewMalignancy()))
-          patient.setNewMalignancy(a);
   }
 
   public ResponseEntity<?> loadSymptoms(MultipartFile file, String name) throws IOException {
@@ -357,6 +269,101 @@ public class PatientService {
       }
     }
     return ResponseEntity.ok(new MessageResponse("Successfully added new symptons"));
+  }
+
+  private static void addToMap(HashMap<Integer, List<String>> map, Integer key, String value) {
+    // If the key is already in the map, add the value to its set
+    if (map.containsKey(key)) {
+      List<String> set = map.get(key);
+      set.add(value);
+    }
+    // Otherwise, create a new set with the value and add it to the map
+    else {
+      List<String> set = new ArrayList<>();
+      if (value.contains(",")) {
+        String[] parts = value.split(",", 4);
+        for (int i = 0; i < parts.length; i++)
+          set.add(parts[i]);
+        map.put(key, set);
+      } else {
+        set.add(value);
+        map.put(key, set);
+      }
+    }
+  }
+
+  private HashMap<String, Integer> setRowNumbers(XSSFSheet worksheet, int index) {
+    HashMap<String, Integer> rowNumbers = new HashMap<>();
+    XSSFRow row = worksheet.getRow(index);
+    for (Cell r : row) {
+      switch (r.toString()) {
+        case "PHATOM_ID", "SUBJID" -> rowNumbers.put("id", r.getColumnIndex());//id
+        case "GENDER", "SEX" -> rowNumbers.put("gender", r.getColumnIndex());//gender
+        case "AGE" -> rowNumbers.put("age", r.getColumnIndex());//age (years)
+        case "RACE" -> rowNumbers.put("ethnicity", r.getColumnIndex());//race
+        case "PD" -> rowNumbers.put("relapse", r.getColumnIndex());//relapse time
+        case "OS_TIME" -> rowNumbers.put("overall survival time", r.getColumnIndex());//overall survival time (months)
+        case "PD_TIME" -> rowNumbers.put("relapse time", r.getColumnIndex());//relapse time (months)
+        case "PFS_STATUS" -> rowNumbers.put("failure free survival", r.getColumnIndex());//failure free survival
+        case "PFS_TIME" ->
+          rowNumbers.put("failure free survival time", r.getColumnIndex());//failure free survival time (months)
+        case "TRT_ARM_LABEL", "CHPTERM" -> rowNumbers.put("treatment drug", r.getColumnIndex());//treatment drug
+        case "STATUS", "DTH" -> rowNumbers.put("overall survival status", r.getColumnIndex());//overall survival status
+        case "CAUSEDTH" -> rowNumbers.put("cause of death", r.getColumnIndex());//cause of death
+        case "NEW_MALIG" -> rowNumbers.put("new malignancy", r.getColumnIndex());//new malignancy
+        case "AE_NAME", "AEPTERM" -> rowNumbers.put("symptom", r.getColumnIndex());//symptom
+        case "AE_GRADE", "SEVRCD" -> rowNumbers.put("grade", r.getColumnIndex());//severity grade
+      }
+    }
+    return rowNumbers;
+  }
+
+  private void treatmentNode(ArrayList<String> treatmentName, Patient patient, Treatment treatment, ArrayList<Treatment> treatmentList) {
+    if (!treatmentName.contains(treatment.getTreatment())) {
+      treatmentRepository.save(treatment);
+      treatmentName.add(treatment.getTreatment());
+      treatmentList.add(treatment);
+      patient.setTreatment(treatment);
+    } else
+      for (Treatment a : treatmentList)
+        if (a.getTreatment().equals(treatment.getTreatment()))
+          patient.setTreatment(a);
+  }
+
+  private void causeOfDeathNode(ArrayList<String> causeOfDeathName, Patient patient, CauseOfDeath causeOfDeath, ArrayList<CauseOfDeath> causeOfDeathsList) {
+    if (!causeOfDeathName.contains(causeOfDeath.getCauseOfDeath())) {
+      causeOfDeathRepository.save(causeOfDeath);
+      causeOfDeathName.add(causeOfDeath.getCauseOfDeath());
+      causeOfDeathsList.add(causeOfDeath);
+      patient.setCauseOfDeath(causeOfDeath);
+    } else
+      for (CauseOfDeath a : causeOfDeathsList)
+        if (a.getCauseOfDeath().equals(causeOfDeath.getCauseOfDeath()))
+          patient.setCauseOfDeath(a);
+  }
+
+  private void overallSurvivalStatusNode(ArrayList<String> overallSurvivalStatusName, Patient patient, OverAllSurvivalStatus overallSurvivalStatus, ArrayList<OverAllSurvivalStatus> overallSurvivalStatusList) {
+    if (!overallSurvivalStatusName.contains(overallSurvivalStatus.getOverAllSurvivalStatus())) {
+      overallSurvivalStatusRepository.save(overallSurvivalStatus);
+      overallSurvivalStatusName.add(overallSurvivalStatus.getOverAllSurvivalStatus());
+      overallSurvivalStatusList.add(overallSurvivalStatus);
+      patient.setOverAllSurvivalStatus(overallSurvivalStatus);
+    } else
+      for (OverAllSurvivalStatus a : overallSurvivalStatusList)
+        if (a.getOverAllSurvivalStatus().equals(overallSurvivalStatus.getOverAllSurvivalStatus()))
+          patient.setOverAllSurvivalStatus(a);
+  }
+
+  private void newMalignancyNode(ArrayList<String> newMalignancyName, Patient patient, NewMalignancy newMalignancy, ArrayList<NewMalignancy> newMalignancyList) {
+    if (!newMalignancyName.contains(newMalignancy.getNewMalignancy())) {
+      newMalignancyRepository.save(newMalignancy);
+      newMalignancyName.add(newMalignancy.getNewMalignancy());
+      newMalignancyList.add(newMalignancy);
+      patient.setNewMalignancy(newMalignancy);
+    } else
+      for (NewMalignancy a : newMalignancyList)
+        if (a.getNewMalignancy().equals(newMalignancy.getNewMalignancy()))
+          patient.setNewMalignancy(a);
   }
 
   private void symptomsNode(Symptoms symptoms, Patient patient, ArrayList<Symptoms> symptomsList) {
