@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -109,21 +110,19 @@ public class PatientService {
                             patient = a;
                         }
                     }
-                    //ID
-                    patient.setSubjectId(currentID);
 
-                    //Database
+                    patient.setSubjectId(currentID);
                     patient.setDataset(name);
-                    //AGE
+
                     if (!rowNumbers.containsKey("age") || row.getCell(rowNumbers.get("age")) == null)
                         patient.setAge(-1);
                     else
                         patient.setAge(Integer.parseInt(row.getCell(rowNumbers.get("age")).toString().replace(".0", "")));
-                    //GENDER
+
                     if (!rowNumbers.containsKey("gender") || row.getCell(rowNumbers.get("gender")) == null)
                         patient.setGender("null");
                     else patient.setGender(row.getCell(rowNumbers.get("gender")).toString());
-                    //ETHNICITY
+
                     if (!rowNumbers.containsKey("ethnicity") || row.getCell(rowNumbers.get("ethnicity")) == null)
                         patient.setEthnicity("null");
                     else patient.setEthnicity(row.getCell(rowNumbers.get("ethnicity")).toString());
@@ -151,8 +150,7 @@ public class PatientService {
                         patient.setFailureFreeSurvivalTime(-1);
                     else
                         patient.setFailureFreeSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("failure free survival time")).toString()));
-
-
+                    
                     if (!rowNumbers.containsKey("overall survival status") || row.getCell(rowNumbers.get("overall survival status")) == null)
                         overallSurvivalStatus.setOverAllSurvivalStatus("Unknown");
                     else
@@ -172,7 +170,7 @@ public class PatientService {
                     newMalignancyNode(newMalignancyName, patient, newMalignancy, newMalignancyList);
 
                     addToMap(Patientmap, Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")),
-                            row.getCell(rowNumbers.get("treatment drug")).toString());
+                            row.getCell(rowNumbers.get("treatment drug")).toString().toUpperCase());
 
                     patients.add(patient);
                     previousID = currentID;
@@ -209,8 +207,15 @@ public class PatientService {
         // Otherwise, create a new set with the value and add it to the map
         else {
             List<String> set = new ArrayList<>();
-            set.add(value);
-            map.put(key, set);
+            if (value.contains(",")){
+                String[] parts = value.split(",", 4);
+                for (int i = 0; i < parts.length; i++)
+                    set.add(parts[i]);
+                map.put(key, set);
+            }else {
+                set.add(value);
+                map.put(key, set);
+            }
         }
     }
 

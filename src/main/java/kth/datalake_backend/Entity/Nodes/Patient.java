@@ -133,9 +133,10 @@ public class Patient {
   }
 
   public void setGender(String gender) {
+    System.out.println(gender);
       switch (gender) {
-        case "1.0", "Male" -> this.gender = Gender.MALE;
-        case "2.0", "Female" -> this.gender = Gender.FEMALE;
+        case "1.0","1", "Male" -> this.gender = Gender.MALE;
+        case "2.0","2", "Female" -> this.gender = Gender.FEMALE;
         default -> this.gender = Gender.UNKNOWN;
       }
   }
@@ -143,15 +144,15 @@ public class Patient {
   public void setEthnicity(String ethnicity) {
     switch (ethnicity) {
       case "1.0", "White" -> this.ethnicity = "White";
-      case "2.0" -> this.ethnicity = "Hispanic";
-      case "3.0" -> this.ethnicity = "Black";
-      case "4.0" -> this.ethnicity = "Oriental";
-      case "5.0" -> this.ethnicity = "Native Hawaiian";
-      case "6.0" -> this.ethnicity = "Native American";
-      case "7.0" -> this.ethnicity = "Indian";
-      case "8.0" -> this.ethnicity = "Filipino";
-      case "9.0" -> this.ethnicity = "Other";
-      case "10.0" -> this.ethnicity = "Patient refusal";
+      case "2.0","2" -> this.ethnicity = "Hispanic";
+      case "3.0","3" -> this.ethnicity = "Black";
+      case "4.0","4" -> this.ethnicity = "Oriental";
+      case "5.0","5" -> this.ethnicity = "Native Hawaiian";
+      case "6.0","6" -> this.ethnicity = "Native American";
+      case "7.0","7" -> this.ethnicity = "Indian";
+      case "8.0","8" -> this.ethnicity = "Filipino";
+      case "9.0","9" -> this.ethnicity = "Other";
+      case "10.0","10" -> this.ethnicity = "Patient refusal";
       default -> this.ethnicity = "Unknown";
     }
   }
@@ -162,8 +163,8 @@ public class Patient {
 
   public void setRelapse(String relapse) {
     switch (relapse) {
-      case "1.0" -> this.relapse = "No";
-      case "2.0" -> this.relapse = "Yes";
+      case "1.0","1" -> this.relapse = "No";
+      case "2.0","2" -> this.relapse = "Yes";
       default -> this.relapse = "Unknown";
     }
   }
@@ -178,8 +179,8 @@ public class Patient {
 
   public void setFailureFreeSurvivalStatus(String failureFreeSurvivalStatus) {
     switch (failureFreeSurvivalStatus) {
-      case "1.0" -> this.failureFreeSurvivalStatus = "Survived";
-      case "2.0" -> this.failureFreeSurvivalStatus = "Deceased";
+      case "1.0","1" -> this.failureFreeSurvivalStatus = "Survived";
+      case "2.0","2" -> this.failureFreeSurvivalStatus = "Deceased";
       default -> this.failureFreeSurvivalStatus = "Unknown";
     }
   }
