@@ -150,7 +150,7 @@ public class PatientService {
                         patient.setFailureFreeSurvivalTime(-1);
                     else
                         patient.setFailureFreeSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("failure free survival time")).toString()));
-                    
+
                     if (!rowNumbers.containsKey("overall survival status") || row.getCell(rowNumbers.get("overall survival status")) == null)
                         overallSurvivalStatus.setOverAllSurvivalStatus("Unknown");
                     else
@@ -224,45 +224,21 @@ public class PatientService {
         XSSFRow row = worksheet.getRow(index);
         for (Cell r : row) {
             switch (r.toString()) {
-                case "PHATOM_ID", "SUBJID":
-                    rowNumbers.put("id", r.getColumnIndex());
-                    break; //id
-                case "GENDER", "SEX":
-                    rowNumbers.put("gender", r.getColumnIndex());
-                    break; //gender
-                case "AGE":
-                    rowNumbers.put("age", r.getColumnIndex());
-                    break; //age (years)
-                case "RACE":
-                    rowNumbers.put("ethnicity", r.getColumnIndex());
-                    break; //race
-                case "PD":
-                    rowNumbers.put("relapse", r.getColumnIndex());
-                    break; //relapse time
-                case "OS_TIME":
-                    rowNumbers.put("overall survival time", r.getColumnIndex());
-                    break; //overall survival time (months)
-                case "PD_TIME":
-                    rowNumbers.put("relapse time", r.getColumnIndex());
-                    break; //relapse time (months)
-                case "PFS_STATUS":
-                    rowNumbers.put("failure free survival", r.getColumnIndex());
-                    break; //failure free survival
-                case "PFS_TIME":
-                    rowNumbers.put("failure free survival time", r.getColumnIndex());
-                    break; //failure free survival time (months)
-                case "TRT_ARM_LABEL", "CHPTERM":
-                    rowNumbers.put("treatment drug", r.getColumnIndex());
-                    break; //treatment drug
-                case "STATUS":
-                    rowNumbers.put("overall survival status", r.getColumnIndex());
-                    break; //overall survival status
-                case "CAUSEDTH":
-                    rowNumbers.put("cause of death", r.getColumnIndex());
-                    break; //cause of death
-                case "NEW_MALIG":
-                    rowNumbers.put("new malignancy", r.getColumnIndex());
-                    break; //new malignancy
+                case "PHATOM_ID", "SUBJID" -> rowNumbers.put("id", r.getColumnIndex());//id
+                case "GENDER", "SEX" -> rowNumbers.put("gender", r.getColumnIndex());//gender
+                case "AGE" -> rowNumbers.put("age", r.getColumnIndex());//age (years)
+                case "RACE" -> rowNumbers.put("ethnicity", r.getColumnIndex());//race
+                case "PD" -> rowNumbers.put("relapse", r.getColumnIndex());//relapse time
+                case "OS_TIME" -> rowNumbers.put("overall survival time", r.getColumnIndex());//overall survival time (months)
+                case "PD_TIME" -> rowNumbers.put("relapse time", r.getColumnIndex());//relapse time (months)
+                case "PFS_STATUS" -> rowNumbers.put("failure free survival", r.getColumnIndex());//failure free survival
+                case "PFS_TIME" -> rowNumbers.put("failure free survival time", r.getColumnIndex());//failure free survival time (months)
+                case "TRT_ARM_LABEL", "CHPTERM" -> rowNumbers.put("treatment drug", r.getColumnIndex());//treatment drug
+                case "STATUS" -> rowNumbers.put("overall survival status", r.getColumnIndex());//overall survival status
+                case "CAUSEDTH" -> rowNumbers.put("cause of death", r.getColumnIndex());//cause of death
+                case "NEW_MALIG" -> rowNumbers.put("new malignancy", r.getColumnIndex());//new malignancy
+                case "AE_NAME", "AEPTERM" -> rowNumbers.put("symptom", r.getColumnIndex());//symptom
+                case "AE_GRADE", "SEVRCD" -> rowNumbers.put("grade", r.getColumnIndex());//severity grade
             }
         }
         return rowNumbers;
@@ -317,8 +293,20 @@ public class PatientService {
     }
 
     public ResponseEntity<?> loadSymptoms(MultipartFile file, String name) throws IOException {
-        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-        XSSFSheet worksheet = workbook.getSheetAt(0);
+
+        XSSFSheet worksheet;
+        if (file.getOriginalFilename().contains(".sas7bdat")) {
+            SasToXlsxConverter converter = new SasToXlsxConverter();
+            // Get the input stream from the MultipartFile object
+            InputStream inputStream = file.getInputStream();
+
+            // Create a SasFileReader object and read the file
+            SasFileReader sasFileReader = new SasFileReaderImpl(inputStream);
+            worksheet = converter.convertSasToXlsx(sasFileReader);
+        } else {
+            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+            worksheet = workbook.getSheetAt(0);
+        }
 
         List<Patient> patientList = patientRepository.findAllByDataset(name);
         List<Integer> patientId = new ArrayList<>();
@@ -360,7 +348,7 @@ public class PatientService {
                         patient = a;
 
 
-                if (row.getCell(rowNumbers.get("symptom")) == null || row.getCell(rowNumbers.get("grade")) == null)
+                if (row.getCell(rowNumbers.get("symptom")) == null || row.getCell(rowNumbers.get("grade")) == null || row.getCell(rowNumbers.get("grade")).toString().equals(""))
                     continue;
                 else {
                     symptoms.setSymptom(row.getCell(rowNumbers.get("symptom")).toString());
