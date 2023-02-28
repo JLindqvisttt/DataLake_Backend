@@ -173,6 +173,9 @@ public class PatientService {
                     Patient patient = new Patient();
                     //ID
                     patient.setSubjectId(Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")));
+
+                    //Database
+                    patient.setDataset(name);
                     //AGE
                     if (!rowNumbers.containsKey("age") || row.getCell(rowNumbers.get("age")) == null)
                         patient.setAge(-1);
