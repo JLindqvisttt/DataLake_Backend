@@ -1,6 +1,5 @@
 package kth.datalake_backend.Service;
 
-import jnr.ffi.annotations.In;
 import kth.datalake_backend.Entity.Nodes.*;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.Nodes.*;
@@ -63,6 +62,7 @@ public class PatientService {
           newMalignancyName.add(t.getNewMalignancy());
 
       HashMap<String, Integer> rowNumbers = null;
+
     for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
     if (index > 0) {
         Patient patient = new Patient();
@@ -117,7 +117,6 @@ public class PatientService {
         overallSurvivalStatusNode(overallSurvivalStatusName, patient, overallSurvivalStatus, overallSurvivalStatusList);
 
         if (!overallSurvivalStatus.getOverAllSurvivalStatus().equals("Alive") && !overallSurvivalStatus.getOverAllSurvivalStatus().equals("Unknown")) {
-            System.out.println("hereo?");
             if (!rowNumbers.containsKey("cause of death") || row.getCell(rowNumbers.get("cause of death")) == null) causeOfDeath.setCauseOfDeath("Unknown");
             else causeOfDeath.setCauseOfDeath(row.getCell(rowNumbers.get("cause of death")).toString());
             causeOfDeathNode(causeOfDeathName, patient, causeOfDeath, causeOfDeathList);
@@ -266,14 +265,12 @@ public class PatientService {
         List<Integer> patientId = new ArrayList<>();
 
         ArrayList<Symptoms> symptomsList = symptomsRepository.findAll();
-        ArrayList<String> symptomsName = new ArrayList<>();
-
-        Patient oldPatient = new Patient();
-        oldPatient.setSubjectId(-1);
 
         for (Patient t : patientList)
           patientId.add(t.getSubjectId());
 
+        HashMap<String, Integer> rowNumbers = null;
+        int id = Integer.MAX_VALUE;
 
         for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
           if (index > 0) {
@@ -281,35 +278,38 @@ public class PatientService {
             Symptoms symptoms = new Symptoms();
             XSSFRow row = worksheet.getRow(index);
 
-            if (row.getCell(0) == null) {
+            if (row.getCell(rowNumbers.get("id")) == null) {
               System.out.println("no id found");
               continue;
             }
 
-            if (!patientId.contains(Integer.parseInt(row.getCell(0).toString().replace(".0", "")))){
-              System.out.println("patient with that id not found");
+            if(id != Integer.MAX_VALUE && id != Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""))){
+                for (Patient a: patientList)
+                    if(a.getSubjectId() == id)
+                        patientRepository.save(a);
             }
-            int id = Integer.parseInt(row.getCell(0).toString().replace(".0", ""));
+
+            id = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
+
+            if (!patientId.contains(id)){
+                System.out.println("patient with that id not found");
+                continue;
+            }
+
             for (Patient a: patientList)
               if(a.getSubjectId() == id)
                   patient = a;
 
 
-
-            if(row.getCell(1) == null || row.getCell(2) == null) continue;
+            if(row.getCell(rowNumbers.get("symptom")) == null || row.getCell(rowNumbers.get("grade")) == null) continue;
             else {
-              symptoms.setSymptom(row.getCell(1).toString());
-              symptoms.setSeverity(Integer.parseInt(row.getCell(2).toString().replace(".0","")));
+              symptoms.setSymptom(row.getCell(rowNumbers.get("symptom")).toString());
+              symptoms.setSeverity(Integer.parseInt(row.getCell(rowNumbers.get("grade")).toString().replace(".0","")));
             }
             symptomsNode(symptoms, patient, symptomsList);
-
-//
-//          if(patient.getSubjectId() != oldPatient.getSubjectId()) {
-//              oldId = patient.getSubjectId();
-//              patientRepository.save(patient);
-//          }else
-//              oldPatient = patient;
-
+          }
+          else{
+              rowNumbers = setRowNumbers(worksheet,index);
           }
         }
         return ResponseEntity.ok(new MessageResponse("testing"));
@@ -317,11 +317,11 @@ public class PatientService {
 
     private void symptomsNode(Symptoms symptoms, Patient patient, ArrayList<Symptoms> symptomsList){
         boolean flag = true;
-        for(int i = 0; i < symptomsList.size(); i++){
-          if(symptomsList.get(i).getSymptom().equals(symptoms.getSymptom()) && symptomsList.get(i).getSeverity() == symptoms.getSeverity()){
-            flag = false;
-            patient.setSymptoms(symptomsList.get(i));
-          }
+        for (Symptoms value : symptomsList) {
+            if (value.getSymptom().equals(symptoms.getSymptom()) && value.getSeverity() == symptoms.getSeverity()) {
+                flag = false;
+                patient.setSymptoms(value);
+            }
         }
         if(flag){
           symptomsRepository.save(symptoms);
@@ -334,20 +334,22 @@ public class PatientService {
         HashMap<String, Integer> rowNumbers = new HashMap<>();
         XSSFRow row = worksheet.getRow(index);
         for (Cell r:row) {
-            switch(r.toString()){
-                case "PHATOM_ID" : rowNumbers.put("id", r.getColumnIndex());  break; //id
-                case "GENDER" : rowNumbers.put("gender", r.getColumnIndex());    break; //gender
-                case "AGE" : rowNumbers.put("age", r.getColumnIndex());  break; //age (years)
-                case "RACE" : rowNumbers.put("ethnicity", r.getColumnIndex());   break; //race
-                case "PD" : rowNumbers.put("relapse", r.getColumnIndex());   break; //relapse time
-                case "OS_TIME" : rowNumbers.put("overall survival time", r.getColumnIndex()); break; //overall survival time (months)
-                case "PD_TIME" : rowNumbers.put("relapse time", r.getColumnIndex());  break; //relapse time (months)
-                case "PFS_STATUS" : rowNumbers.put("failure free survival", r.getColumnIndex()); break; //failure free survival
-                case "PFS_TIME" : rowNumbers.put("failure free survival time", r.getColumnIndex()); break; //failure free survival time (months)
-                case "TRT_ARM_LABEL" : rowNumbers.put("treatment drug", r.getColumnIndex());  break; //treatment drug
-                case "STATUS" : rowNumbers.put("overall survival status", r.getColumnIndex()); break; //overall survival status
-                case "CAUSEDTH" : rowNumbers.put("cause of death", r.getColumnIndex());    break; //cause of death
-                case "NEW_MALIG" : rowNumbers.put("new malignancy", r.getColumnIndex());  break; //new malignancy
+            switch (r.toString()) {
+                case "PHATOM_ID" -> rowNumbers.put("id", r.getColumnIndex());//id
+                case "GENDER" -> rowNumbers.put("gender", r.getColumnIndex());//gender
+                case "AGE" -> rowNumbers.put("age", r.getColumnIndex());//age (years)
+                case "RACE" -> rowNumbers.put("ethnicity", r.getColumnIndex());//race
+                case "PD" -> rowNumbers.put("relapse", r.getColumnIndex());//relapse time
+                case "OS_TIME" -> rowNumbers.put("overall survival time", r.getColumnIndex());//overall survival time (months)
+                case "PD_TIME" -> rowNumbers.put("relapse time", r.getColumnIndex());//relapse time (months)
+                case "PFS_STATUS" -> rowNumbers.put("failure free survival", r.getColumnIndex());//failure free survival
+                case "PFS_TIME" -> rowNumbers.put("failure free survival time", r.getColumnIndex());//failure free survival time (months)
+                case "TRT_ARM_LABEL" -> rowNumbers.put("treatment drug", r.getColumnIndex());//treatment drug
+                case "STATUS" -> rowNumbers.put("overall survival status", r.getColumnIndex());//overall survival status
+                case "CAUSEDTH" -> rowNumbers.put("cause of death", r.getColumnIndex());//cause of death
+                case "NEW_MALIG" -> rowNumbers.put("new malignancy", r.getColumnIndex());//new malignancy
+                case "AE_NAME" -> rowNumbers.put("symptom", r.getColumnIndex());//symptom
+                case "AE_GRADE" -> rowNumbers.put("grade", r.getColumnIndex());//severity grade
             }
         }
         return rowNumbers;
