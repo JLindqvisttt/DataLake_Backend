@@ -38,145 +38,59 @@ public class PatientService {
     @Autowired
     NewMalignancyRepository newMalignancyRepository;
 
-  @Autowired
-  SymptomsRepository symptomsRepository;
+    @Autowired
+    SymptomsRepository symptomsRepository;
 
-  //https://por-porkaew15.medium.com/how-to-import-excel-by-spring-boot-2624367c8468
-  public ResponseEntity<?> loadData(MultipartFile file, String name) throws IOException {
-    XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-    XSSFSheet worksheet = workbook.getSheetAt(0);
+    //https://por-porkaew15.medium.com/how-to-import-excel-by-spring-boot-2624367c8468
+    public ResponseEntity<?> loadData(MultipartFile file, String name) throws IOException {
+        XSSFSheet worksheet;
+        if (file.getOriginalFilename().contains(".sas7bdat")){
+            SasToXlsxConverter converter = new SasToXlsxConverter();
+            // Get the input stream from the MultipartFile object
+            InputStream inputStream = file.getInputStream();
 
-      List<Patient> patientList = patientRepository.findAllByDataset(name);
-
-      List<Integer> patientId = new ArrayList<>();
-        for(Patient t:patientList)
-            patientId.add(t.getSubjectId());
-
-    ArrayList<Treatment> treatmentList = treatmentRepository.findAll();
-    ArrayList<String> treatmentName = new ArrayList<>();
-      for (Treatment t:treatmentList)
-          treatmentName.add(t.getTreatment());
-
-    ArrayList<CauseOfDeath> causeOfDeathList = causeOfDeathRepository.findAll();
-    ArrayList<String> causeOfDeathName = new ArrayList<>();
-      for (CauseOfDeath t:causeOfDeathList)
-          causeOfDeathName.add(t.getCauseOfDeath());
-
-    ArrayList<OverAllSurvivalStatus> overallSurvivalStatusList = overallSurvivalStatusRepository.findAll();
-    ArrayList<String> overallSurvivalStatusName = new ArrayList<>();
-      for (OverAllSurvivalStatus t:overallSurvivalStatusList)
-          overallSurvivalStatusName.add(t.getOverAllSurvivalStatus());
-
-    ArrayList<NewMalignancy> newMalignancyList = newMalignancyRepository.findAll();
-    ArrayList<String> newMalignancyName = new ArrayList<>();
-      for (NewMalignancy t:newMalignancyList)
-          newMalignancyName.add(t.getNewMalignancy());
-
-      HashMap<String, Integer> rowNumbers = null;
-
-    for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
-    if (index > 0) {
-        Patient patient = new Patient();
-        Treatment treatment;
-        CauseOfDeath causeOfDeath = new CauseOfDeath();
-        OverAllSurvivalStatus overallSurvivalStatus = new OverAllSurvivalStatus();
-        NewMalignancy newMalignancy = new NewMalignancy();
-        XSSFRow row = worksheet.getRow(index);
-
-        if (row.getCell(0) == null) {
-            System.out.println("no id found");
-            continue;
+            // Create a SasFileReader object and read the file
+            SasFileReader sasFileReader = new SasFileReaderImpl(inputStream);
+             worksheet = converter.convertSasToXlsx(sasFileReader);
+        }else {
+            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+             worksheet = workbook.getSheetAt(0);
         }
 
 
-        int searchId = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
-        for (Patient a : patientList)
-            if (a.getSubjectId() == searchId)
-               patient = a;
-
-
-        patient.setSubjectId(Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")));
-
-        patient.setDataset(name);
-
-
-        if (!rowNumbers.containsKey("age") || row.getCell(rowNumbers.get("age")) == null ) patient.setAge(-1);
-        else patient.setAge(Integer.parseInt(row.getCell(rowNumbers.get("age")).toString().replace(".0", "")));
-
-        if (!rowNumbers.containsKey("gender") || row.getCell(rowNumbers.get("gender")) == null) patient.setGender("null");
-        else patient.setGender(row.getCell(rowNumbers.get("gender")).toString());
-
-        if (!rowNumbers.containsKey("ethnicity") || row.getCell(rowNumbers.get("ethnicity")) == null) patient.setEthnicity("null");
-        else patient.setEthnicity(row.getCell(rowNumbers.get("ethnicity")).toString());
-
-        if (!rowNumbers.containsKey("relapse") || row.getCell(rowNumbers.get("relapse")) == null) patient.setRelapse("null");
-        else patient.setRelapse(row.getCell(rowNumbers.get("relapse")).toString());
-
-        if (!rowNumbers.containsKey("overall survival time") || row.getCell(rowNumbers.get("overall survival time")) == null) patient.setSurvivalTime(-1);
-        else patient.setSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("overall survival time")).toString()));
-
-        if (!rowNumbers.containsKey("relapse time") || row.getCell(rowNumbers.get("relapse time")) == null) patient.setRelapseTime(-1);
-        else patient.setRelapseTime(Double.parseDouble(row.getCell(rowNumbers.get("relapse time")).toString()));
-
-        if (!rowNumbers.containsKey("failure free survival") || row.getCell(rowNumbers.get("failure free survival")) == null) patient.setFailureFreeSurvivalStatus("null");
-        else patient.setFailureFreeSurvivalStatus(row.getCell(rowNumbers.get("failure free survival")).toString());
-
-        if (!rowNumbers.containsKey("failure free survival time") || row.getCell(rowNumbers.get("failure free survival time")) == null) patient.setFailureFreeSurvivalTime(-1);
-        else patient.setFailureFreeSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("failure free survival time")).toString()));
-
-
-
-        if (!rowNumbers.containsKey("treatment drug") || row.getCell(rowNumbers.get("treatment drug")) == null) treatment = new Treatment("Unknown");
-        else treatment = new Treatment(row.getCell(rowNumbers.get("treatment drug")).toString());
-        treatmentNode(treatmentName, patient, treatment, treatmentList);
-
-        if (!rowNumbers.containsKey("overall survival status") || row.getCell(rowNumbers.get("overall survival status")) == null) overallSurvivalStatus.setOverAllSurvivalStatus("Unknown");
-        else overallSurvivalStatus.setOverAllSurvivalStatus(row.getCell(rowNumbers.get("overall survival status")).toString());
-        overallSurvivalStatusNode(overallSurvivalStatusName, patient, overallSurvivalStatus, overallSurvivalStatusList);
-
-        if (!overallSurvivalStatus.getOverAllSurvivalStatus().equals("Alive") && !overallSurvivalStatus.getOverAllSurvivalStatus().equals("Unknown")) {
-            if (!rowNumbers.containsKey("cause of death") || row.getCell(rowNumbers.get("cause of death")) == null) causeOfDeath.setCauseOfDeath("Unknown");
-            else causeOfDeath.setCauseOfDeath(row.getCell(rowNumbers.get("cause of death")).toString());
-            causeOfDeathNode(causeOfDeathName, patient, causeOfDeath, causeOfDeathList);
-        }
-
-        if (!rowNumbers.containsKey("new malignancy") || row.getCell(rowNumbers.get("new malignancy")) == null) newMalignancy.setNewMalignancy("Unknown");
-        else newMalignancy.setNewMalignancy(row.getCell(rowNumbers.get("new malignancy")).toString());
-        newMalignancyNode(newMalignancyName, patient, newMalignancy, newMalignancyList);
-
-        patientRepository.save(patient);
-        }
-        else{
-            rowNumbers = setRowNumbers(worksheet,index);
-        }
-    }
-        return ResponseEntity.ok(new MessageResponse("testing"));
-    }
-
-    public ResponseEntity<?> loadFileSAS(MultipartFile file, String name) throws IOException {
-        SasToXlsxConverter converter = new SasToXlsxConverter();
-        // Get the input stream from the MultipartFile object
-        InputStream inputStream = file.getInputStream();
-
-        // Create a SasFileReader object and read the file
-        SasFileReader sasFileReader = new SasFileReaderImpl(inputStream);
-        XSSFSheet worksheet = converter.convertSasToXlsx(sasFileReader);
-
-
+        //Get patients in database
+        List<Patient> patientList = patientRepository.findAllByDataset(name);
         // Get treatment list
         ArrayList<Treatment> treatmentList = treatmentRepository.findAll();
         ArrayList<String> treatmentName = new ArrayList<>();
-
         // Add treatments from list to treatmentName
         for (Treatment t : treatmentList)
             treatmentName.add(t.getTreatment());
 
+        ArrayList<CauseOfDeath> causeOfDeathList = causeOfDeathRepository.findAll();
+        ArrayList<String> causeOfDeathName = new ArrayList<>();
+        for (CauseOfDeath t : causeOfDeathList)
+            causeOfDeathName.add(t.getCauseOfDeath());
+
+        ArrayList<OverAllSurvivalStatus> overallSurvivalStatusList = overallSurvivalStatusRepository.findAll();
+        ArrayList<String> overallSurvivalStatusName = new ArrayList<>();
+        for (OverAllSurvivalStatus t : overallSurvivalStatusList)
+            overallSurvivalStatusName.add(t.getOverAllSurvivalStatus());
+
+        ArrayList<NewMalignancy> newMalignancyList = newMalignancyRepository.findAll();
+        ArrayList<String> newMalignancyName = new ArrayList<>();
+        for (NewMalignancy t : newMalignancyList)
+            newMalignancyName.add(t.getNewMalignancy());
+
         HashMap<String, Integer> rowNumbers = null;
         Treatment treatment;
         List<Patient> patients = new ArrayList<>();
+
         HashMap<Integer, List<String>> Patientmap = new HashMap<>();
         int previousID = 0;
+
         for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
+
             if (index > 0) {
                 CauseOfDeath causeOfDeath = new CauseOfDeath();
                 OverAllSurvivalStatus overallSurvivalStatus = new OverAllSurvivalStatus();
@@ -190,6 +104,11 @@ public class PatientService {
                 int currentID = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
                 if (previousID != currentID) {
                     Patient patient = new Patient();
+                    for (Patient a : patientList) {
+                        if (a.getSubjectId() == currentID) {
+                            patient = a;
+                        }
+                    }
                     //ID
                     patient.setSubjectId(currentID);
 
@@ -209,8 +128,51 @@ public class PatientService {
                         patient.setEthnicity("null");
                     else patient.setEthnicity(row.getCell(rowNumbers.get("ethnicity")).toString());
 
+                    if (!rowNumbers.containsKey("relapse") || row.getCell(rowNumbers.get("relapse")) == null)
+                        patient.setRelapse("null");
+                    else patient.setRelapse(row.getCell(rowNumbers.get("relapse")).toString());
+
+                    if (!rowNumbers.containsKey("overall survival time") || row.getCell(rowNumbers.get("overall survival time")) == null)
+                        patient.setSurvivalTime(-1);
+                    else
+                        patient.setSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("overall survival time")).toString()));
+                    
+                    if (!rowNumbers.containsKey("relapse time") || row.getCell(rowNumbers.get("relapse time")) == null || row.getCell(rowNumbers.get("relapse time")).toString().equals(""))
+                        patient.setRelapseTime(-1);
+                    else patient.setRelapseTime(Double.parseDouble(row.getCell(rowNumbers.get("relapse time")).toString()));
+
+                    if (!rowNumbers.containsKey("failure free survival") || row.getCell(rowNumbers.get("failure free survival")) == null)
+                        patient.setFailureFreeSurvivalStatus("null");
+                    else
+                        patient.setFailureFreeSurvivalStatus(row.getCell(rowNumbers.get("failure free survival")).toString());
+
+                    if (!rowNumbers.containsKey("failure free survival time") || row.getCell(rowNumbers.get("failure free survival time")) == null)
+                        patient.setFailureFreeSurvivalTime(-1);
+                    else
+                        patient.setFailureFreeSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("failure free survival time")).toString()));
+
+
+                    if (!rowNumbers.containsKey("overall survival status") || row.getCell(rowNumbers.get("overall survival status")) == null)
+                        overallSurvivalStatus.setOverAllSurvivalStatus("Unknown");
+                    else
+                        overallSurvivalStatus.setOverAllSurvivalStatus(row.getCell(rowNumbers.get("overall survival status")).toString());
+                    overallSurvivalStatusNode(overallSurvivalStatusName, patient, overallSurvivalStatus, overallSurvivalStatusList);
+
+                    if (!overallSurvivalStatus.getOverAllSurvivalStatus().equals("Alive") && !overallSurvivalStatus.getOverAllSurvivalStatus().equals("Unknown")) {
+                        if (!rowNumbers.containsKey("cause of death") || row.getCell(rowNumbers.get("cause of death")) == null)
+                            causeOfDeath.setCauseOfDeath("Unknown");
+                        else causeOfDeath.setCauseOfDeath(row.getCell(rowNumbers.get("cause of death")).toString());
+                        causeOfDeathNode(causeOfDeathName, patient, causeOfDeath, causeOfDeathList);
+                    }
+
+                    if (!rowNumbers.containsKey("new malignancy") || row.getCell(rowNumbers.get("new malignancy")) == null)
+                        newMalignancy.setNewMalignancy("Unknown");
+                    else newMalignancy.setNewMalignancy(row.getCell(rowNumbers.get("new malignancy")).toString());
+                    newMalignancyNode(newMalignancyName, patient, newMalignancy, newMalignancyList);
+
                     addToMap(Patientmap, Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")),
                             row.getCell(rowNumbers.get("treatment drug")).toString());
+
                     patients.add(patient);
                     previousID = currentID;
                 } else {
@@ -358,55 +320,55 @@ public class PatientService {
         ArrayList<Symptoms> symptomsList = symptomsRepository.findAll();
 
         for (Patient t : patientList)
-          patientId.add(t.getSubjectId());
+            patientId.add(t.getSubjectId());
 
         HashMap<String, Integer> rowNumbers = null;
         int id = Integer.MAX_VALUE;
 
         for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
-          if (index > 0) {
-            Patient patient = new Patient();
-            Symptoms symptoms = new Symptoms();
-            XSSFRow row = worksheet.getRow(index);
+            if (index > 0) {
+                Patient patient = new Patient();
+                Symptoms symptoms = new Symptoms();
+                XSSFRow row = worksheet.getRow(index);
 
-            if (row.getCell(rowNumbers.get("id")) == null) {
-              System.out.println("no id found");
-              continue;
+                if (row.getCell(rowNumbers.get("id")) == null) {
+                    System.out.println("no id found");
+                    continue;
+                }
+
+                if (id != Integer.MAX_VALUE && id != Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""))) {
+                    for (Patient a : patientList)
+                        if (a.getSubjectId() == id)
+                            patientRepository.save(a);
+                }
+
+                id = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
+
+                if (!patientId.contains(id)) {
+                    System.out.println("patient with that id not found");
+                    continue;
+                }
+
+                for (Patient a : patientList)
+                    if (a.getSubjectId() == id)
+                        patient = a;
+
+
+                if (row.getCell(rowNumbers.get("symptom")) == null || row.getCell(rowNumbers.get("grade")) == null)
+                    continue;
+                else {
+                    symptoms.setSymptom(row.getCell(rowNumbers.get("symptom")).toString());
+                    symptoms.setSeverity(Integer.parseInt(row.getCell(rowNumbers.get("grade")).toString().replace(".0", "")));
+                }
+                symptomsNode(symptoms, patient, symptomsList);
+            } else {
+                rowNumbers = setRowNumbers(worksheet, index);
             }
-
-            if(id != Integer.MAX_VALUE && id != Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""))){
-                for (Patient a: patientList)
-                    if(a.getSubjectId() == id)
-                        patientRepository.save(a);
-            }
-
-            id = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
-
-            if (!patientId.contains(id)){
-                System.out.println("patient with that id not found");
-                continue;
-            }
-
-            for (Patient a: patientList)
-              if(a.getSubjectId() == id)
-                  patient = a;
-
-
-            if(row.getCell(rowNumbers.get("symptom")) == null || row.getCell(rowNumbers.get("grade")) == null) continue;
-            else {
-              symptoms.setSymptom(row.getCell(rowNumbers.get("symptom")).toString());
-              symptoms.setSeverity(Integer.parseInt(row.getCell(rowNumbers.get("grade")).toString().replace(".0","")));
-            }
-            symptomsNode(symptoms, patient, symptomsList);
-          }
-          else{
-              rowNumbers = setRowNumbers(worksheet,index);
-          }
         }
         return ResponseEntity.ok(new MessageResponse("testing"));
-      }
+    }
 
-    private void symptomsNode(Symptoms symptoms, Patient patient, ArrayList<Symptoms> symptomsList){
+    private void symptomsNode(Symptoms symptoms, Patient patient, ArrayList<Symptoms> symptomsList) {
         boolean flag = true;
         for (Symptoms value : symptomsList) {
             if (value.getSymptom().equals(symptoms.getSymptom()) && value.getSeverity() == symptoms.getSeverity()) {
@@ -414,11 +376,11 @@ public class PatientService {
                 patient.setSymptoms(value);
             }
         }
-        if(flag){
-          symptomsRepository.save(symptoms);
-          patient.setSymptoms(symptoms);
-          symptomsList.add(symptoms);
+        if (flag) {
+            symptomsRepository.save(symptoms);
+            patient.setSymptoms(symptoms);
+            symptomsList.add(symptoms);
         }
-   }
+    }
 
 }
