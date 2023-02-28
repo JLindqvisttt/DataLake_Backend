@@ -44,17 +44,17 @@ public class PatientService {
     //https://por-porkaew15.medium.com/how-to-import-excel-by-spring-boot-2624367c8468
     public ResponseEntity<?> loadData(MultipartFile file, String name) throws IOException {
         XSSFSheet worksheet;
-        if (file.getOriginalFilename().contains(".sas7bdat")){
+        if (file.getOriginalFilename().contains(".sas7bdat")) {
             SasToXlsxConverter converter = new SasToXlsxConverter();
             // Get the input stream from the MultipartFile object
             InputStream inputStream = file.getInputStream();
 
             // Create a SasFileReader object and read the file
             SasFileReader sasFileReader = new SasFileReaderImpl(inputStream);
-             worksheet = converter.convertSasToXlsx(sasFileReader);
-        }else {
+            worksheet = converter.convertSasToXlsx(sasFileReader);
+        } else {
             XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-             worksheet = workbook.getSheetAt(0);
+            worksheet = workbook.getSheetAt(0);
         }
 
 
@@ -136,10 +136,11 @@ public class PatientService {
                         patient.setSurvivalTime(-1);
                     else
                         patient.setSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("overall survival time")).toString()));
-                    
+
                     if (!rowNumbers.containsKey("relapse time") || row.getCell(rowNumbers.get("relapse time")) == null || row.getCell(rowNumbers.get("relapse time")).toString().equals(""))
                         patient.setRelapseTime(-1);
-                    else patient.setRelapseTime(Double.parseDouble(row.getCell(rowNumbers.get("relapse time")).toString()));
+                    else
+                        patient.setRelapseTime(Double.parseDouble(row.getCell(rowNumbers.get("relapse time")).toString()));
 
                     if (!rowNumbers.containsKey("failure free survival") || row.getCell(rowNumbers.get("failure free survival")) == null)
                         patient.setFailureFreeSurvivalStatus("null");
