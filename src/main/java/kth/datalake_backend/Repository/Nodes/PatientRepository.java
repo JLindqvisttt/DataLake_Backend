@@ -8,5 +8,5 @@ import java.util.ArrayList;
 
 public interface PatientRepository extends Neo4jRepository<Patient, Long> {
     ArrayList<Patient> findAll();
-
+    ArrayList<Patient> findAllByDataset(String id);
 }

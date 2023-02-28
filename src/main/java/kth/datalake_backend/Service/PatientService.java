@@ -46,7 +46,8 @@ public class PatientService {
     XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
     XSSFSheet worksheet = workbook.getSheetAt(0);
 
-      List<Patient> patientList = patientRepository.findAll();
+      List<Patient> patientList = patientRepository.findAllByDataset(name);
+
       List<Integer> patientId = new ArrayList<>();
         for(Patient t:patientList)
             patientId.add(t.getSubjectId());
@@ -86,8 +87,13 @@ public class PatientService {
             System.out.println("no id found");
             continue;
         }
-        if (patientId.contains(Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""))))
-            continue;
+
+
+        int searchId = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
+        for (Patient a : patientList)
+            if (a.getSubjectId() == searchId)
+               patient = a;
+
 
         patient.setSubjectId(Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")));
 
@@ -346,7 +352,7 @@ public class PatientService {
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
         XSSFSheet worksheet = workbook.getSheetAt(0);
 
-        List<Patient> patientList = patientRepository.findAll();
+        List<Patient> patientList = patientRepository.findAllByDataset(name);
         List<Integer> patientId = new ArrayList<>();
 
         ArrayList<Symptoms> symptomsList = symptomsRepository.findAll();
