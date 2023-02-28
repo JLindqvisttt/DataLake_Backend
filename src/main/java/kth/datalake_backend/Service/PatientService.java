@@ -168,7 +168,7 @@ public class PatientService {
                     System.out.println("no id found");
                     continue;
                 }
-                
+
                 if (previousID != Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""))) {
                     Patient patient = new Patient();
                     //ID
