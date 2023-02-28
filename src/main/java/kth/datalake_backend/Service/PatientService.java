@@ -1,9 +1,12 @@
 package kth.datalake_backend.Service;
 
+import com.epam.parso.SasFileReader;
+import com.epam.parso.impl.SasFileReaderImpl;
 import kth.datalake_backend.Entity.Nodes.*;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.Nodes.*;
 
+import kth.datalake_backend.Service.Util.SasToXlsxConverter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -15,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -142,78 +147,151 @@ public class PatientService {
         return ResponseEntity.ok(new MessageResponse("testing"));
     }
 
-    public ResponseEntity<?> loadFile(MultipartFile file, String name) throws IOException {
-        ArrayList<Patient> patients = new ArrayList<>();
-        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-        XSSFSheet worksheet = workbook.getSheetAt(1);
+    public ResponseEntity<?> loadFileSAS(MultipartFile file, String name) throws IOException {
+        SasToXlsxConverter converter = new SasToXlsxConverter();
+        // Get the input stream from the MultipartFile object
+        InputStream inputStream = file.getInputStream();
 
+        // Create a SasFileReader object and read the file
+        SasFileReader sasFileReader = new SasFileReaderImpl(inputStream);
+        XSSFSheet worksheet = converter.convertSasToXlsx(sasFileReader);
+
+
+        // Get treatment list
         ArrayList<Treatment> treatmentList = treatmentRepository.findAll();
         ArrayList<String> treatmentName = new ArrayList<>();
 
+        // Add treatments from list to treatmentName
         for (Treatment t : treatmentList)
             treatmentName.add(t.getTreatment());
 
+        HashMap<String, Integer> rowNumbers = null;
+        Treatment treatment;
+        List<Patient> patients = new ArrayList<>();
+        HashMap<Integer, List<String>> Patientmap = new HashMap<>();
         int previousID = 0;
         for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
             if (index > 0) {
-                Patient patient = new Patient();
+                CauseOfDeath causeOfDeath = new CauseOfDeath();
+                OverAllSurvivalStatus overallSurvivalStatus = new OverAllSurvivalStatus();
+                NewMalignancy newMalignancy = new NewMalignancy();
                 XSSFRow row = worksheet.getRow(index);
 
                 if (row.getCell(0) == null) {
                     System.out.println("no id found");
                     continue;
                 }
+                int currentID = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
+                if (previousID != currentID) {
+                    Patient patient = new Patient();
+                    //ID
+                    patient.setSubjectId(currentID);
 
-                if (index == 1) {
-                    previousID = Integer.parseInt(row.getCell(0).toString());
-                    insertPatient(row, patient, name, treatmentName, treatmentList, patients);
+                    //Database
+                    patient.setDataset(name);
+                    //AGE
+                    if (!rowNumbers.containsKey("age") || row.getCell(rowNumbers.get("age")) == null)
+                        patient.setAge(-1);
+                    else
+                        patient.setAge(Integer.parseInt(row.getCell(rowNumbers.get("age")).toString().replace(".0", "")));
+                    //GENDER
+                    if (!rowNumbers.containsKey("gender") || row.getCell(rowNumbers.get("gender")) == null)
+                        patient.setGender("null");
+                    else patient.setGender(row.getCell(rowNumbers.get("gender")).toString());
+                    //ETHNICITY
+                    if (!rowNumbers.containsKey("ethnicity") || row.getCell(rowNumbers.get("ethnicity")) == null)
+                        patient.setEthnicity("null");
+                    else patient.setEthnicity(row.getCell(rowNumbers.get("ethnicity")).toString());
+
+                    addToMap(Patientmap, Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")),
+                            row.getCell(rowNumbers.get("treatment drug")).toString());
+                    patients.add(patient);
+                    previousID = currentID;
                 } else {
-                    if (Integer.parseInt(row.getCell(0).toString()) != previousID) {
-                        insertPatient(row, patient,  name, treatmentName, treatmentList, patients);
-                        previousID = Integer.parseInt(row.getCell(0).toString());
-                        System.out.println(previousID);
-
-                    } else {
-                        System.out.println("in else statement");
-                        if (!row.getCell(4).toString().equals(worksheet.getRow(index - 1).getCell(4).toString())) {
-                            for (Patient p : patients) {
-                                System.out.println("in foreach patient");
-                                if (p.getSubjectId() == Integer.parseInt(row.getCell(0).toString())) {
-                                    p.setTreatment(new Treatment(row.getCell(4).toString()));
-                                }
-                            }
-                        }
+                    if (Patientmap.containsKey(currentID)) {
+                        String med = row.getCell(rowNumbers.get("treatment drug")).toString();
+                        if (!Patientmap.get(currentID).contains(med))
+                            addToMap(Patientmap, currentID, med);
                     }
                 }
+
+
+            } else {
+                rowNumbers = setRowNumbers(worksheet, index);
             }
         }
-        int i = 0;
         for (Patient p : patients) {
-            System.out.println("in save patients to database " + i);
+            List<String> treatmentsInHashMap = Patientmap.get(p.getSubjectId());
+            Collections.sort(treatmentsInHashMap);
+            treatment = new Treatment(treatmentsInHashMap.toString());
+            treatmentNode(treatmentName, p, treatment, treatmentList);
             patientRepository.save(p);
-            i++;
         }
         return ResponseEntity.ok(new MessageResponse("testing"));
     }
 
-    private void insertPatient(XSSFRow row, Patient patient, String name, ArrayList<String> treatmentName, ArrayList<Treatment> treatmentList,  ArrayList<Patient> patients) {
-        Treatment treatment;
-        patient.setSubjectId(Integer.parseInt(row.getCell(0).toString().replace(".0", "")));
-        patient.setDataset(name);
 
-        if (row.getCell(1) == null) patient.setAge(-1);
-        else patient.setAge(Integer.parseInt(row.getCell(1).toString().replace(".0", "")));
+    private static void addToMap(HashMap<Integer, List<String>> map, Integer key, String value) {
+        // If the key is already in the map, add the value to its set
+        if (map.containsKey(key)) {
+            List<String> set = map.get(key);
+            set.add(value);
+        }
+        // Otherwise, create a new set with the value and add it to the map
+        else {
+            List<String> set = new ArrayList<>();
+            set.add(value);
+            map.put(key, set);
+        }
+    }
 
-        if (row.getCell(2) == null) patient.setGender("null");
-        else patient.setGender(row.getCell(2).toString());
-
-        if (row.getCell(3) == null) patient.setEthnicity("null");
-        else patient.setEthnicity(row.getCell(3).toString());
-
-        if (row.getCell(4) == null) treatment = new Treatment("Unknown");
-        else treatment = new Treatment(row.getCell(4).toString());
-        treatmentNode(treatmentName, patient, treatment, treatmentList);
-        patients.add(patient);
+    private HashMap<String, Integer> setRowNumbers(XSSFSheet worksheet, int index) {
+        HashMap<String, Integer> rowNumbers = new HashMap<>();
+        XSSFRow row = worksheet.getRow(index);
+        for (Cell r : row) {
+            switch (r.toString()) {
+                case "PHATOM_ID", "SUBJID":
+                    rowNumbers.put("id", r.getColumnIndex());
+                    break; //id
+                case "GENDER", "SEX":
+                    rowNumbers.put("gender", r.getColumnIndex());
+                    break; //gender
+                case "AGE":
+                    rowNumbers.put("age", r.getColumnIndex());
+                    break; //age (years)
+                case "RACE":
+                    rowNumbers.put("ethnicity", r.getColumnIndex());
+                    break; //race
+                case "PD":
+                    rowNumbers.put("relapse", r.getColumnIndex());
+                    break; //relapse time
+                case "OS_TIME":
+                    rowNumbers.put("overall survival time", r.getColumnIndex());
+                    break; //overall survival time (months)
+                case "PD_TIME":
+                    rowNumbers.put("relapse time", r.getColumnIndex());
+                    break; //relapse time (months)
+                case "PFS_STATUS":
+                    rowNumbers.put("failure free survival", r.getColumnIndex());
+                    break; //failure free survival
+                case "PFS_TIME":
+                    rowNumbers.put("failure free survival time", r.getColumnIndex());
+                    break; //failure free survival time (months)
+                case "TRT_ARM_LABEL", "CHPTERM":
+                    rowNumbers.put("treatment drug", r.getColumnIndex());
+                    break; //treatment drug
+                case "STATUS":
+                    rowNumbers.put("overall survival status", r.getColumnIndex());
+                    break; //overall survival status
+                case "CAUSEDTH":
+                    rowNumbers.put("cause of death", r.getColumnIndex());
+                    break; //cause of death
+                case "NEW_MALIG":
+                    rowNumbers.put("new malignancy", r.getColumnIndex());
+                    break; //new malignancy
+            }
+        }
+        return rowNumbers;
     }
 
     private void treatmentNode(ArrayList<String> treatmentName, Patient patient, Treatment treatment, ArrayList<Treatment> treatmentList) {
@@ -337,28 +415,4 @@ public class PatientService {
         }
    }
 
-    private HashMap<String, Integer> setRowNumbers(XSSFSheet worksheet, int index){
-        HashMap<String, Integer> rowNumbers = new HashMap<>();
-        XSSFRow row = worksheet.getRow(index);
-        for (Cell r:row) {
-            switch (r.toString()) {
-                case "PHATOM_ID" -> rowNumbers.put("id", r.getColumnIndex());//id
-                case "GENDER" -> rowNumbers.put("gender", r.getColumnIndex());//gender
-                case "AGE" -> rowNumbers.put("age", r.getColumnIndex());//age (years)
-                case "RACE" -> rowNumbers.put("ethnicity", r.getColumnIndex());//race
-                case "PD" -> rowNumbers.put("relapse", r.getColumnIndex());//relapse time
-                case "OS_TIME" -> rowNumbers.put("overall survival time", r.getColumnIndex());//overall survival time (months)
-                case "PD_TIME" -> rowNumbers.put("relapse time", r.getColumnIndex());//relapse time (months)
-                case "PFS_STATUS" -> rowNumbers.put("failure free survival", r.getColumnIndex());//failure free survival
-                case "PFS_TIME" -> rowNumbers.put("failure free survival time", r.getColumnIndex());//failure free survival time (months)
-                case "TRT_ARM_LABEL" -> rowNumbers.put("treatment drug", r.getColumnIndex());//treatment drug
-                case "STATUS" -> rowNumbers.put("overall survival status", r.getColumnIndex());//overall survival status
-                case "CAUSEDTH" -> rowNumbers.put("cause of death", r.getColumnIndex());//cause of death
-                case "NEW_MALIG" -> rowNumbers.put("new malignancy", r.getColumnIndex());//new malignancy
-                case "AE_NAME" -> rowNumbers.put("symptom", r.getColumnIndex());//symptom
-                case "AE_GRADE" -> rowNumbers.put("grade", r.getColumnIndex());//severity grade
-            }
-        }
-        return rowNumbers;
-    }
 }
