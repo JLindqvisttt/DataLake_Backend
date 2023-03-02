@@ -57,32 +57,46 @@ public class PatientService {
     } else return ResponseEntity.badRequest().body(new MessageResponse("File type not supported"));
 
 
-    //Get patients in database
+    //Get patients list from database with connection to the dataset
     List<Patient> patientList = patientRepository.findAllByDataset(name);
-    // Get treatment list
+
+    // Get treatment list from database
     ArrayList<Treatment> treatmentList = treatmentRepository.findAll();
     ArrayList<String> treatmentName = new ArrayList<>();
+
     // Add treatments from list to treatmentName
     for (Treatment t : treatmentList)
       treatmentName.add(t.getTreatment());
 
+    // Get cause of death list from database
     ArrayList<CauseOfDeath> causeOfDeathList = causeOfDeathRepository.findAll();
     ArrayList<String> causeOfDeathName = new ArrayList<>();
+
+    // Add cause of death from list to treatmentName
     for (CauseOfDeath t : causeOfDeathList)
       causeOfDeathName.add(t.getCauseOfDeath());
 
+    //Get over all survival status from database
     ArrayList<OverAllSurvivalStatus> overallSurvivalStatusList = overallSurvivalStatusRepository.findAll();
     ArrayList<String> overallSurvivalStatusName = new ArrayList<>();
+
+    // Add over all survival status to overallSurvivalStatusName
     for (OverAllSurvivalStatus t : overallSurvivalStatusList)
       overallSurvivalStatusName.add(t.getOverAllSurvivalStatus());
 
+    // Get new malignancy list from database
     ArrayList<NewMalignancy> newMalignancyList = newMalignancyRepository.findAll();
     ArrayList<String> newMalignancyName = new ArrayList<>();
+
+    // Add malignancy to newMalignancyName
     for (NewMalignancy t : newMalignancyList)
       newMalignancyName.add(t.getNewMalignancy());
 
+    // Get datasets from database
     ArrayList<Dataset> datasetList = datasetRepository.findAll();
     ArrayList<String> datasetsName = new ArrayList<>();
+
+    // Add datasets to datasetsName
     for (Dataset t : datasetList)
       datasetsName.add(t.getDatasetName());
 
