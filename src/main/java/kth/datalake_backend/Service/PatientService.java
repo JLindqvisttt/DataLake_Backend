@@ -222,7 +222,7 @@ public class PatientService {
       patientRepository.save(p);
     }
 
-    return ResponseEntity.ok(new MessageResponse("Successfully added new patients"));
+    return ResponseEntity.ok(new MessageResponse("Successfully added"));
   }
 
   public ResponseEntity<?> loadSymptoms(MultipartFile file, String name) throws IOException {
@@ -292,7 +292,7 @@ public class PatientService {
         rowNumbers = setRowNumbers(worksheet, index);
       }
     }
-    return ResponseEntity.ok(new MessageResponse("Successfully added new symptons"));
+    return ResponseEntity.ok(new MessageResponse("Successfully added"));
   }
 
   private static void addToMap(HashMap<Integer, List<String>> map, Integer key, String value) {
