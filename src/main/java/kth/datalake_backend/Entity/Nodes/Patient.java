@@ -70,7 +70,7 @@ public class Patient {
     this.age = age;
     this.subjectId = subjectId;
   }
-  
+
   public int getAge() {
     return age;
   }
@@ -126,7 +126,6 @@ public class Patient {
   }
 
   public void setGender(String gender) {
-    System.out.println(gender);
       switch (gender) {
         case "1.0","1", "Male" -> this.gender = Gender.MALE;
         case "2.0","2", "Female" -> this.gender = Gender.FEMALE;
