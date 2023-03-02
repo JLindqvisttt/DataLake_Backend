@@ -17,8 +17,6 @@ public class Patient {
   @GeneratedValue
   private Long id;
 
-  @NotBlank
-  private String dataset;
 
   @NotBlank
   private int age;
@@ -64,18 +62,15 @@ public class Patient {
   @Relationship(type="Symptoms", direction = Relationship.Direction.OUTGOING)
   private Set<Symptoms> symptoms = new HashSet<>();
 
+  @Relationship(type="Dataset", direction = Relationship.Direction.OUTGOING)
+  private Set<Dataset> dataset = new HashSet<>();
   public Patient() {}
 
   public Patient(int age, int subjectId) {
     this.age = age;
     this.subjectId = subjectId;
   }
-
-
-  public String getDataset() {
-    return dataset;
-  }
-
+  
   public int getAge() {
     return age;
   }
@@ -124,9 +119,7 @@ public class Patient {
     return symptoms;
   }
 
-  public void setDataset(String dataset) {
-    this.dataset = dataset;
-  }
+  public Set<Dataset> getDataset() {return dataset;}
 
   public void setAge(int age) {
     this.age = age;
@@ -193,6 +186,7 @@ public class Patient {
 
   public void setCauseOfDeath(CauseOfDeath causeOfDeath){this.causeOfDeath.add(causeOfDeath);}
 
+  public void setDataset(Dataset dataset) {this.dataset.add(dataset);}
   public void setNewMalignancy(NewMalignancy newMalignancy){this.newMalignancy.add(newMalignancy);}
 
   public void setOverAllSurvivalStatus(OverAllSurvivalStatus overAllSurvivalStatus){this.overAllSurvivalStatus.add(overAllSurvivalStatus);}
@@ -206,7 +200,7 @@ public class Patient {
   public String toString() {
     return "Patient{" +
             "id=" + id +
-            ", dataset='" + dataset + '\'' +
+
             ", age=" + age +
             ", gender=" + gender +
             ", ethnicity='" + ethnicity + '\'' +

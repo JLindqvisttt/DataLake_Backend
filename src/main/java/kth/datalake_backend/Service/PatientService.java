@@ -39,6 +39,8 @@ public class PatientService {
   NewMalignancyRepository newMalignancyRepository;
 
   @Autowired
+  DatasetRepository datasetRepository;
+  @Autowired
   SymptomsRepository symptomsRepository;
 
   //https://por-porkaew15.medium.com/how-to-import-excel-by-spring-boot-2624367c8468
@@ -79,11 +81,18 @@ public class PatientService {
     for (NewMalignancy t : newMalignancyList)
       newMalignancyName.add(t.getNewMalignancy());
 
+    ArrayList<Dataset> datasetList = datasetRepository.findAll();
+    ArrayList<String> datasetsName = new ArrayList<>();
+    for (Dataset t : datasetList)
+      datasetsName.add(t.getDatasetName());
+
+
     HashMap<String, Integer> rowNumbers = null;
     Treatment treatment;
     List<Patient> patients = new ArrayList<>();
 
     HashMap<Integer, List<String>> Patientmap = new HashMap<>();
+    Dataset dataset = new Dataset();
     int previousID = 0;
 
     for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
@@ -108,7 +117,8 @@ public class PatientService {
           }
 
           patient.setSubjectId(currentID);
-          patient.setDataset(name);
+          dataset.setDatasetName(name);
+          datasetNode(datasetsName,patient, dataset,datasetList);
 
           if (!rowNumbers.containsKey("age") || row.getCell(rowNumbers.get("age")) == null)
             patient.setAge(-1);
@@ -317,6 +327,20 @@ public class PatientService {
     }
     return rowNumbers;
   }
+
+  private void datasetNode(ArrayList<String> datasetName, Patient patient, Dataset dataset, ArrayList<Dataset> datasetList){
+    if (!datasetName.contains(dataset.getDatasetName())){
+      System.out.println("in here");
+      datasetRepository.save(dataset);
+      datasetName.add(dataset.getDatasetName());
+      datasetList.add(dataset);
+      patient.setDataset(dataset);
+    } else
+      for (Dataset a : datasetList)
+        if (a.getDatasetName().equals(dataset.getDatasetName()))
+          patient.setDataset(a);
+  }
+
 
   private void treatmentNode(ArrayList<String> treatmentName, Patient patient, Treatment treatment, ArrayList<Treatment> treatmentList) {
     if (!treatmentName.contains(treatment.getTreatment())) {
