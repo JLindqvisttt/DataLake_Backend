@@ -24,6 +24,7 @@ public class OverAllSurvivalStatus {
 
     public void setOverAllSurvivalStatus(String overAllSurvivalStatus, String name) {
         if(name.equals("266"))overAllSurvivalStatus = String.valueOf(Double.valueOf(overAllSurvivalStatus)+1);
+        System.out.println("Row 27, OverAllSurvivalStatus: " +overAllSurvivalStatus);
         switch (overAllSurvivalStatus) {
             case "1.0" -> this.overAllSurvivalStatus = "Alive";
             case "2.0" -> this.overAllSurvivalStatus = "Death";
