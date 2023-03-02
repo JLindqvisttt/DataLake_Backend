@@ -190,6 +190,7 @@ public class PatientService {
           }
         }
 
+
       } else {
         rowNumbers = setRowNumbers(worksheet, index);
       }
@@ -218,10 +219,10 @@ public class PatientService {
       // Create a SasFileReader object and read the file
       SasFileReader sasFileReader = new SasFileReaderImpl(inputStream);
       worksheet = converter.convertSasToXlsx(sasFileReader);
-    } else if (file.getOriginalFilename().contains(".xlsx")){
+    } else {
       XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
       worksheet = workbook.getSheetAt(0);
-    }else return ResponseEntity.badRequest().body(new MessageResponse("File type not supported"));
+    }
 
     List<Patient> patientList = patientRepository.findAllByDataset(name);
     List<Integer> patientId = new ArrayList<>();
