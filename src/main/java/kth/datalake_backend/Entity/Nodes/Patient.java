@@ -18,9 +18,6 @@ public class Patient {
   private Long id;
 
   @NotBlank
-  private String dataset;
-
-  @NotBlank
   private int age;
 
   @NotBlank
@@ -64,16 +61,14 @@ public class Patient {
   @Relationship(type="Symptoms", direction = Relationship.Direction.OUTGOING)
   private Set<Symptoms> symptoms = new HashSet<>();
 
+  @Relationship(type="Dataset", direction = Relationship.Direction.OUTGOING)
+  private Set<Dataset> dataset = new HashSet<>();
+
   public Patient() {}
 
   public Patient(int age, int subjectId) {
     this.age = age;
     this.subjectId = subjectId;
-  }
-
-
-  public String getDataset() {
-    return dataset;
   }
 
   public int getAge() {
@@ -120,20 +115,13 @@ public class Patient {
 
   public Set<OverAllSurvivalStatus> getOverAllSurvivalStatus() {return overAllSurvivalStatus;}
 
-  public Set<Symptoms> getSymptoms() {
-    return symptoms;
-  }
-
-  public void setDataset(String dataset) {
-    this.dataset = dataset;
-  }
+  public Set<Dataset> getDataset() {return dataset;}
 
   public void setAge(int age) {
     this.age = age;
   }
 
   public void setGender(String gender) {
-    System.out.println(gender);
       switch (gender) {
         case "1.0","1", "Male" -> this.gender = Gender.MALE;
         case "2.0","2", "Female" -> this.gender = Gender.FEMALE;
@@ -189,6 +177,7 @@ public class Patient {
     this.failureFreeSurvivalTime = failureFreeSurvivalTime;
   }
 
+
   public void setTreatment(Treatment treatment){this.treatment.add(treatment);}
 
   public void setCauseOfDeath(CauseOfDeath causeOfDeath){this.causeOfDeath.add(causeOfDeath);}
@@ -201,12 +190,13 @@ public class Patient {
     this.symptoms.add(symptoms);
   }
 
+  public void setDataset(Dataset dataset) {this.dataset.add(dataset);}
+
 
   @Override
   public String toString() {
     return "Patient{" +
             "id=" + id +
-            ", dataset='" + dataset + '\'' +
             ", age=" + age +
             ", gender=" + gender +
             ", ethnicity='" + ethnicity + '\'' +
