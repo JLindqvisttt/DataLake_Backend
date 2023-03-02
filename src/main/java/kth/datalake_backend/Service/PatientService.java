@@ -330,7 +330,6 @@ public class PatientService {
 
   private void datasetNode(ArrayList<String> datasetName, Patient patient, Dataset dataset, ArrayList<Dataset> datasetList){
     if (!datasetName.contains(dataset.getDatasetName())){
-      System.out.println("in here");
       datasetRepository.save(dataset);
       datasetName.add(dataset.getDatasetName());
       datasetList.add(dataset);
