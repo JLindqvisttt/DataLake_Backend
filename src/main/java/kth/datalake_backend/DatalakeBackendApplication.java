@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+
 @SpringBootApplication
 @EnableNeo4jRepositories
 public class DatalakeBackendApplication {
@@ -27,12 +29,11 @@ public class DatalakeBackendApplication {
     @Bean
     public CommandLineRunner preloadUsers(UserRepository userRepository) {
         return (args) -> {
-            User userAdmin = new User("John", "Doe", "admin@gmail.com", encoder.encode("admin"), ERole.valueOf("ROLE_ADMIN"));
-            User user = new User("Jane", "Doe", "user@gmail.com", encoder.encode("user"), ERole.valueOf("ROLE_USER"));
+            if(userRepository.findByUsername("admin@gmail.com") == null)
+                userRepository.save(new User("John", "Doe", "admin@gmail.com", encoder.encode("admin"), ERole.valueOf("ROLE_ADMIN")));
 
-            userRepository.save(userAdmin);
-            userRepository.save(user);
-
+            if(userRepository.findByUsername("user@gmail.com") == null)
+                userRepository.save(new User("Jane", "Doe", "user@gmail.com", encoder.encode("user"), ERole.valueOf("ROLE_USER")));
         };
     }
 }

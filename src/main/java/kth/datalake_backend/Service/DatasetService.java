@@ -18,6 +18,4 @@ public class DatasetService {
     public List<Dataset> getAllDatasets() throws IOException {
         return datasetRepository.findAll();
     }
-
-
 }

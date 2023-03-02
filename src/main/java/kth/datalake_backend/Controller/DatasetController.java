@@ -1,7 +1,9 @@
 package kth.datalake_backend.Controller;
 
 import kth.datalake_backend.Entity.Nodes.Dataset;
+import kth.datalake_backend.Service.AuthService;
 import kth.datalake_backend.Service.DatasetService;
+import kth.datalake_backend.Service.PatientService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +16,11 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/dataset")
 public class DatasetController {
-    DatasetService datasetService;
+    private final DatasetService datasetService;
+
+    public DatasetController(DatasetService datasetService) {
+        this.datasetService = datasetService;
+    }
 
     @GetMapping("/getAllDatasets")
     public List<Dataset> getUserAllUsers() throws IOException {
