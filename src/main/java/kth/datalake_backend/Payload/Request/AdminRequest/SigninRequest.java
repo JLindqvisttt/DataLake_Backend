@@ -1,4 +1,4 @@
-package kth.datalake_backend.Payload.Request;
+package kth.datalake_backend.Payload.Request.AdminRequest;
 
 import javax.validation.constraints.NotBlank;
 

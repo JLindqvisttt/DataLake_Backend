@@ -1,4 +1,4 @@
-package kth.datalake_backend.Payload.Request;
+package kth.datalake_backend.Payload.Request.UserRequest;
 
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue;

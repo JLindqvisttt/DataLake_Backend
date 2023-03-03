@@ -2,9 +2,9 @@ package kth.datalake_backend.Controller;
 
 
 import kth.datalake_backend.Entity.User.User;
-import kth.datalake_backend.Payload.Request.RemoveUserRequest;
-import kth.datalake_backend.Payload.Request.SignUpRequest;
-import kth.datalake_backend.Payload.Request.UpdateUserRequest_Admin;
+import kth.datalake_backend.Payload.Request.AdminRequest.RemoveUserRequest;
+import kth.datalake_backend.Payload.Request.AdminRequest.SignUpRequest;
+import kth.datalake_backend.Payload.Request.AdminRequest.UpdateUserRequest_Admin;
 import kth.datalake_backend.Service.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

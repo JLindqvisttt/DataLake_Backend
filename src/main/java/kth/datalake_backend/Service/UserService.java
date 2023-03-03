@@ -2,7 +2,7 @@ package kth.datalake_backend.Service;
 
 
 import kth.datalake_backend.Entity.User.User;
-import kth.datalake_backend.Payload.Request.UpdateUserRequest_User;
+import kth.datalake_backend.Payload.Request.UserRequest.UpdateUserRequest_User;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

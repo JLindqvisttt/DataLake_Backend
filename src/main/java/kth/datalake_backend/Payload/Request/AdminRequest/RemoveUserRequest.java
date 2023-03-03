@@ -1,4 +1,4 @@
-package kth.datalake_backend.Payload.Request;
+package kth.datalake_backend.Payload.Request.AdminRequest;
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;

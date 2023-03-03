@@ -1,6 +1,6 @@
 package kth.datalake_backend.Controller;
 
-import kth.datalake_backend.Payload.Request.UpdateUserRequest_User;
+import kth.datalake_backend.Payload.Request.UserRequest.UpdateUserRequest_User;
 import kth.datalake_backend.Service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

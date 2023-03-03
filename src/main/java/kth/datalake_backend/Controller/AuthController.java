@@ -1,8 +1,7 @@
 package kth.datalake_backend.Controller;
 
 
-import kth.datalake_backend.Payload.Request.SignUpRequest;
-import kth.datalake_backend.Payload.Request.SigninRequest;
+import kth.datalake_backend.Payload.Request.AdminRequest.SigninRequest;
 import kth.datalake_backend.Service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
