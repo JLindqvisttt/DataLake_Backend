@@ -3,6 +3,7 @@ package kth.datalake_backend.Entity.Nodes;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Property;
 
 import javax.validation.constraints.NotBlank;
 
@@ -14,6 +15,7 @@ public class Treatment {
     private Long id;
 
     @NotBlank
+    @Property("Treatment")
     private String treatment;
 
     public Treatment(String treatment){

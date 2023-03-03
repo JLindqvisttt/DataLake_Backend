@@ -6,13 +6,11 @@ import org.json.JSONObject;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public interface PatientRepository extends Neo4jRepository<Patient, Long> {
     ArrayList<Patient> findAll();
@@ -20,7 +18,9 @@ public interface PatientRepository extends Neo4jRepository<Patient, Long> {
     @Query("MATCH (:Dataset{datasetName: $name})--(p:Patient) RETURN p")
     List<Patient> findAllByDataset(String name);
 
-    @Query("CALL apoc.export.json.query('MATCH(:Dataset{datasetName: $name})--(a:Patient)-[r]-(b) RETURN a,b', null, {}) YIELD file RETURN file")
-    String findPatientByDataset(@Param("name") String name);
-    
+    @Query()
+    ArrayList<Patient> findPatientBySubjectId(int subId);
+
+    @Query("MATCH (:Dataset{datasetName: $name})--(actor:Patient)-[r]->(b)WITH actor, collect(b) AS nodes RETURN actor{actor, b: nodes}")
+    List<Patient> findPatientByDataset(String name);
 }

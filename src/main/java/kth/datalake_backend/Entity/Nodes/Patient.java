@@ -6,8 +6,8 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import javax.validation.constraints.NotBlank;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Node
 public class Patient {
@@ -48,23 +48,24 @@ public class Patient {
 
 
   @Relationship(type="Treatment", direction = Relationship.Direction.OUTGOING)
-  private Set<Treatment> treatment = new HashSet<>();
+  private Treatment treatment;
 
   @Relationship(type = "Death", direction = Relationship.Direction.OUTGOING)
-  private Set<CauseOfDeath> causeOfDeath = new HashSet<>();
+  private CauseOfDeath causeOfDeath;
 
   @Relationship(type = "newMalignancy", direction = Relationship.Direction.OUTGOING)
-  private Set<NewMalignancy> newMalignancy = new HashSet<>();
+  private NewMalignancy newMalignancy;
 
   @Relationship(type = "OverallSurvivalStatus", direction = Relationship.Direction.OUTGOING)
-  private Set<OverAllSurvivalStatus> overAllSurvivalStatus = new HashSet<>();
+  private OverAllSurvivalStatus overAllSurvivalStatus;
 
   @Relationship(type="Symptoms", direction = Relationship.Direction.OUTGOING)
-  private Set<Symptoms> symptoms = new HashSet<>();
+  private List<Symptoms> symptoms;
 
   @Relationship(type="Dataset", direction = Relationship.Direction.OUTGOING)
-  private Set<Dataset> dataset = new HashSet<>();
-  public Patient() {}
+  private Dataset dataset;
+
+  public Patient() {  }
 
   public Patient(int age, int subjectId) {
     this.age = age;
@@ -107,30 +108,30 @@ public class Patient {
     return failureFreeSurvivalTime;
   }
 
-  public Set<Treatment> getTreatment() {return treatment;}
+  public Treatment getTreatment() {return treatment;}
 
-  public Set<CauseOfDeath> getCauseOfDeath() {return causeOfDeath;}
+  public CauseOfDeath getCauseOfDeath() {return causeOfDeath;}
 
-  public Set<NewMalignancy> getNewMalignancy() {return newMalignancy;}
+  public NewMalignancy getNewMalignancy() {return newMalignancy;}
 
-  public Set<OverAllSurvivalStatus> getOverAllSurvivalStatus() {return overAllSurvivalStatus;}
+  public OverAllSurvivalStatus getOverAllSurvivalStatus() {return overAllSurvivalStatus;}
 
-  public Set<Symptoms> getSymptoms() {
+  public List<Symptoms> getSymptoms() {
     return symptoms;
   }
 
-  public Set<Dataset> getDataset() {return dataset;}
+  public Dataset getDataset() {return dataset;}
 
   public void setAge(int age) {
     this.age = age;
   }
 
   public void setGender(String gender) {
-      switch (gender) {
-        case "1.0","1", "Male" -> this.gender = Gender.MALE;
-        case "2.0","2", "Female" -> this.gender = Gender.FEMALE;
-        default -> this.gender = Gender.UNKNOWN;
-      }
+    switch (gender) {
+      case "1.0","1", "Male" -> this.gender = Gender.MALE;
+      case "2.0","2", "Female" -> this.gender = Gender.FEMALE;
+      default -> this.gender = Gender.UNKNOWN;
+    }
   }
 
   public void setEthnicity(String ethnicity) {
@@ -181,14 +182,14 @@ public class Patient {
     this.failureFreeSurvivalTime = failureFreeSurvivalTime;
   }
 
-  public void setTreatment(Treatment treatment){this.treatment.add(treatment);}
+  public void setTreatment(Treatment treatment){this.treatment = treatment;}
 
-  public void setCauseOfDeath(CauseOfDeath causeOfDeath){this.causeOfDeath.add(causeOfDeath);}
+  public void setCauseOfDeath(CauseOfDeath causeOfDeath){this.causeOfDeath = causeOfDeath;}
 
-  public void setDataset(Dataset dataset) {this.dataset.add(dataset);}
-  public void setNewMalignancy(NewMalignancy newMalignancy){this.newMalignancy.add(newMalignancy);}
+  public void setDataset(Dataset dataset) {this.dataset = dataset;}
+  public void setNewMalignancy(NewMalignancy newMalignancy){this.newMalignancy = newMalignancy;}
 
-  public void setOverAllSurvivalStatus(OverAllSurvivalStatus overAllSurvivalStatus){this.overAllSurvivalStatus.add(overAllSurvivalStatus);}
+  public void setOverAllSurvivalStatus(OverAllSurvivalStatus overAllSurvivalStatus){this.overAllSurvivalStatus =overAllSurvivalStatus;}
 
   public void setSymptoms(Symptoms symptoms) {
     this.symptoms.add(symptoms);
