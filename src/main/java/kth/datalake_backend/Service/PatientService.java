@@ -24,6 +24,7 @@ import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -44,14 +45,9 @@ public class PatientService {
   OverallSurvivalStatusRepository overallSurvivalStatusRepository;
   @Autowired
   NewMalignancyRepository newMalignancyRepository;
-
-  @Autowired
-  DatasetRepository datasetRepository;
   @Autowired
   SymptomsRepository symptomsRepository;
 
-  @Autowired
-  private Driver neo4jDriver;
 
   //https://por-porkaew15.medium.com/how-to-import-excel-by-spring-boot-2624367c8468
   public ResponseEntity<?> loadData(MultipartFile file, String name) throws IOException {
@@ -69,6 +65,7 @@ public class PatientService {
 
     //Get patients list from database with connection to the dataset
     List<Patient> patientList = patientRepository.findAllByDataset(name);
+
 
     // Get treatment list from database
     ArrayList<Treatment> treatmentList = treatmentRepository.findAll();
@@ -102,21 +99,12 @@ public class PatientService {
     for (NewMalignancy t : newMalignancyList)
       newMalignancyName.add(t.getNewMalignancy());
 
-    // Get datasets from database
-    ArrayList<Dataset> datasetList = datasetRepository.findAll();
-    ArrayList<String> datasetsName = new ArrayList<>();
-
-    // Add datasets to datasetsName
-    for (Dataset t : datasetList)
-      datasetsName.add(t.getDatasetName());
-
 
     HashMap<String, Integer> rowNumbers = null;
     Treatment treatment;
     List<Patient> patients = new ArrayList<>();
 
     HashMap<Integer, List<String>> Patientmap = new HashMap<>();
-    Dataset dataset = new Dataset();
     int previousID = 0;
 
     for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
@@ -141,8 +129,8 @@ public class PatientService {
           }
 
           patient.setSubjectId(currentID);
-          dataset.setDatasetName(name);
-          datasetNode(datasetsName,patient, dataset,datasetList);
+          patient.setDataset(name);
+
 
           if (!rowNumbers.containsKey("age") || row.getCell(rowNumbers.get("age")) == null)
             patient.setAge(-1);
@@ -182,7 +170,7 @@ public class PatientService {
             patient.setFailureFreeSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("failure free survival time")).toString()));
 
           if (!rowNumbers.containsKey("overall survival status") || row.getCell(rowNumbers.get("overall survival status")) == null)
-            overallSurvivalStatus.setOverAllSurvivalStatus("Unknown", name);
+            overallSurvivalStatus.setOverAllSurvivalStatus("5", name);
           else
             overallSurvivalStatus.setOverAllSurvivalStatus(row.getCell(rowNumbers.get("overall survival status")).toString(), name);
           overallSurvivalStatusNode(overallSurvivalStatusName, patient, overallSurvivalStatus, overallSurvivalStatusList);
@@ -305,11 +293,17 @@ public class PatientService {
     return ResponseEntity.ok(new MessageResponse("Successfully added"));
   }
 
-  public String getDataAsJson(String name) {
-    return patientRepository.findPatientByDataset(name);
+  public List<String> getDataSets() {
+    return patientRepository.findByDatabase();
   }
 
+  public List<Patient> getPatientsAsJson(String name){
+    return patientRepository.findAllByDataset(name);
+  }
 
+  public List<Patient> getAllPatients() {
+    return patientRepository.findAll();
+  }
 
   private static void addToMap(HashMap<Integer, List<String>> map, Integer key, String value) {
     // If the key is already in the map, add the value to its set
@@ -356,18 +350,6 @@ public class PatientService {
       }
     }
     return rowNumbers;
-  }
-
-  private void datasetNode(ArrayList<String> datasetName, Patient patient, Dataset dataset, ArrayList<Dataset> datasetList){
-    if (!datasetName.contains(dataset.getDatasetName())){
-      datasetRepository.save(dataset);
-      datasetName.add(dataset.getDatasetName());
-      datasetList.add(dataset);
-      patient.setDataset(dataset);
-    } else
-      for (Dataset a : datasetList)
-        if (a.getDatasetName().equals(dataset.getDatasetName()))
-          patient.setDataset(a);
   }
 
   private void treatmentNode(ArrayList<String> treatmentName, Patient patient, Treatment treatment, ArrayList<Treatment> treatmentList) {
@@ -432,5 +414,6 @@ public class PatientService {
       symptomsList.add(symptoms);
     }
   }
+
 
 }

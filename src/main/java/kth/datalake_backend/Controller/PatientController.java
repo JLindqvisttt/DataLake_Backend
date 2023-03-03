@@ -35,8 +35,18 @@ public class PatientController {
     return patientService.loadSymptoms(files, name);
   }
 
+  @GetMapping("/getAllDatasets")
+  public List<String> getDatasets() throws IOException {
+    return patientService.getDataSets();
+  }
+
   @GetMapping("/getPatientsByDataset")
-  public String getPatientsAsJson(@RequestParam("name") String name) throws IOException {
-    return patientService.getDataAsJson(name);
+  public List<Patient> getPatientsAsJson( @RequestParam("name") String name) throws IOException {
+    return patientService.getPatientsAsJson(name);
+  }
+
+  @GetMapping("/getAllPatients")
+  public List<Patient> getAllPatients(){
+    return patientService.getAllPatients();
   }
 }

@@ -24,9 +24,9 @@ public class CauseOfDeath {
 
     public void setCauseOfDeath(String causeOfDeath) {
         switch (causeOfDeath) {
-            case "1.0" -> this.causeOfDeath = "Protocol treatment related";
-            case "2.0" -> this.causeOfDeath = "Protocol disease related";
-            case "3.0" -> this.causeOfDeath = "Not related to protocol treatment or protocol disease";
+            case "1.0","1" -> this.causeOfDeath = "Protocol treatment related";
+            case "2.0","2" -> this.causeOfDeath = "Protocol disease related";
+            case "3.0","3" -> this.causeOfDeath = "Not related to protocol treatment or protocol disease";
             default -> this.causeOfDeath = "Unknown";
         }
     }
