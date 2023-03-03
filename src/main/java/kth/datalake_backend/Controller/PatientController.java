@@ -1,19 +1,24 @@
 package kth.datalake_backend.Controller;
 
+import kth.datalake_backend.Entity.Nodes.Patient;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Service.PatientService;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.neo4j.driver.Driver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/patient")
 public class PatientController {
-
   private final PatientService patientService;
 
   public PatientController(PatientService patientService) {
@@ -30,4 +35,8 @@ public class PatientController {
     return patientService.loadSymptoms(files, name);
   }
 
+  @GetMapping("/getPatientsByDataset")
+  public String getPatientsAsJson(@RequestParam("name") String name) throws IOException {
+    return patientService.getDataAsJson(name);
+  }
 }

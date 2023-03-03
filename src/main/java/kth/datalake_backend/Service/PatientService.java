@@ -2,6 +2,14 @@ package kth.datalake_backend.Service;
 
 import com.epam.parso.SasFileReader;
 import com.epam.parso.impl.SasFileReaderImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kth.datalake_backend.Entity.Nodes.*;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.Nodes.*;
@@ -11,18 +19,17 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
 
 @Service
 public class PatientService {
@@ -42,6 +49,9 @@ public class PatientService {
   DatasetRepository datasetRepository;
   @Autowired
   SymptomsRepository symptomsRepository;
+
+  @Autowired
+  private Driver neo4jDriver;
 
   //https://por-porkaew15.medium.com/how-to-import-excel-by-spring-boot-2624367c8468
   public ResponseEntity<?> loadData(MultipartFile file, String name) throws IOException {
@@ -295,6 +305,12 @@ public class PatientService {
     return ResponseEntity.ok(new MessageResponse("Successfully added new symptons"));
   }
 
+  public String getDataAsJson(String name) {
+    return patientRepository.findPatientByDataset(name);
+  }
+
+
+
   private static void addToMap(HashMap<Integer, List<String>> map, Integer key, String value) {
     // If the key is already in the map, add the value to its set
     if (map.containsKey(key)) {
@@ -353,7 +369,6 @@ public class PatientService {
         if (a.getDatasetName().equals(dataset.getDatasetName()))
           patient.setDataset(a);
   }
-
 
   private void treatmentNode(ArrayList<String> treatmentName, Patient patient, Treatment treatment, ArrayList<Treatment> treatmentList) {
     if (!treatmentName.contains(treatment.getTreatment())) {
