@@ -41,4 +41,14 @@ public class AdminController {
   public ResponseEntity removeUser(@Valid @RequestBody RemoveUserRequest removeUserRequest) {
     return adminService.removeUser(removeUserRequest);
   }
+
+  @GetMapping("/nrOfNodes")
+  public List<Long> nrOfNodes() {
+    return adminService.nrOfNodes();
+  }
+
+  @GetMapping("/nrOfRelations")
+  public List<Long> nrOfRelations() {
+    return adminService.nrOfRelations();
+  }
 }

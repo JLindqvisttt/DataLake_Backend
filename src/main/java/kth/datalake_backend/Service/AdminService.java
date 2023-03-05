@@ -42,7 +42,8 @@ public class AdminService {
   }
 
   public ResponseEntity<?> registerUser(SignUpRequest signUpRequest) {
-    if (adminRepository.existsByUsername(signUpRequest.getUsername())) return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+    if (adminRepository.existsByUsername(signUpRequest.getUsername()))
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
     User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(), signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), ERole.ROLE_USER);
     adminRepository.save(user);
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
@@ -50,8 +51,16 @@ public class AdminService {
 
   public ResponseEntity removeUser(RemoveUserRequest removeUserRequest) {
     User user = adminRepository.findByIdentity(removeUserRequest.getIdentity());
-    if (user == null) return ResponseEntity.badRequest().body( new MessageResponse("Could not remove user, try again"));
+    if (user == null) return ResponseEntity.badRequest().body(new MessageResponse("Could not remove user, try again"));
     adminRepository.delete(user);
     return ResponseEntity.ok(new MessageResponse("Successfully removed user"));
+  }
+
+  public List<Long> nrOfNodes() {
+    return adminRepository.nrOfNodes();
+  }
+
+  public List<Long> nrOfRelations() {
+    return adminRepository.nrOfRelations();
   }
 }
