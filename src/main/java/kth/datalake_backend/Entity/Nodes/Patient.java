@@ -198,7 +198,6 @@ public class Patient {
   public String toString() {
     return "Patient{" +
             "id=" + id +
-
             ", age=" + age +
             ", gender=" + gender +
             ", ethnicity='" + ethnicity + '\'' +

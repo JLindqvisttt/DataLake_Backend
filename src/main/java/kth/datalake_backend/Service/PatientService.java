@@ -160,7 +160,7 @@ public class PatientService {
             patient.setRelapseTime(Double.parseDouble(row.getCell(rowNumbers.get("relapse time")).toString()));
 
           if (!rowNumbers.containsKey("failure free survival") || row.getCell(rowNumbers.get("failure free survival")) == null)
-            patient.setFailureFreeSurvivalStatus("null");
+            patient.setFailureFreeSurvivalStatus("Unknown");
           else
             patient.setFailureFreeSurvivalStatus(row.getCell(rowNumbers.get("failure free survival")).toString());
 
