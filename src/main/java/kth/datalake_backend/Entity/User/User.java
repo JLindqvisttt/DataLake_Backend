@@ -16,7 +16,7 @@ public class User {
 
   @Id
   @GeneratedValue
-  private Long id;
+  private Long Id;
 
   @NotBlank
   @Size(min = 2 ,max = 20)
@@ -42,14 +42,14 @@ public class User {
   private ERole role;
 
   public User(Long identity, String firstname, String lastname,String username) {
-    this.id = identity;
+    this.Id = identity;
     this.firstName = firstname;
     this.lastName = lastname;
     this.username = username;
   }
   public User(Long identity, String password, String username) {
     this.username = username;
-    this.id = identity;
+    this.Id = identity;
     this.password = password;
   }
   public List<String> getAvailableDatabases() {
@@ -65,7 +65,7 @@ public class User {
 
   }
   public User(Long identity, String firstName, String lastName, String username, List<String> availableDatabases, ERole role) {
-    this.id = identity;
+    this.Id = identity;
     this.firstName = firstName;
     this.lastName = lastName;
     this.username = username;
@@ -73,7 +73,7 @@ public class User {
     this.role = role;
   }
   public User(Long identity, String firstName, String lastName, String username, String password, List<String> availableDatabases, ERole role) {
-    this.id = identity;
+    this.Id = identity;
     this.firstName = firstName;
     this.lastName = lastName;
     this.username = username;
@@ -132,11 +132,11 @@ public class User {
   }
 
   public Long getId() {
-    return id;
+    return Id;
   }
 
   public void setId(Long id) {
-    this.id = id;
+    this.Id = id;
   }
 
   public void setLastName(String lastName) {
@@ -162,7 +162,7 @@ public class User {
   @Override
   public String toString() {
     return "User{" +
-      "identity=" + id +
+      "identity=" + Id +
       ", firstName='" + firstName + '\'' +
       ", lastName='" + lastName + '\'' +
       ", username='" + username + '\'' +

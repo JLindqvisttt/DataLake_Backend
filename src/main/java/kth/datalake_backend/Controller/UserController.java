@@ -1,6 +1,7 @@
 package kth.datalake_backend.Controller;
 
-import kth.datalake_backend.Payload.Request.UpdateUserRequest_User;
+import kth.datalake_backend.Payload.Request.UpdateUserPasswordRequest;
+import kth.datalake_backend.Payload.Request.UpdateUserUsernameRequest;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -19,19 +20,15 @@ public class UserController {
     this.userService = userService;
   }
 
-  @PatchMapping("/updateUser")
-  public ResponseEntity<MessageResponse> updateUser(@Valid @RequestBody UpdateUserRequest_User updateUserRequest_user) {
-    return userService.updateUser(updateUserRequest_user);
-  }
 
   @PatchMapping("/updateUserName")
-  public ResponseEntity<MessageResponse> updateUserName(@Valid @RequestBody UpdateUserRequest_User updateUserRequest_user) {
-    return userService.updateUser(updateUserRequest_user);
+  public ResponseEntity<MessageResponse> updateUserName(@Valid @RequestBody UpdateUserUsernameRequest updateUserUsernameRequest) {
+    return userService.updateUserName(updateUserUsernameRequest);
   }
 
   @PatchMapping("/updateUserPassword")
-  public ResponseEntity<MessageResponse> updateUserPassword(@Valid @RequestBody UpdateUserRequest_User updateUserRequest_user) {
-    return userService.updateUser(updateUserRequest_user);
+  public ResponseEntity<MessageResponse> updateUserPassword(@Valid @RequestBody UpdateUserPasswordRequest updateUserPasswordRequest) {
+    return userService.updateUserPassword(updateUserPasswordRequest);
   }
 
 }

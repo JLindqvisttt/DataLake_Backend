@@ -18,10 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.neo4j.core.Neo4jTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -232,11 +228,25 @@ public class AdminServiceTest {
         register.setUsername("A");
 
         response = adminService.registerUser(register).getBody().toString();
-        assertEquals("User registered successfully", response);
+        assertEquals("Invalid username must be at least 6 characters and max 40 characters", response);
 
         //email long
+        register.setFirstname("AA");
+        register.setLastname("BB");
+        register.setPassword("AAABBB");
+        register.setUsername("Dwog3hSXfcDIaSKucbWqwaNfzVNumWQ@gmail.com");
+
+        response = adminService.registerUser(register).getBody().toString();
+        assertEquals("Invalid username must be at least 6 characters and max 40 characters", response);
 
         //email same
+        register.setFirstname("AA");
+        register.setLastname("BB");
+        register.setPassword("AAABBB");
+        register.setUsername("user@gmail.com");
+
+        response = adminService.registerUser(register).getBody().toString();
+        assertEquals("Error: Email is already in use!", response);
     }
 
     @Test
@@ -264,7 +274,7 @@ public class AdminServiceTest {
     public void invalidID() {
         UpdateUserRequest_Admin update = new UpdateUserRequest_Admin();
         String response;
-        update.setId(9L);
+        update.setId(91L);
         update.setFirstname(user.getFirstName());
         update.setLastname(user.getLastName());
         update.setPassword("user12");
