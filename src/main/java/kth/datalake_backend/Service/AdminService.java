@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdminService {
@@ -27,16 +28,14 @@ public class AdminService {
   }
 
   public ResponseEntity updateUser(UpdateUserRequest_Admin updateUserRequest) {
-    User userCheck = adminRepository.findByIdentity(updateUserRequest.getIdentity());
-    if (userCheck == null) return ResponseEntity.badRequest().body(new MessageResponse("Could not save, try again"));
-    if (updateUserRequest.getPassword() == null) {
-      userCheck.setRole(updateUserRequest.getRole());
-      userCheck.setAvailableDatabases(updateUserRequest.getAvailableDatabases());
-    } else {
-      userCheck.setPassword(encoder.encode(updateUserRequest.getPassword()));
-      userCheck.setRole(updateUserRequest.getRole());
-      userCheck.setAvailableDatabases(updateUserRequest.getAvailableDatabases());
-    }
+    Optional<User> getUser = adminRepository.findById(updateUserRequest.getId());
+    User userCheck;
+    if (getUser.isPresent()) userCheck = getUser.get();
+    else return ResponseEntity.badRequest().body(new MessageResponse("Could not find the user"));
+
+    if (updateUserRequest.getPassword() != null && updateUserRequest.getPassword().length() >= 2 && updateUserRequest.getPassword().length() <= 20) userCheck.setPassword(encoder.encode(updateUserRequest.getPassword()));
+    if (updateUserRequest.getAvailableDatabases() != null) userCheck.setAvailableDatabases(updateUserRequest.getAvailableDatabases());
+    if (updateUserRequest.getRole() != null) userCheck.setRole(updateUserRequest.getRole());
     adminRepository.save(userCheck);
     return ResponseEntity.ok(new MessageResponse("Successfully updated user"));
   }
@@ -50,8 +49,10 @@ public class AdminService {
   }
 
   public ResponseEntity removeUser(RemoveUserRequest removeUserRequest) {
-    User user = adminRepository.findByIdentity(removeUserRequest.getIdentity());
-    if (user == null) return ResponseEntity.badRequest().body(new MessageResponse("Could not remove user, try again"));
+    Optional<User> getUser = adminRepository.findById(removeUserRequest.getId());
+    User user;
+    if (getUser.isPresent()) user = getUser.get();
+    else return ResponseEntity.badRequest().body(new MessageResponse("Could not find the user"));
     adminRepository.delete(user);
     return ResponseEntity.ok(new MessageResponse("Successfully removed user"));
   }

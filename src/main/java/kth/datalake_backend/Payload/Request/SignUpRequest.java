@@ -7,20 +7,20 @@ import javax.validation.constraints.Size;
 public class SignUpRequest {
 
   @NotBlank
-  @Size(max = 50)
+  @Size(min = 6,max = 40)
   @Email
   private String username;
 
   @NotBlank
-  @Size(min = 6, max = 40)
+  @Size(min = 6, max = 20)
   private String password;
 
   @NotBlank
-  @Size(max = 50)
+  @Size(min = 2, max = 20)
   private String firstname;
 
   @NotBlank
-  @Size(max = 50)
+  @Size(min = 2, max = 20)
   private String lastname;
 
   public String getUsername() {

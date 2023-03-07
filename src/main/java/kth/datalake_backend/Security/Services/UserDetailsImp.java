@@ -35,7 +35,7 @@ public class UserDetailsImp implements UserDetails {
 
   public static UserDetailsImp build(User user){
 
-      return new UserDetailsImp(user.getIdentity(),user.getUsername(), user.getPassword(),user.getFirstName(),user.getLastName(),user.getAvailableDatabases(),user.getRole());
+      return new UserDetailsImp(user.getId(),user.getUsername(), user.getPassword(),user.getFirstName(),user.getLastName(),user.getAvailableDatabases(),user.getRole());
   }
 
   public void setUsername(String username) {

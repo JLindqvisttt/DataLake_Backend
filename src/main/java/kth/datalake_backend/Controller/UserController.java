@@ -23,6 +23,14 @@ public class UserController {
     return userService.updateUser(updateUserRequest_user);
   }
 
+  @PatchMapping("/updateUserName")
+  public ResponseEntity updateUserName(@Valid @RequestBody UpdateUserRequest_User updateUserRequest_user) {
+    return userService.updateUser(updateUserRequest_user);
+  }
 
+  @PatchMapping("/updateUserPassword")
+  public ResponseEntity updateUserPassword(@Valid @RequestBody UpdateUserRequest_User updateUserRequest_user) {
+    return userService.updateUser(updateUserRequest_user);
+  }
 
 }

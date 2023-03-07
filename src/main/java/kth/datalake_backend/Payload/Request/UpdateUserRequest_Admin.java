@@ -12,23 +12,23 @@ import java.util.List;
 public class UpdateUserRequest_Admin {
     @Id
     @GeneratedValue
-    private Long identity;
+    private Long Id;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 6,max = 40)
     @Email
     private String username;
 
     @NotBlank
-    @Size(min = 6, max = 40)
+    @Size(min = 6, max = 20)
     private String password;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 2 ,max = 20)
     private String firstname;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 2 ,max = 20)
     private String lastname;
 
     @NotBlank
@@ -69,12 +69,12 @@ public class UpdateUserRequest_Admin {
         this.lastname = lastname;
     }
 
-    public Long getIdentity() {
-        return identity;
+    public Long getId() {
+        return Id;
     }
 
-    public void setIdentity(Long identity) {
-        this.identity = identity;
+    public void setId(Long id) {
+        this.Id = id;
     }
 
     public List<String> getAvailableDatabases() {
@@ -96,7 +96,7 @@ public class UpdateUserRequest_Admin {
     @Override
     public String toString() {
         return "UpdateUserRequest{" +
-                "identity=" + identity +
+                "identity=" + Id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", firstname='" + firstname + '\'' +

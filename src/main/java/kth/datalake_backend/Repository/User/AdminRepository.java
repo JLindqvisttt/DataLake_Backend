@@ -7,9 +7,6 @@ import org.springframework.data.neo4j.repository.query.Query;
 import java.util.List;
 
 public interface AdminRepository extends Neo4jRepository<User, Long> {
-
-  User findByIdentity(Long identity);
-
   List<User> findAll();
 
   boolean existsByUsername(String username);

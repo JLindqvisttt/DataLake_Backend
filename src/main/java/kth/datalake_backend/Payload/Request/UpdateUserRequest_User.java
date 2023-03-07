@@ -13,30 +13,30 @@ public class UpdateUserRequest_User {
 
   @Id
   @GeneratedValue
-  private Long identity;
+  private Long Id;
 
   @NotBlank
-  @Size(min = 6, max = 40)
+  @Size(min = 6, max = 20)
   private String password;
 
 
   @NotBlank
-  @Size(max = 50)
+  @Size(min = 2 ,max = 20)
   private String firstname;
 
   @NotBlank
-  @Size(max = 50)
+  @Size(min = 2 ,max = 20)
   private String lastname;
 
   @NotBlank
-  @Size(min = 6, max = 40)
+  @Size(min = 6, max = 20)
   private String checkPassword;
-  public Long getIdentity() {
-    return identity;
+  public Long getId() {
+    return Id;
   }
 
-  public void setIdentity(Long identity) {
-    this.identity = identity;
+  public void setId(Long id) {
+    this.Id = id;
   }
 
 
@@ -75,7 +75,7 @@ public class UpdateUserRequest_User {
   @Override
   public String toString() {
     return "UpdateUserRequest_User{" +
-      "identity=" + identity +
+      "identity=" + Id +
       ", password='" + password + '\'' +
       ", checkPassword='" + checkPassword + '\'' +
       ", firstname='" + firstname + '\'' +

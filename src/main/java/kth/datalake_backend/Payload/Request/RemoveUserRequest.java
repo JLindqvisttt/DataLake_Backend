@@ -7,16 +7,16 @@ public class RemoveUserRequest {
 
   @Id
   @GeneratedValue
-  private Long identity;
+  private Long Id;
 
-  public Long getIdentity() {
-    return identity;
+  public Long getId() {
+    return Id;
   }
 
   @Override
   public String toString() {
     return "RemoveUserRequest{" +
-      "identity=" + identity +
+      "identity=" + Id +
       '}';
   }
 }

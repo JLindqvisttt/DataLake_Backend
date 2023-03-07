@@ -1,13 +1,8 @@
 package kth.datalake_backend.Controller;
 
 import kth.datalake_backend.Entity.Nodes.Patient;
-import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Service.PatientService;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.neo4j.driver.Driver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

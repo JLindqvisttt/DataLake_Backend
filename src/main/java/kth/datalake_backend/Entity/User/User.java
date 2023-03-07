@@ -16,23 +16,23 @@ public class User {
 
   @Id
   @GeneratedValue
-  private Long identity;
+  private Long id;
 
   @NotBlank
-  @Size(max = 50)
+  @Size(min = 2 ,max = 20)
   private String firstName;
   @NotBlank
-  @Size(max = 50)
+  @Size(min = 2,max = 20)
   private String lastName;
 
   @NotBlank
-  @Size(max = 50)
+  @Size(min = 6,max = 40)
   @Email
   private String username;
 
   @JsonIgnore
   @NotBlank
-  @Size(max = 120)
+  @Size(min = 6,max = 20)
   private String password;
 
   @NotBlank
@@ -42,14 +42,14 @@ public class User {
   private ERole role;
 
   public User(Long identity, String firstname, String lastname,String username) {
-    this.identity = identity;
+    this.id = identity;
     this.firstName = firstname;
     this.lastName = lastname;
     this.username = username;
   }
   public User(Long identity, String password, String username) {
     this.username = username;
-    this.identity = identity;
+    this.id = identity;
     this.password = password;
   }
   public List<String> getAvailableDatabases() {
@@ -65,7 +65,7 @@ public class User {
 
   }
   public User(Long identity, String firstName, String lastName, String username, List<String> availableDatabases, ERole role) {
-    this.identity = identity;
+    this.id = identity;
     this.firstName = firstName;
     this.lastName = lastName;
     this.username = username;
@@ -73,7 +73,7 @@ public class User {
     this.role = role;
   }
   public User(Long identity, String firstName, String lastName, String username, String password, List<String> availableDatabases, ERole role) {
-    this.identity = identity;
+    this.id = identity;
     this.firstName = firstName;
     this.lastName = lastName;
     this.username = username;
@@ -131,12 +131,12 @@ public class User {
     return lastName;
   }
 
-  public Long getIdentity() {
-    return identity;
+  public Long getId() {
+    return id;
   }
 
-  public void setIdentity(Long identity) {
-    this.identity = identity;
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public void setLastName(String lastName) {
@@ -162,7 +162,7 @@ public class User {
   @Override
   public String toString() {
     return "User{" +
-      "identity=" + identity +
+      "identity=" + id +
       ", firstName='" + firstName + '\'' +
       ", lastName='" + lastName + '\'' +
       ", username='" + username + '\'' +
