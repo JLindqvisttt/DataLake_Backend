@@ -52,7 +52,8 @@ public class UserService {
         User userCheck;
         if (getUser.isPresent()) userCheck = getUser.get();
         else return ResponseEntity.badRequest().body(new MessageResponse("Could not find the user"));
-
+        String control = updateUserRequest_user.checkName();
+        if(control == null) return ResponseEntity.badRequest().body(new MessageResponse(control));
         System.out.println("UserName"+updateUserRequest_user.getFirstname().length());
         if (updateUserRequest_user.getLastname().length() >= 2 && updateUserRequest_user.getLastname().length() <= 20 && updateUserRequest_user.getFirstname().length() >= 2 &&  updateUserRequest_user.getFirstname().length() <= 20) {
             userCheck.setFirstName(updateUserRequest_user.getFirstname());
@@ -68,7 +69,8 @@ public class UserService {
         User userCheck;
         if (getUser.isPresent()) userCheck = getUser.get();
         else return ResponseEntity.badRequest().body(new MessageResponse("Could not find the user"));
-
+        String control = updateUserRequest_user.checkName();
+        if(control == null) return ResponseEntity.badRequest().body(new MessageResponse(control));
         if (encoder.matches(updateUserRequest_user.getCheckPassword(), userCheck.getPassword())) {
             if (updateUserRequest_user.getPassword().length() >= 6 && updateUserRequest_user.getPassword().length() <= 20) {
                 userCheck.setPassword(encoder.encode(updateUserRequest_user.getPassword()));

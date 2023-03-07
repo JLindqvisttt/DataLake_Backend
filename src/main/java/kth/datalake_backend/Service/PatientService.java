@@ -411,6 +411,4 @@ public class PatientService {
       symptomsList.add(symptoms);
     }
   }
-
-
 }

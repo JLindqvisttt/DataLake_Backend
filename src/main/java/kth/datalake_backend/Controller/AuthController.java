@@ -22,7 +22,7 @@ public class AuthController {
   }
 
   @PostMapping("/signIn")
-  public ResponseEntity signIn(@Valid @RequestBody SigninRequest signinRequest){
+  public ResponseEntity<?> signIn(@Valid @RequestBody SigninRequest signinRequest){
     return authService.authenticateUser(signinRequest.getUsername(),signinRequest.getPassword());
   }
 

@@ -27,28 +27,32 @@ public class AdminService {
     return adminRepository.findAll();
   }
 
-  public ResponseEntity updateUser(UpdateUserRequest_Admin updateUserRequest) {
+  public ResponseEntity<MessageResponse> updateUser(UpdateUserRequest_Admin updateUserRequest) {
     Optional<User> getUser = adminRepository.findById(updateUserRequest.getId());
     User userCheck;
     if (getUser.isPresent()) userCheck = getUser.get();
     else return ResponseEntity.badRequest().body(new MessageResponse("Could not find the user"));
-
-    if (updateUserRequest.getPassword() != null && updateUserRequest.getPassword().length() >= 2 && updateUserRequest.getPassword().length() <= 20) userCheck.setPassword(encoder.encode(updateUserRequest.getPassword()));
+    if (updateUserRequest.getPassword() != null) {
+      if(updateUserRequest.getPassword().length() >= 6 && updateUserRequest.getPassword().length() <= 20) userCheck.setPassword(encoder.encode(updateUserRequest.getPassword()));
+      else return ResponseEntity.badRequest().body(new MessageResponse("Is not a valid password, must be more the 6 and max 20 characters"));
+    }
     if (updateUserRequest.getAvailableDatabases() != null) userCheck.setAvailableDatabases(updateUserRequest.getAvailableDatabases());
     if (updateUserRequest.getRole() != null) userCheck.setRole(updateUserRequest.getRole());
     adminRepository.save(userCheck);
     return ResponseEntity.ok(new MessageResponse("Successfully updated user"));
   }
 
-  public ResponseEntity<?> registerUser(SignUpRequest signUpRequest) {
+  public ResponseEntity<MessageResponse> registerUser(SignUpRequest signUpRequest) {
+    String control = signUpRequest.check();
+    if(control != null) return ResponseEntity.badRequest().body(new MessageResponse(control));
     if (adminRepository.existsByUsername(signUpRequest.getUsername()))
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
     User user = new User(signUpRequest.getFirstname(), signUpRequest.getLastname(), signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), ERole.ROLE_USER);
     adminRepository.save(user);
-    return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    return ResponseEntity.ok(new MessageResponse("User registered successfully"));
   }
 
-  public ResponseEntity removeUser(RemoveUserRequest removeUserRequest) {
+  public ResponseEntity<MessageResponse> removeUser(RemoveUserRequest removeUserRequest) {
     Optional<User> getUser = adminRepository.findById(removeUserRequest.getId());
     User user;
     if (getUser.isPresent()) user = getUser.get();

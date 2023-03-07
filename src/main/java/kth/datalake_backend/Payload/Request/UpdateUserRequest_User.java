@@ -82,4 +82,14 @@ public class UpdateUserRequest_User {
       ", lastname='" + lastname + '\'' +
       '}';
   }
+
+  public String checkName() {
+
+    return null;
+  }
+
+  public String checkPassword(){
+
+    return null;
+  }
 }

@@ -12,6 +12,7 @@ public class RemoveUserRequest {
   public Long getId() {
     return Id;
   }
+  public void setId(Long id){this.Id = id;}
 
   @Override
   public String toString() {
