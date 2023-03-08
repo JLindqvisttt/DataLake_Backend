@@ -49,6 +49,18 @@ public class PatientService {
   @Autowired
   AdminRepository adminRepository;
 
+  public List<String> getDataSets() {
+    return patientRepository.findByDatabase();
+  }
+
+  public List<Patient> getPatientsAsJson(String name){
+    return patientRepository.findAllByDataset(name);
+  }
+
+  public List<Patient> getAllPatients() {
+    return patientRepository.findAll();
+  }
+
   //https://por-porkaew15.medium.com/how-to-import-excel-by-spring-boot-2624367c8468
   public ResponseEntity<?> loadData(MultipartFile file, String name) throws IOException {
     XSSFSheet worksheet;
@@ -291,18 +303,6 @@ public class PatientService {
       }
     }
     return ResponseEntity.ok(new MessageResponse("Successfully added new symptoms"));
-  }
-
-  public List<String> getDataSets() {
-    return patientRepository.findByDatabase();
-  }
-
-  public List<Patient> getPatientsAsJson(String name){
-    return patientRepository.findAllByDataset(name);
-  }
-
-  public List<Patient> getAllPatients() {
-    return patientRepository.findAll();
   }
 
   private static void addToMap(HashMap<Integer, List<String>> map, Integer key, String value) {

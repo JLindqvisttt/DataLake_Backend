@@ -268,7 +268,6 @@ public class AdminServiceTest {
         assertEquals(1, adminRepository.findAll().size());
     }
 
-
     @Test
     @DisplayName("Invalid ID")
     public void invalidID() {

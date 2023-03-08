@@ -21,6 +21,7 @@ public class User {
   @NotBlank
   @Size(min = 2 ,max = 20)
   private String firstName;
+
   @NotBlank
   @Size(min = 2,max = 20)
   private String lastName;
@@ -47,11 +48,13 @@ public class User {
     this.lastName = lastname;
     this.username = username;
   }
+
   public User(Long identity, String password, String username) {
     this.username = username;
     this.Id = identity;
     this.password = password;
   }
+
   public List<String> getAvailableDatabases() {
     return availableDatabases;
   }
@@ -60,10 +63,10 @@ public class User {
     if (!availableDatabases.contains(newdatabase)) availableDatabases.add(newdatabase);
   }
 
-
   public User() {
 
   }
+
   public User(Long identity, String firstName, String lastName, String username, List<String> availableDatabases, ERole role) {
     this.Id = identity;
     this.firstName = firstName;
@@ -72,6 +75,7 @@ public class User {
     this.availableDatabases = availableDatabases;
     this.role = role;
   }
+
   public User(Long identity, String firstName, String lastName, String username, String password, List<String> availableDatabases, ERole role) {
     this.Id = identity;
     this.firstName = firstName;
