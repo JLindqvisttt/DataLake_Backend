@@ -31,7 +31,7 @@ public class PatientController {
   }
 
   @GetMapping("/getAllDatasets")
-  public List<String> getDatasets() throws IOException {
+  public List<String> getDatasets() {
     return patientService.getDataSets();
   }
 

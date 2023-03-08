@@ -45,7 +45,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
         System.out.println( request.getRequestURI().toString());
         if (request.getRequestURI().toString().equals("/api/admin/getAllUser") || request.getRequestURI().toString().equals("/api/admin/removeUser") || request.getRequestURI().toString().equals("/api/admin/nrOfRelations")
-          || request.getRequestURI().toString().equals("/api/admin/nrOfNodes")
+          || request.getRequestURI().toString().equals("/api/admin/nrOfNodes") || request.getRequestURI().toString().equals("/api/patient/getAllDatasets")
           || request.getRequestURI().toString().equals("/api/admin/signUp") || request.getRequestURI().toString().equals("/api/admin/updateUser")
         || request.getRequestURI().toString().equals("/api/patient/input/symptoms") || request.getRequestURI().toString().equals("/api/patient/input")) {
           if (!userDetailsService.ifUserIsAdmin(username)) {

@@ -30,10 +30,10 @@ public class DatalakeBackendApplication {
     public CommandLineRunner preloadUsers(UserRepository userRepository) {
         return (args) -> {
             if(userRepository.findByUsername("admin@gmail.com") == null)
-                userRepository.save(new User("John", "Doe", "admin@gmail.com", encoder.encode("admin"), ERole.valueOf("ROLE_ADMIN")));
+                userRepository.save(new User("John", "Doe", "admin@gmail.com", encoder.encode("admin123"), ERole.valueOf("ROLE_ADMIN")));
 
             if(userRepository.findByUsername("user@gmail.com") == null)
-                userRepository.save(new User("Jane", "Doe", "user@gmail.com", encoder.encode("user"), ERole.valueOf("ROLE_USER")));
+                userRepository.save(new User("Jane", "Doe", "user@gmail.com", encoder.encode("user123"), ERole.valueOf("ROLE_USER")));
         };
     }
 }
