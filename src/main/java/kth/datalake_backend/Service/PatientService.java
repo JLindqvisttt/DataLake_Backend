@@ -14,6 +14,7 @@ import kth.datalake_backend.Entity.Nodes.*;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.Nodes.*;
 
+import kth.datalake_backend.Repository.User.AdminRepository;
 import kth.datalake_backend.Service.Util.SasToXlsxConverter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -45,6 +46,8 @@ public class PatientService {
   @Autowired
   SymptomsRepository symptomsRepository;
 
+  @Autowired
+  AdminRepository adminRepository;
 
   //https://por-porkaew15.medium.com/how-to-import-excel-by-spring-boot-2624367c8468
   public ResponseEntity<?> loadData(MultipartFile file, String name) throws IOException {
@@ -216,8 +219,8 @@ public class PatientService {
       }
       patientRepository.save(p);
     }
-
-    return ResponseEntity.ok(new MessageResponse("Successfully added"));
+    adminRepository.addDatabaseToAdminUsers(name);
+    return ResponseEntity.ok(new MessageResponse("Successfully added new patients"));
   }
 
   public ResponseEntity<?> loadSymptoms(MultipartFile file, String name) throws IOException {
@@ -287,7 +290,7 @@ public class PatientService {
         rowNumbers = setRowNumbers(worksheet, index);
       }
     }
-    return ResponseEntity.ok(new MessageResponse("Successfully added"));
+    return ResponseEntity.ok(new MessageResponse("Successfully added new symptoms"));
   }
 
   public List<String> getDataSets() {

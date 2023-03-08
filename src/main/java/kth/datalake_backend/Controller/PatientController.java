@@ -36,7 +36,7 @@ public class PatientController {
   }
 
   @GetMapping("/getPatientsByDataset")
-  public List<Patient> getPatientsAsJson( @RequestParam("name") String name) throws IOException {
+  public List<Patient> getPatientsAsJson( @RequestParam("name") String name) {
     return patientService.getPatientsAsJson(name);
   }
 
