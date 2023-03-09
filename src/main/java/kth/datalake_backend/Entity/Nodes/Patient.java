@@ -85,7 +85,7 @@ public class Patient {
 
   /**
    * Get patients dataset
-   * @return
+   * @return dataset name
    */
   public String getDataset() {return dataset;}
 
@@ -212,8 +212,11 @@ public class Patient {
   }
 
   /**
-   * Set patient gender
-   * @param gender
+   * Set patient gender depending on input value
+   * 1.0, 1 or Male: Gender.MALE
+   * 2.0, 2 or Female: Gender.FEMALE
+   * @param gender gender to set
+   * @see Gender
    */
   public void setGender(String gender) {
       switch (gender) {
@@ -224,8 +227,18 @@ public class Patient {
   }
 
   /**
-   * Set patient ethnicity
-   * @param ethnicity
+   * Set patient ethnicity depending on input value
+   * @param ethnicity 1.0 or 1 or White: White,
+   *                  2.0 or 2: Hispanic,
+   *                  3.0 or 3: Black,
+   *                  4.0 or 4: Oriental,
+   *                  5.0 or 5: Native Hawaiian,
+   *                  6.0 or 6: Native American,
+   *                  7.0 or 7: Indian,
+   *                  8.0 or 8: Filipino,
+   *                  9.0 or 9: Other,
+   *                  10.0 or 10: Patient refusal,
+   *                  other than these unknown
    */
   public void setEthnicity(String ethnicity) {
     switch (ethnicity) {
@@ -253,7 +266,9 @@ public class Patient {
 
   /**
    * Set relapse depending on input value
-   * @param relapse string value of 1-2, unknown if not one of these
+   * @param relapse 1 or 1.0: No,
+   *                2 or 2.0: Yes,
+   *                other than these: Unknown
    */
   public void setRelapse(String relapse) {
     switch (relapse) {
@@ -280,8 +295,10 @@ public class Patient {
   }
 
   /**
-   * Set failure free survival status depending on input value
-   * @param failureFreeSurvivalStatus string value of 1-2, unknown if not one of these
+   * Set relapse depending on input value
+   * @param failureFreeSurvivalStatus 1 or 1.0: Survived,
+   *                                  2 or 2.0: Deceased,
+   *                                  other than these: Unknown
    */
   public void setFailureFreeSurvivalStatus(String failureFreeSurvivalStatus) {
     switch (failureFreeSurvivalStatus) {

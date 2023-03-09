@@ -42,7 +42,9 @@ public class NewMalignancy {
 
     /**
      * Set new malignancy depending on the input string
-     * @param newMalignancy the string value of 1 -2, set unknown if not one of these
+     * @param newMalignancy 1: No,
+     *                      2: Yes,
+     *                      Unknown if not one of these
      */
     public void setNewMalignancy(String newMalignancy) {
         switch (newMalignancy) {

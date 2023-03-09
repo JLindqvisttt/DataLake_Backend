@@ -30,7 +30,7 @@ public class Symptoms {
 
     /**
      * Get symptoms
-     * @return
+     * @return symptom
      */
     public String getSymptom() {
         return symptom;
@@ -46,15 +46,15 @@ public class Symptoms {
 
     /**
      * Get severity of symptom
-     * @return
+     * @return severity
      */
     public int getSeverity() {
         return severity;
     }
 
     /**
-     * Set severity of sympyom
-     * @param severity
+     * Set severity of symptom
+     * @param severity of the symptom
      */
     public void setSeverity(int severity) {
         this.severity = severity;

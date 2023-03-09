@@ -26,7 +26,7 @@ public class OverAllSurvivalStatus {
 
     /**
      * Get current overall survival status
-     * @return
+     * @return overAllSurvivalStatus
      */
     public String getOverAllSurvivalStatus() {
         return overAllSurvivalStatus;
@@ -34,7 +34,9 @@ public class OverAllSurvivalStatus {
 
     /**
      * Set overall survival status depending on the input string and dataset name
-     * @param overAllSurvivalStatus string value 1-3, unknown if not one of these
+     * @param overAllSurvivalStatus  1: Alive,
+     *                               2: Death, 3: Lost to follow-up,
+     *                               Unknown if not one of these
      * @param name name of the dataset
      */
     public void setOverAllSurvivalStatus(String overAllSurvivalStatus, String name) {

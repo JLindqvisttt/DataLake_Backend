@@ -26,7 +26,7 @@ public class CauseOfDeath {
 
     /**
      * Get current cause of death
-     * @return
+     * @return cause of death
      */
     public String getCauseOfDeath() {
         return causeOfDeath;
@@ -34,7 +34,10 @@ public class CauseOfDeath {
 
     /**
      * Set cause of death depending on the input string
-     * @param causeOfDeath the cause of death, string value of 1 - 3, unknown if not one of these values
+     * @param causeOfDeath 1: Protocol treatment related,
+     *                     2: Protocol disease related,
+     *                     3: Not related to protocol treatment or protocol disease,
+     *                     Unknown if not one of these values
      */
     public void setCauseOfDeath(String causeOfDeath) {
         switch (causeOfDeath) {
