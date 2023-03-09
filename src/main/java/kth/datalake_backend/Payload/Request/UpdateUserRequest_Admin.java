@@ -1,6 +1,6 @@
 package kth.datalake_backend.Payload.Request;
 
-import kth.datalake_backend.Entity.ERole;
+import kth.datalake_backend.Entity.User.ERole;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 
@@ -9,26 +9,26 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-public class UpdateUserRequest {
+public class UpdateUserRequest_Admin {
     @Id
     @GeneratedValue
-    private Long identity;
+    private Long Id;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 6,max = 40)
     @Email
     private String username;
 
     @NotBlank
-    @Size(min = 6, max = 40)
+    @Size(min = 6, max = 20)
     private String password;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 2 ,max = 20)
     private String firstname;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 2 ,max = 20)
     private String lastname;
 
     @NotBlank
@@ -69,12 +69,12 @@ public class UpdateUserRequest {
         this.lastname = lastname;
     }
 
-    public Long getIdentity() {
-        return identity;
+    public Long getId() {
+        return Id;
     }
 
-    public void setIdentity(Long identity) {
-        this.identity = identity;
+    public void setId(Long id) {
+        this.Id = id;
     }
 
     public List<String> getAvailableDatabases() {
@@ -96,7 +96,7 @@ public class UpdateUserRequest {
     @Override
     public String toString() {
         return "UpdateUserRequest{" +
-                "identity=" + identity +
+                "identity=" + Id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", firstname='" + firstname + '\'' +

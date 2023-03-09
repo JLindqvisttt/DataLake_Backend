@@ -1,45 +1,50 @@
 package kth.datalake_backend.Controller;
 
-
-import kth.datalake_backend.Entity.User;
-import kth.datalake_backend.Payload.Request.SignUpRequest;
-import kth.datalake_backend.Payload.Request.SigninRequest;
-import kth.datalake_backend.Payload.Request.UpdateUserRequest;
+import kth.datalake_backend.Payload.Request.UpdateUserPasswordRequest;
+import kth.datalake_backend.Payload.Request.UpdateUserUsernameRequest;
+import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.util.List;
 
+/**
+ * RestController for Users
+ */
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/api/auth")
+@RequestMapping("/api/user")
 public class UserController {
 
   private final UserService userService;
 
+  /**
+   *
+   * @param userService
+   */
   public UserController(UserService userService) {
     this.userService = userService;
   }
 
-  @PostMapping("/signIn")
-  public ResponseEntity signIn(@Valid @RequestBody SigninRequest signinRequest){
-    return userService.authenticateUser(signinRequest.getUsername(),signinRequest.getPassword());
+
+  /**
+   * Update the name of a user
+   * @param updateUserUsernameRequest user to update
+   * @return a ResponseEntity
+   */
+  @PatchMapping("/updateUserName")
+  public ResponseEntity<MessageResponse> updateUserName(@Valid @RequestBody UpdateUserUsernameRequest updateUserUsernameRequest) {
+    return userService.updateUserName(updateUserUsernameRequest);
   }
 
-  @PostMapping("/signUp")
-  public ResponseEntity signUp(@Valid @RequestBody SignUpRequest signUpRequestRequest){
-    return userService.registerUser(signUpRequestRequest);
+  /**
+   * Update the password of a user
+   * @param updateUserPasswordRequest the user to update
+   * @return a ResponseEntity
+   */
+  @PatchMapping("/updateUserPassword")
+  public ResponseEntity<MessageResponse> updateUserPassword(@Valid @RequestBody UpdateUserPasswordRequest updateUserPasswordRequest) {
+    return userService.updateUserPassword(updateUserPasswordRequest);
   }
 
-  @GetMapping("/getAllUser")
-  public List<User> getUserAllUsers() {
-    return userService.getAllUser();
-  }
-
-  @PatchMapping("/updateUser")
-  public ResponseEntity updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest){
-    return userService.updateUser(updateUserRequest);
-  }
 }

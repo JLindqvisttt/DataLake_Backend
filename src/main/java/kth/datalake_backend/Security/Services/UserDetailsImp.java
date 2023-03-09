@@ -1,14 +1,13 @@
 package kth.datalake_backend.Security.Services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import kth.datalake_backend.Entity.ERole;
-import kth.datalake_backend.Entity.User;
+import kth.datalake_backend.Entity.User.ERole;
+import kth.datalake_backend.Entity.User.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 public class UserDetailsImp implements UserDetails {
 
@@ -36,7 +35,7 @@ public class UserDetailsImp implements UserDetails {
 
   public static UserDetailsImp build(User user){
 
-      return new UserDetailsImp(user.getIdentity(),user.getUsername(), user.getPassword(),user.getFirstName(),user.getLastName(),user.getAvailableDatabases(),user.getRole());
+      return new UserDetailsImp(user.getId(),user.getUsername(), user.getPassword(),user.getFirstName(),user.getLastName(),user.getAvailableDatasets(),user.getRole());
   }
 
   public void setUsername(String username) {
