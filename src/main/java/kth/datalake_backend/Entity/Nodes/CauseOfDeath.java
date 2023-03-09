@@ -6,6 +6,9 @@ import org.springframework.data.neo4j.core.schema.Node;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Cause of Death Node
+ */
 @Node
 public class CauseOfDeath {
 
@@ -16,12 +19,23 @@ public class CauseOfDeath {
     @NotBlank
     private String causeOfDeath;
 
+    /**
+     * Class constructor
+     */
     public CauseOfDeath(){}
 
+    /**
+     * Get current cause of death
+     * @return
+     */
     public String getCauseOfDeath() {
         return causeOfDeath;
     }
 
+    /**
+     * Set cause of death depending on the input string
+     * @param causeOfDeath the cause of death, string value of 1 - 3, unknown if not one of these values
+     */
     public void setCauseOfDeath(String causeOfDeath) {
         switch (causeOfDeath) {
             case "1.0","1" -> this.causeOfDeath = "Protocol treatment related";

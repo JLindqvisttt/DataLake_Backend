@@ -6,6 +6,9 @@ import org.springframework.data.neo4j.core.schema.Node;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Overall survival status Node
+ */
 @Node
 public class OverAllSurvivalStatus {
 
@@ -16,12 +19,24 @@ public class OverAllSurvivalStatus {
     @NotBlank
     private String overAllSurvivalStatus;
 
+    /**
+     * Class constructor
+     */
     public OverAllSurvivalStatus() {}
 
+    /**
+     * Get current overall survival status
+     * @return
+     */
     public String getOverAllSurvivalStatus() {
         return overAllSurvivalStatus;
     }
 
+    /**
+     * Set overall survival status depending on the input string and dataset name
+     * @param overAllSurvivalStatus string value 1-3, unknown if not one of these
+     * @param name name of the dataset
+     */
     public void setOverAllSurvivalStatus(String overAllSurvivalStatus, String name) {
         if(name.equals("266"))overAllSurvivalStatus = String.valueOf(Double.valueOf(overAllSurvivalStatus)+1);
         switch (overAllSurvivalStatus) {

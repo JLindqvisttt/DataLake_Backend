@@ -2,14 +2,6 @@ package kth.datalake_backend.Service;
 
 import com.epam.parso.SasFileReader;
 import com.epam.parso.impl.SasFileReaderImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kth.datalake_backend.Entity.Nodes.*;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.Nodes.*;
@@ -22,7 +14,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -201,7 +192,7 @@ public class PatientService {
 
           if (rowNumbers.containsKey("treatment drug") && row.getCell(rowNumbers.get("treatment drug")) != null){
               addToMap(Patientmap, Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", "")),
-                      row.getCell(rowNumbers.get("treatment drug")).toString().toUpperCase());
+                      row.getCell(rowNumbers.get("treatment drug")).toString());
           }
 
 
@@ -216,21 +207,22 @@ public class PatientService {
             }
           }
         }
-
-
       } else {
-        rowNumbers = setRowNumbers(worksheet, index);
+        rowNumbers = setRowNumbersPatients(worksheet, index);
+        if(rowNumbers.get("id") == null) return ResponseEntity.badRequest().body(new MessageResponse("File has missing id"));
       }
     }
+
     for (Patient p : patients) {
       if(!Patientmap.isEmpty()) {
         List<String> treatmentsInHashMap = Patientmap.get(p.getSubjectId());
         Collections.sort(treatmentsInHashMap);
-        treatment = new Treatment(treatmentsInHashMap.toString());
+        treatment = new Treatment(treatmentsInHashMap.toString().replace("[", "").replace("]", ""));
         treatmentNode(treatmentName, p, treatment, treatmentList);
       }
       patientRepository.save(p);
     }
+
     adminRepository.addDatabaseToAdminUsers(name);
     return ResponseEntity.ok(new MessageResponse("Successfully added new patients"));
   }
@@ -275,8 +267,7 @@ public class PatientService {
 
         if (id != Integer.MAX_VALUE && id != Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""))) {
           for (Patient a : patientList)
-            if (a.getSubjectId() == id)
-              patientRepository.save(a);
+            if (a.getSubjectId() == id) patientRepository.save(a);
         }
 
         id = Integer.parseInt(row.getCell(rowNumbers.get("id")).toString().replace(".0", ""));
@@ -286,12 +277,11 @@ public class PatientService {
           continue;
         }
 
-        for (Patient a : patientList)
+           for (Patient a : patientList)
           if (a.getSubjectId() == id)
             patient = a;
 
-
-        if (row.getCell(rowNumbers.get("symptom")) == null || row.getCell(rowNumbers.get("grade")) == null || row.getCell(rowNumbers.get("grade")).toString().equals(""))
+        if (row.getCell(rowNumbers.get("symptom")) == null || row.getCell(rowNumbers.get("symptom")).toString().equals("")|| row.getCell(rowNumbers.get("grade")) == null || row.getCell(rowNumbers.get("grade")).toString().equals(""))
           continue;
         else {
           symptoms.setSymptom(row.getCell(rowNumbers.get("symptom")).toString());
@@ -299,13 +289,22 @@ public class PatientService {
         }
         symptomsNode(symptoms, patient, symptomsList);
       } else {
-        rowNumbers = setRowNumbers(worksheet, index);
+        rowNumbers = setRowNumbersSymptoms(worksheet, index);
+        if(rowNumbers.get("id") == null) return ResponseEntity.badRequest().body(new MessageResponse("File has missing id"));
+        if(rowNumbers.get("symptom") == null) return ResponseEntity.badRequest().body(new MessageResponse("File has missing symptoms"));
+        if(rowNumbers.get("grade") == null) return ResponseEntity.badRequest().body(new MessageResponse("File has missing grade"));
       }
+    }
+
+    if (id != Integer.MAX_VALUE ) {
+      for (Patient a : patientList)
+        if (a.getSubjectId() == id) patientRepository.save(a);
     }
     return ResponseEntity.ok(new MessageResponse("Successfully added new symptoms"));
   }
 
   private static void addToMap(HashMap<Integer, List<String>> map, Integer key, String value) {
+    value = value.toUpperCase(Locale.ROOT);
     // If the key is already in the map, add the value to its set
     if (map.containsKey(key)) {
       List<String> set = map.get(key);
@@ -326,10 +325,11 @@ public class PatientService {
     }
   }
 
-  private HashMap<String, Integer> setRowNumbers(XSSFSheet worksheet, int index) {
+  private HashMap<String, Integer> setRowNumbersPatients(XSSFSheet worksheet, int index) {
     HashMap<String, Integer> rowNumbers = new HashMap<>();
     XSSFRow row = worksheet.getRow(index);
     for (Cell r : row) {
+      //String rowValue = r.toString().toUpperCase();
       switch (r.toString()) {
         case "PHATOM_ID", "SUBJID" -> rowNumbers.put("id", r.getColumnIndex());//id
         case "GENDER", "SEX" -> rowNumbers.put("gender", r.getColumnIndex());//gender
@@ -339,12 +339,23 @@ public class PatientService {
         case "OS_TIME" -> rowNumbers.put("overall survival time", r.getColumnIndex());//overall survival time (months)
         case "PD_TIME" -> rowNumbers.put("relapse time", r.getColumnIndex());//relapse time (months)
         case "PFS_STATUS" -> rowNumbers.put("failure free survival", r.getColumnIndex());//failure free survival
-        case "PFS_TIME" ->
-          rowNumbers.put("failure free survival time", r.getColumnIndex());//failure free survival time (months)
+        case "PFS_TIME" -> rowNumbers.put("failure free survival time", r.getColumnIndex());//failure free survival time (months)
         case "TRT_ARM_LABEL", "CHPTERM" -> rowNumbers.put("treatment drug", r.getColumnIndex());//treatment drug
         case "STATUS", "DTH" -> rowNumbers.put("overall survival status", r.getColumnIndex());//overall survival status
         case "CAUSEDTH" -> rowNumbers.put("cause of death", r.getColumnIndex());//cause of death
         case "NEW_MALIG" -> rowNumbers.put("new malignancy", r.getColumnIndex());//new malignancy
+      }
+    }
+    return rowNumbers;
+  }
+
+  private HashMap<String, Integer> setRowNumbersSymptoms(XSSFSheet worksheet, int index) {
+    HashMap<String, Integer> rowNumbers = new HashMap<>();
+    XSSFRow row = worksheet.getRow(index);
+    for (Cell r : row) {
+      //String rowValue = r.toString().toUpperCase();
+      switch (r.toString()) {
+        case "PHATOM_ID", "SUBJID" -> rowNumbers.put("id", r.getColumnIndex());//id
         case "AE_NAME", "AEPTERM" -> rowNumbers.put("symptom", r.getColumnIndex());//symptom
         case "AE_GRADE", "SEVRCD" -> rowNumbers.put("grade", r.getColumnIndex());//severity grade
       }

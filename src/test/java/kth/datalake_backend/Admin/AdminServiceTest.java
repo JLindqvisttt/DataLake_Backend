@@ -106,7 +106,7 @@ public class AdminServiceTest {
         List<String> databases = patientRepository.findByDatabase();
         update.setAvailableDatabases(databases);
         user.setAvailableDatabases(databases);
-        assertEquals(databases.size(),user.getAvailableDatabases().size());
+        assertEquals(databases.size(),user.getAvailableDatasets().size());
 
         //adds another dataset
         patient.setSubjectId(12);
@@ -116,7 +116,7 @@ public class AdminServiceTest {
         databases = patientRepository.findByDatabase();
         update.setAvailableDatabases(databases);
         user.setAvailableDatabases(databases);
-        assertEquals(databases.size(),user.getAvailableDatabases().size());
+        assertEquals(databases.size(),user.getAvailableDatasets().size());
     }
 
     @Test

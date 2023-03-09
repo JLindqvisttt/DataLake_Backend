@@ -6,6 +6,9 @@ import org.springframework.data.neo4j.core.schema.Node;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Symptoms Node
+ */
 @Node
 public class Symptoms {
 
@@ -19,21 +22,40 @@ public class Symptoms {
     @NotBlank
     private int severity;
 
+    /**
+     * Class constructor
+     */
     public Symptoms() {
     }
 
+    /**
+     * Get symptoms
+     * @return
+     */
     public String getSymptom() {
         return symptom;
     }
 
+    /**
+     * Set symptoms
+     * @param symptom symptoms to set
+     */
     public void setSymptom(String symptom) {
         this.symptom = symptom;
     }
 
+    /**
+     * Get severity of symptom
+     * @return
+     */
     public int getSeverity() {
         return severity;
     }
 
+    /**
+     * Set severity of sympyom
+     * @param severity
+     */
     public void setSeverity(int severity) {
         this.severity = severity;
     }
