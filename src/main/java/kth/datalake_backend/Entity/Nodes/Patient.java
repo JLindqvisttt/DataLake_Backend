@@ -246,10 +246,10 @@ public class Patient {
 
     /**
      * Set patient gender depending on input value
-     * 1.0, 1 or Male: Gender.MALE
-     * 2.0, 2 or Female: Gender.FEMALE
      *
-     * @param gender gender to set
+     * @param gender 1.0, 1 or Male: MALE,
+     *               2.0, 2 or Female: FEMALE,
+     *               other than these: UNKNOWN
      * @see Gender
      */
     public void setGender(String gender) {

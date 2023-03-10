@@ -29,11 +29,11 @@ public class AuthService {
     JwtUtils jwtUtils;
 
     /**
-     * Authenticated the user through login in reqest, check if password and user are correct and then returns JWToken and account information
+     * Authenticated the user through login in request, check if password and user are correct and then returns JWToken and account information
      *
      * @param username of the user trying to log in
      * @param password of the user trying to log in
-     * @return user information and token, or error requestbody if in log failed
+     * @return user information and token, or error Requestbody if in log failed
      */
     public ResponseEntity<?> authenticateUser(String username, String password) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

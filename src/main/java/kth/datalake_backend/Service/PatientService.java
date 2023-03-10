@@ -43,7 +43,7 @@ public class PatientService {
     AdminRepository adminRepository;
 
     /**
-     * Get a lit of the different dataset type exist in the database
+     * Get a list of the different dataset type exist in the database
      *
      * @return a list of all datasets
      */
@@ -71,7 +71,7 @@ public class PatientService {
     }
 
     /**
-     * function to insert new datasets of patient into the database, accepted input variables are,
+     * Function to insert new datasets of patient into the database, accepted input variables are,
      * gender, age, pd, os_time, pd_time, pfs_status, pfs_time, trt_arm_label, status, causedth, new_malig
      *
      * @param file accepted types are xlsx and sas7bdat
@@ -213,7 +213,7 @@ public class PatientService {
     }
 
     /**
-     * function to insert new datasets of symptoms into the database on an already existing sheet of patient, accepted input variables are,
+     * Function to insert new datasets of symptoms into the database on an already existing sheet of patient, accepted input variables are,
      * phatom_id, ae_name, ae_grade
      *
      * @param file accepted types are xlsx and sas7bdat

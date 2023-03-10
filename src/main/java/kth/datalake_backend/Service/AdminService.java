@@ -106,7 +106,7 @@ public class AdminService {
     /**
      * Returns the number of existing nodes in the database currently
      *
-     * @return List<Long> contains 1 Long value
+     * @return List<Long> contains one Long value
      */
     public List<Long> nrOfNodes() {
         return adminRepository.nrOfNodes();
