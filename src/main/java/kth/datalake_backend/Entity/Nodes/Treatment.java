@@ -21,25 +21,28 @@ public class Treatment {
 
     /**
      * Class constructor, specify the treatment
+     *
      * @param treatment name of treatment
      */
-    public Treatment(String treatment){
+    public Treatment(String treatment) {
         this.treatment = treatment;
     }
 
     /**
      * Get treatment
+     *
      * @return treatment
      */
-    public String getTreatment(){
+    public String getTreatment() {
         return treatment;
     }
 
     /**
      * Set treatment
+     *
      * @param treatment name of treatment
      */
-    public void setTreatment(String treatment){
+    public void setTreatment(String treatment) {
         this.treatment = treatment;
     }
 }

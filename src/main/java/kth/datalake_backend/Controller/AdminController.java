@@ -21,64 +21,75 @@ import java.util.List;
 @RequestMapping("/api/admin")
 public class AdminController {
 
-  private final AdminService adminService;
+    private final AdminService adminService;
 
-  /**
-   * Class constructor specifying the adminservice to use
-   * @param adminService adminservice
-   */
-  public AdminController(AdminService adminService){
-    this.adminService = adminService;
-  }
+    /**
+     * Class constructor specifying the adminservice to use
+     *
+     * @param adminService adminservice
+     */
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
+    }
 
-  /**
-   * Get all users from database
-   * @return a list of users
-   */
-  @GetMapping("/getAllUser")
-  public List<User> getUserAllUsers() {
-    return adminService.getAllUser();
-  }
+    /**
+     * Get all users from database
+     *
+     * @return a list of users
+     */
+    @GetMapping("/getAllUser")
+    public List<User> getUserAllUsers() {
+        return adminService.getAllUser();
+    }
 
-  /**
-   * Update user
-   * @param updateUserRequest the user to update
-   * @return a ResponseEntity
-   */
-  @PatchMapping("/updateUser")
-  public ResponseEntity<MessageResponse> updateUser(@Valid @RequestBody UpdateUserRequest_Admin updateUserRequest){
-    return adminService.updateUser(updateUserRequest);
-  }
+    /**
+     * Update user
+     *
+     * @param updateUserRequest the user to update
+     * @return a ResponseEntity
+     */
+    @PatchMapping("/updateUser")
+    public ResponseEntity<MessageResponse> updateUser(@Valid @RequestBody UpdateUserRequest_Admin updateUserRequest) {
+        return adminService.updateUser(updateUserRequest);
+    }
 
-  /**
-   * Sign up a user
-   * @param signUpRequestRequest a user to register
-   * @return a ResponseEntity
-   */
-  @PostMapping("/signUp")
-  public ResponseEntity<MessageResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequestRequest){
-    return adminService.registerUser(signUpRequestRequest);
-  }
+    /**
+     * Sign up a user
+     *
+     * @param signUpRequestRequest a user to register
+     * @return a ResponseEntity
+     */
+    @PostMapping("/signUp")
+    public ResponseEntity<MessageResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequestRequest) {
+        return adminService.registerUser(signUpRequestRequest);
+    }
 
-  /**
-   * Remove a user
-   * @param removeUserRequest the user to remove
-   * @return a ResponseEntity
-   */
-  @PostMapping("/removeUser")
-  public ResponseEntity<MessageResponse> removeUser(@Valid @RequestBody RemoveUserRequest removeUserRequest) {
-    return adminService.removeUser(removeUserRequest);
-  }
+    /**
+     * Remove a user
+     *
+     * @param removeUserRequest the user to remove
+     * @return a ResponseEntity
+     */
+    @PostMapping("/removeUser")
+    public ResponseEntity<MessageResponse> removeUser(@Valid @RequestBody RemoveUserRequest removeUserRequest) {
+        return adminService.removeUser(removeUserRequest);
+    }
 
+    /**
+     * Get all the number of nodes from the database
+     * @return a list of the number of the nodes
+     */
+    @GetMapping("/nrOfNodes")
+    public List<Long> nrOfNodes() {
+        return adminService.nrOfNodes();
+    }
 
-  @GetMapping("/nrOfNodes")
-  public List<Long> nrOfNodes() {
-    return adminService.nrOfNodes();
-  }
-
-
-  @GetMapping("/nrOfRelations")
-  public List<Long> nrOfRelations() {
-    return adminService.nrOfRelations();
-  }
+    /**
+     * Get all the number of relations from the database
+     * @return a list of the number of the relations
+     */
+    @GetMapping("/nrOfRelations")
+    public List<Long> nrOfRelations() {
+        return adminService.nrOfRelations();
+    }
 }

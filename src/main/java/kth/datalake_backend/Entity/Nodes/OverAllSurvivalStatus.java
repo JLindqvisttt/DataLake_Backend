@@ -22,10 +22,12 @@ public class OverAllSurvivalStatus {
     /**
      * Class constructor
      */
-    public OverAllSurvivalStatus() {}
+    public OverAllSurvivalStatus() {
+    }
 
     /**
      * Get current overall survival status
+     *
      * @return overAllSurvivalStatus
      */
     public String getOverAllSurvivalStatus() {
@@ -34,17 +36,18 @@ public class OverAllSurvivalStatus {
 
     /**
      * Set overall survival status depending on the input string and dataset name
-     * @param overAllSurvivalStatus  1: Alive,
-     *                               2: Death, 3: Lost to follow-up,
-     *                               Unknown if not one of these
-     * @param name name of the dataset
+     *
+     * @param overAllSurvivalStatus 1: Alive,
+     *                              2: Death, 3: Lost to follow-up,
+     *                              Unknown if not one of these
+     * @param name                  name of the dataset
      */
     public void setOverAllSurvivalStatus(String overAllSurvivalStatus, String name) {
-        if(name.equals("266"))overAllSurvivalStatus = String.valueOf(Double.valueOf(overAllSurvivalStatus)+1);
+        if (name.equals("266")) overAllSurvivalStatus = String.valueOf(Double.valueOf(overAllSurvivalStatus) + 1);
         switch (overAllSurvivalStatus) {
-            case "1.0","1" -> this.overAllSurvivalStatus = "Alive";
-            case "2.0","2" -> this.overAllSurvivalStatus = "Death";
-            case "3.0","3" -> this.overAllSurvivalStatus = "Lost to follow-up";
+            case "1.0", "1" -> this.overAllSurvivalStatus = "Alive";
+            case "2.0", "2" -> this.overAllSurvivalStatus = "Death";
+            case "3.0", "3" -> this.overAllSurvivalStatus = "Lost to follow-up";
             default -> this.overAllSurvivalStatus = "Unknown";
         }
     }

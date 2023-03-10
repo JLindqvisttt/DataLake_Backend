@@ -13,28 +13,34 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Authentication service class for handling business logic for authentication and make call to the database
+ */
 @Service
 public class AuthService {
 
-  @Autowired
-  AuthenticationManager authenticationManager;
-  @Autowired
-  AuthRepository authRepository;
-  @Autowired
-  PasswordEncoder encoder;
-  @Autowired
-  JwtUtils jwtUtils;
+    @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
+    AuthRepository authRepository;
+    @Autowired
+    PasswordEncoder encoder;
+    @Autowired
+    JwtUtils jwtUtils;
 
-  public ResponseEntity<?> authenticateUser(String username, String password) {
-    Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    String jwt = jwtUtils.generateJwtToken(username);
-    UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
+    /**
+     * Authenticated the user through login in reqest, check if password and user are correct and then returns JWToken and account information
+     *
+     * @param username of the user trying to log in
+     * @param password of the user trying to log in
+     * @return user information and token, or error requestbody if in log failed
+     */
+    public ResponseEntity<?> authenticateUser(String username, String password) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(username);
+        UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
 
-    return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getIdentity(), userDetails.getUsername(), userDetails.getFirstName(), userDetails.getLastName(), userDetails.getRoles().toString(), userDetails.getAvailableDatabases().stream().toList()));
-  }
-
-
-
-
+        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getIdentity(), userDetails.getUsername(), userDetails.getFirstName(), userDetails.getLastName(), userDetails.getRoles().toString(), userDetails.getAvailableDatabases().stream().toList()));
+    }
 }

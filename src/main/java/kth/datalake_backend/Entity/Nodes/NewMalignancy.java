@@ -22,18 +22,21 @@ public class NewMalignancy {
     /**
      * Class constructor
      */
-    public NewMalignancy(){}
+    public NewMalignancy() {
+    }
 
     /**
      * Class constructor, specifies the new malignancy
+     *
      * @param newMalignancy the new malignancy to initialize with
      */
-    public NewMalignancy(String newMalignancy){
+    public NewMalignancy(String newMalignancy) {
         this.newMalignancy = newMalignancy;
     }
 
     /**
      * Get current string of new malignancy
+     *
      * @return current string of new malignancy
      */
     public String getNewMalignancy() {
@@ -42,14 +45,15 @@ public class NewMalignancy {
 
     /**
      * Set new malignancy depending on the input string
+     *
      * @param newMalignancy 1: No,
      *                      2: Yes,
      *                      Unknown if not one of these
      */
     public void setNewMalignancy(String newMalignancy) {
         switch (newMalignancy) {
-            case "1.0","1" -> this.newMalignancy = "No";
-            case "2.0","2" -> this.newMalignancy = "Yes";
+            case "1.0", "1" -> this.newMalignancy = "No";
+            case "2.0", "2" -> this.newMalignancy = "Yes";
             default -> this.newMalignancy = "Unknown";
         }
     }

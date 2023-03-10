@@ -30,6 +30,7 @@ public class Symptoms {
 
     /**
      * Get symptoms
+     *
      * @return symptom
      */
     public String getSymptom() {
@@ -38,6 +39,7 @@ public class Symptoms {
 
     /**
      * Set symptoms
+     *
      * @param symptom symptoms to set
      */
     public void setSymptom(String symptom) {
@@ -46,6 +48,7 @@ public class Symptoms {
 
     /**
      * Get severity of symptom
+     *
      * @return severity
      */
     public int getSeverity() {
@@ -54,6 +57,7 @@ public class Symptoms {
 
     /**
      * Set severity of symptom
+     *
      * @param severity of the symptom
      */
     public void setSeverity(int severity) {

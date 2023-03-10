@@ -15,25 +15,27 @@ import javax.validation.Valid;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-  public final AuthService authService;
+    public final AuthService authService;
 
 
-  /**
-   * Class constructor
-   * @param authService specify the authService to use
-   */
-  public AuthController(AuthService authService) {
-    this.authService = authService;
-  }
+    /**
+     * Class constructor
+     *
+     * @param authService specify the authService to use
+     */
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
-  /**
-   * Sign in request
-   * @param signinRequest the user to sign in
-   * @return a ResponseEntity
-   */
-  @PostMapping("/signIn")
-  public ResponseEntity<?> signIn(@Valid @RequestBody SigninRequest signinRequest){
-    return authService.authenticateUser(signinRequest.getUsername(),signinRequest.getPassword());
-  }
+    /**
+     * Sign in request
+     *
+     * @param signinRequest the user to sign in
+     * @return a ResponseEntity
+     */
+    @PostMapping("/signIn")
+    public ResponseEntity<?> signIn(@Valid @RequestBody SigninRequest signinRequest) {
+        return authService.authenticateUser(signinRequest.getUsername(), signinRequest.getPassword());
+    }
 
 }

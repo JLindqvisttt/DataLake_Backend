@@ -69,7 +69,9 @@ public class PatientServiceTest {
 
         patient = new Patient(1l,51,FEMALE,"White", 12727, "No",10000,10000,"Survived",9999,"261");
 
-        patient.setTreatment(new Treatment("CISPLATIN, ETOPOSIDE"));
+        Treatment treatment = new Treatment("CISPLATIN, ETOPOSIDE");
+        Treatment treatment1 = new Treatment("ETOPOSIDETEST");
+
 
         CauseOfDeath causeOfDeath = new CauseOfDeath();
         causeOfDeath.setCauseOfDeath("1");
@@ -99,7 +101,7 @@ public class PatientServiceTest {
 
         patient1 = new Patient(2l,52,MALE,"Asian", 32717, "Yes",10000,10000,"Death",9999,"266");
 
-        patient1.setTreatment(new Treatment("CISPLATIN, ETOPOSIDE"));
+        patient1.setTreatment(treatment);
 
         causeOfDeath = new CauseOfDeath();
         causeOfDeath.setCauseOfDeath("2");

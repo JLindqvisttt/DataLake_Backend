@@ -22,10 +22,12 @@ public class CauseOfDeath {
     /**
      * Class constructor
      */
-    public CauseOfDeath(){}
+    public CauseOfDeath() {
+    }
 
     /**
      * Get current cause of death
+     *
      * @return cause of death
      */
     public String getCauseOfDeath() {
@@ -34,6 +36,7 @@ public class CauseOfDeath {
 
     /**
      * Set cause of death depending on the input string
+     *
      * @param causeOfDeath 1: Protocol treatment related,
      *                     2: Protocol disease related,
      *                     3: Not related to protocol treatment or protocol disease,
@@ -41,9 +44,9 @@ public class CauseOfDeath {
      */
     public void setCauseOfDeath(String causeOfDeath) {
         switch (causeOfDeath) {
-            case "1.0","1" -> this.causeOfDeath = "Protocol treatment related";
-            case "2.0","2" -> this.causeOfDeath = "Protocol disease related";
-            case "3.0","3" -> this.causeOfDeath = "Not related to protocol treatment or protocol disease";
+            case "1.0", "1" -> this.causeOfDeath = "Protocol treatment related";
+            case "2.0", "2" -> this.causeOfDeath = "Protocol disease related";
+            case "3.0", "3" -> this.causeOfDeath = "Not related to protocol treatment or protocol disease";
             default -> this.causeOfDeath = "Unknown";
         }
     }

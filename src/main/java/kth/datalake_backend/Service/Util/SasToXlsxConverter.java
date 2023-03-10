@@ -2,13 +2,23 @@ package kth.datalake_backend.Service.Util;
 
 import com.epam.parso.Column;
 import com.epam.parso.SasFileReader;
-import com.epam.parso.impl.SasFileReaderImpl;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.IOException;
 
+/**
+ * The SasToXlsxConverter class is responsible for converting a SAS file to an XLSX file.
+ */
 public class SasToXlsxConverter {
+
+    /**
+     * Converts a SAS file to an XLSX sheet.
+     *
+     * @param sasFileReader the SAS file reader containing the data to be converted
+     * @return the converted XLSX sheet
+     * @throws IOException if an I/O error occurs during the conversion process
+     */
     public XSSFSheet convertSasToXlsx(SasFileReader sasFileReader) throws IOException {
         // Create a new XSSFWorkbook
         XSSFWorkbook workbook = new XSSFWorkbook();

@@ -5,7 +5,7 @@ import kth.datalake_backend.Entity.User.ERole;
 import kth.datalake_backend.Entity.User.User;
 import kth.datalake_backend.Payload.Request.UpdateUserPasswordRequest;
 
-import kth.datalake_backend.Payload.Request.UpdateUserUsernameRequest;
+import kth.datalake_backend.Payload.Request.UpdateUserFirstnameAndLastnameRequest;
 import kth.datalake_backend.Repository.User.UserRepository;
 
 import kth.datalake_backend.Service.UserService;
@@ -84,8 +84,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("Invalid Firstname Update")
     public void invalidUpdateFirstname() {
-        UpdateUserUsernameRequest update = new UpdateUserUsernameRequest();
-        UpdateUserUsernameRequest updateAdmin = new UpdateUserUsernameRequest();
+        UpdateUserFirstnameAndLastnameRequest update = new UpdateUserFirstnameAndLastnameRequest();
+        UpdateUserFirstnameAndLastnameRequest updateAdmin = new UpdateUserFirstnameAndLastnameRequest();
         String response;
 
         //null firstname update -- USER
@@ -140,8 +140,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("Inputting valid update password values")
     public void validUpdateFirstLastName() {
-        UpdateUserUsernameRequest update = new UpdateUserUsernameRequest();
-        UpdateUserUsernameRequest updateAdmin = new UpdateUserUsernameRequest();
+        UpdateUserFirstnameAndLastnameRequest update = new UpdateUserFirstnameAndLastnameRequest();
+        UpdateUserFirstnameAndLastnameRequest updateAdmin = new UpdateUserFirstnameAndLastnameRequest();
         String response;
 
         //short first and last name update -- USER
@@ -228,7 +228,7 @@ public class UserServiceTest {
     @DisplayName("Invalid ID")
     public void invalidID() {
         UpdateUserPasswordRequest update = new UpdateUserPasswordRequest();
-        UpdateUserUsernameRequest updateName = new UpdateUserUsernameRequest();
+        UpdateUserFirstnameAndLastnameRequest updateName = new UpdateUserFirstnameAndLastnameRequest();
         String response;
 
         //invalid ID -- USER

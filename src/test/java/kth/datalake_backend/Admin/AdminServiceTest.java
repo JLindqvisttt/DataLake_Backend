@@ -83,7 +83,7 @@ public class AdminServiceTest {
         response = adminService.updateUser(update).getBody().toString();
         assertEquals("Successfully updated user", response);
 
-        //Controls that the password dose not change if none is provided
+        //Controls that the password does not change if none is provided
         updateCheck = adminRepository.findById(user.getId()).get();
         assertTrue(encoder.matches("user12", updateCheck.getPassword()));
 
@@ -104,7 +104,7 @@ public class AdminServiceTest {
         patientRepository.save(patient);
 
         List<String> databases = patientRepository.findByDatabase();
-        update.setAvailableDatabases(databases);
+        update.setAvailableDatasets(databases);
         user.setAvailableDatabases(databases);
         assertEquals(databases.size(),user.getAvailableDatasets().size());
 
@@ -114,7 +114,7 @@ public class AdminServiceTest {
         patientRepository.save(patient);
 
         databases = patientRepository.findByDatabase();
-        update.setAvailableDatabases(databases);
+        update.setAvailableDatasets(databases);
         user.setAvailableDatabases(databases);
         assertEquals(databases.size(),user.getAvailableDatasets().size());
     }

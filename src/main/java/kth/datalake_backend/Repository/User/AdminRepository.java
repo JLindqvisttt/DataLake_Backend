@@ -7,18 +7,49 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Interface to represent a Neo4j repository for managing {@link User} objects with an admin role.
+ */
+
 @Repository
 public interface AdminRepository extends Neo4jRepository<User, Long> {
-  List<User> findAll();
 
-  boolean existsByUsername(String username);
+    /**
+     * Retrieves all users with an admin role.
+     *
+     * @return a list of {@link User} objects
+     */
+    List<User> findAll();
 
-  @Query("MATCH (n) RETURN count(n) AS numberOfNodes")
-  List<Long> nrOfNodes();
+    /**
+     * Checks if a user with the specified username exists.
+     *
+     * @param username the username to search for
+     * @return true if a user with the specified username exists, false otherwise
+     */
+    boolean existsByUsername(String username);
 
-  @Query("MATCH ()-[r]->() RETURN count(r) AS numberOfRelationships")
-  List<Long> nrOfRelations();
+    /**
+     * Retrieves the number of nodes in the graph database.
+     *
+     * @return a list containing the number of nodes
+     */
+    @Query("MATCH (n) RETURN count(n) AS numberOfNodes")
+    List<Long> nrOfNodes();
 
-  @Query("MATCH (u:User {role: 'ROLE_ADMIN'}) WHERE NOT $databaseName IN u.availableDatabases SET u.availableDatabases = u.availableDatabases + $databaseName")
-  void addDatabaseToAdminUsers(String databaseName);
+    /**
+     * Retrieves the number of relationships in the graph database.
+     *
+     * @return a list containing the number of relationships
+     */
+    @Query("MATCH ()-[r]->() RETURN count(r) AS numberOfRelationships")
+    List<Long> nrOfRelations();
+
+    /**
+     * Adds a database to the available databases of all admin users who don't already have it.
+     *
+     * @param databaseName the name of the database to add
+     */
+    @Query("MATCH (u:User {role: 'ROLE_ADMIN'}) WHERE NOT $databaseName IN u.availableDatabases SET u.availableDatabases = u.availableDatabases + $databaseName")
+    void addDatabaseToAdminUsers(String databaseName);
 }
