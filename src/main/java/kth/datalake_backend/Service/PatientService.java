@@ -11,7 +11,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,21 +25,23 @@ import java.util.*;
 @Service
 public class PatientService {
 
-    @Autowired
-    PatientRepository patientRepository;
-    @Autowired
-    TreatmentRepository treatmentRepository;
-    @Autowired
-    CauseOfDeathRepository causeOfDeathRepository;
-    @Autowired
-    OverallSurvivalStatusRepository overallSurvivalStatusRepository;
-    @Autowired
-    NewMalignancyRepository newMalignancyRepository;
-    @Autowired
-    SymptomsRepository symptomsRepository;
+    private final PatientRepository patientRepository;
+    private final TreatmentRepository treatmentRepository;
+    private final CauseOfDeathRepository causeOfDeathRepository;
+    private final OverallSurvivalStatusRepository overallSurvivalStatusRepository;
+    private final NewMalignancyRepository newMalignancyRepository;
+    private final SymptomsRepository symptomsRepository;
+    private final AdminRepository adminRepository;
 
-    @Autowired
-    AdminRepository adminRepository;
+    public PatientService(PatientRepository patientRepository, TreatmentRepository treatmentRepository, CauseOfDeathRepository causeOfDeathRepository, OverallSurvivalStatusRepository overallSurvivalStatusRepository, NewMalignancyRepository newMalignancyRepository, SymptomsRepository symptomsRepository, AdminRepository adminRepository) {
+        this.patientRepository = patientRepository;
+        this.treatmentRepository = treatmentRepository;
+        this.causeOfDeathRepository = causeOfDeathRepository;
+        this.overallSurvivalStatusRepository = overallSurvivalStatusRepository;
+        this.newMalignancyRepository = newMalignancyRepository;
+        this.symptomsRepository = symptomsRepository;
+        this.adminRepository = adminRepository;
+    }
 
     /**
      * Get a list of the different dataset type exist in the database
@@ -163,7 +164,7 @@ public class PatientService {
                     else patient.setFailureFreeSurvivalTime(Double.parseDouble(row.getCell(rowNumbers.get("failure free survival time")).toString()));
 
                     if (!rowNumbers.containsKey("overall survival status") || row.getCell(rowNumbers.get("overall survival status")) == null)
-                        overallSurvivalStatus.setOverAllSurvivalStatus("Unknown", name);
+                        overallSurvivalStatus.setOverAllSurvivalStatus("6", name);
                     else overallSurvivalStatus.setOverAllSurvivalStatus(row.getCell(rowNumbers.get("overall survival status")).toString(), name);
                     overallSurvivalStatusNode(overallSurvivalStatusName, patient, overallSurvivalStatus, overallSurvivalStatusList);
 

@@ -31,11 +31,21 @@ import java.util.List;
         prePostEnabled = true)
 public class WebSecurityConfig {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
+    private final AuthEntryPointJwt unauthorizedHandler;
+
+
+    /**
+     * Class constructor
+     *
+     * @param userDetailsService specify the userDetailService to use
+     * @param unauthorizedHandler specify the unauthorizedHandler to use
+     */
+    public WebSecurityConfig(UserDetailsService userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
+        this.userDetailsService = userDetailsService;
+        this.unauthorizedHandler = unauthorizedHandler;
+    }
 
     /**
      * Configures the authentication token filter.
@@ -100,7 +110,7 @@ public class WebSecurityConfig {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/auth/signIn", "/api/patient/getPatientsByDataset", "/api/patient/getAllPatients").permitAll()
+                .authorizeRequests().antMatchers("/api/auth/signIn").permitAll()
                 .anyRequest().authenticated();
         http.authenticationProvider(authenticationProvider()).cors().configurationSource(request -> corsConfiguration);
 

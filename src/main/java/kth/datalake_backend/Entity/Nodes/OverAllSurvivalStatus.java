@@ -43,7 +43,7 @@ public class OverAllSurvivalStatus {
      * @param name                  name of the dataset
      */
     public void setOverAllSurvivalStatus(String overAllSurvivalStatus, String name) {
-        if (name.equals("266")) overAllSurvivalStatus = String.valueOf(Double.valueOf(overAllSurvivalStatus) + 1);
+        if (name.equals("266")) overAllSurvivalStatus = String.valueOf(Double.parseDouble(overAllSurvivalStatus) + 1);
         switch (overAllSurvivalStatus) {
             case "1.0", "1" -> this.overAllSurvivalStatus = "Alive";
             case "2.0", "2" -> this.overAllSurvivalStatus = "Death";

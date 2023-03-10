@@ -1,16 +1,13 @@
 package kth.datalake_backend.Service;
 
 import kth.datalake_backend.Payload.Response.JwtResponse;
-import kth.datalake_backend.Repository.User.AuthRepository;
 import kth.datalake_backend.Security.JWT.JwtUtils;
 import kth.datalake_backend.Security.Services.UserDetailsImp;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,14 +16,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
-    AuthRepository authRepository;
-    @Autowired
-    PasswordEncoder encoder;
-    @Autowired
-    JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
+
+    /**
+     * Class constructor specifying the
+     *
+     * @param authenticationManager AuthenticationManager
+     * @param jwtUtils JwtUtils
+     */
+    public AuthService(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
+    }
 
     /**
      * Authenticated the user through login in request, check if password and user are correct and then returns JWToken and account information

@@ -42,9 +42,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer "))
             return headerAuth.substring(7, headerAuth.length());
-        }
+
         return null;
     }
 
@@ -66,10 +66,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
                 System.out.println(request.getRequestURI().toString());
-                if (request.getRequestURI().toString().equals("/api/admin/getAllUser") || request.getRequestURI().toString().equals("/api/admin/removeUser") || request.getRequestURI().toString().equals("/api/admin/nrOfRelations")
-                        || request.getRequestURI().toString().equals("/api/admin/nrOfNodes") || request.getRequestURI().toString().equals("/api/patient/getAllDatasets")
-                        || request.getRequestURI().toString().equals("/api/admin/signUp") || request.getRequestURI().toString().equals("/api/admin/updateUser")
-                        || request.getRequestURI().toString().equals("/api/patient/input/symptoms") || request.getRequestURI().toString().equals("/api/patient/input")) {
+                if (request.getRequestURI().toString().equals("/api/patient/getAllDatasets")|| request.getRequestURI().toString().equals("/api/patient/input/symptoms") || request.getRequestURI().toString().equals("/api/patient/input")
+                || request.getRequestURI().toString().contains("/api/admin/")) {
                     if (!userDetailsService.ifUserIsAdmin(username)) {
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         filterChain.doFilter(request, response);
@@ -84,9 +82,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_OK);
                 filterChain.doFilter(request, response);
             }
-        } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
-        }
+        } catch (Exception e) {logger.error("Cannot set user authentication: {}", e);}
 
         filterChain.doFilter(request, response);
     }

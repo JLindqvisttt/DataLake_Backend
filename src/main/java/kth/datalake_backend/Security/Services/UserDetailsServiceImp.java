@@ -16,11 +16,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImp implements UserDetailsService {
 
+    private final AuthRepository authRepository;
+
     /**
-     * AuthRepository instance for accessing user information.
+     * Class constructor
+     *
+     * @param authRepository specify the authRepository to use
      */
-    @Autowired
-    AuthRepository authRepository;
+    public UserDetailsServiceImp(AuthRepository authRepository) {
+        this.authRepository = authRepository;
+    }
 
     /**
      * Loads user details from AuthRepository by username and returns UserDetailsImp.

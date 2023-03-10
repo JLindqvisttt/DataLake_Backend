@@ -7,7 +7,6 @@ import kth.datalake_backend.Payload.Request.SignUpRequest;
 import kth.datalake_backend.Payload.Request.UpdateUserRequest_Admin;
 import kth.datalake_backend.Payload.Response.MessageResponse;
 import kth.datalake_backend.Repository.User.AdminRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,11 +19,20 @@ import java.util.Optional;
  */
 @Service
 public class AdminService {
-    @Autowired
-    AdminRepository adminRepository;
+    private final AdminRepository adminRepository;
 
-    @Autowired
-    PasswordEncoder encoder;
+    private final PasswordEncoder encoder;
+
+    /**
+     * Class constructor specifying the
+     *
+     * @param adminRepository AdminRepository
+     * @param encoder PasswordEncoder
+     */
+    public AdminService(AdminRepository adminRepository, PasswordEncoder encoder) {
+        this.adminRepository = adminRepository;
+        this.encoder = encoder;
+    }
 
     /**
      * Returns all users from the database
