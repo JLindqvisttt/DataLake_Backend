@@ -16,8 +16,9 @@ https://data.projectdatasphere.org/projectdatasphere/html/content/261
 From dataset 261 was "c9732_demographic" used for the patient data and "c9732_ae" was used for symptoms
 
 https://data.projectdatasphere.org/projectdatasphere/html/content/266
-From dataset 266 was "c_chemo" aswell as "a_eendpt" used for patient and "c_ae" was used for symptoms
+From dataset 266 was "c_chemo" as well as "a_eendpt" used for patient and "c_ae" was used for symptoms
 
+Currently the code is formed to handle the datasets with the respectable names due to different column values meaning different things, so keep in mind to keep the names "261" and "266" or change it in the code, this is currently only implemented in Entity -> Nodes -> OverAllSurvivalStatus
 
 PS: We believe that a greater number of connections could be made between nodes from different datasets if the imports from the dataset were made to be case-insensitive. The change should be rather simple and could be a good starting point for learning how to modify the application.
 
