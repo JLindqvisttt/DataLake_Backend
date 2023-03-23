@@ -12,6 +12,13 @@ The code contains Javadocs, and we have added extra comments where we felt they 
 
 The dataset we have used for development and testing purposes has been provided by "Project Data Sphere". Because these datasets are not public and have been provided to us through a user agreement, we have decided not to publicly release them on this GitHub. The access link for these datasets is provided below.
 
+https://data.projectdatasphere.org/projectdatasphere/html/content/261
+From dataset 261 was "c9732_demographic" used for the patient data and "c9732_ae" was used for symptoms
+
+https://data.projectdatasphere.org/projectdatasphere/html/content/266
+From dataset 266 was "c_chemo" aswell as "a_eendpt" used for patient and "c_ae" was used for symptoms
+
+
 PS: We believe that a greater number of connections could be made between nodes from different datasets if the imports from the dataset were made to be case-insensitive. The change should be rather simple and could be a good starting point for learning how to modify the application.
 
 Author infromation:<br>
